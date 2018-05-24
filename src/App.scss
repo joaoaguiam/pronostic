@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,600i,700,700i,800|Volkhov:400,700');
+
+
+// html, body, .app, #root  {
+//     height: 100%;
+//     width: 100%;
+    
+// }
+
+body{
+    font-family: 'Nunito', sans-serif;
+    background-color:#f5f5f5;
+}
+
+.btn-primary { 
+    background-color: #6ab187;
+    border-color: #6ab187;
+}
+
+.btn-primary:hover {
+    background-color: #4FAE54;
+    border-color: #4FAE54;
+}
+
+.btn-secondary { 
+    background-color: #6ab187;
+    border-color: #6ab187;
+}
+
+.btn-secondary:hover {
+    background-color: #4FAE54;
+    border-color: #4FAE54;
+}
+
+
+.form-control:focus, .btn-primary:focus {
+    border-color: #4FAE54;
+    // box-shadow: 0 0 0 0.2rem rgba(244, 81, 30,.25);
+    box-shadow: 0 0 0 0.2rem rgba(79, 174, 84,.25);   
+}
+
+.hands-bg {
+    background:  url('/assets/hands.png');
+    /* background-repeat:  no-repeat; */
+    position:  fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index:  -1;
+    height:  367px;
+    right: 0;
+    opacity: 0.1;
+}
