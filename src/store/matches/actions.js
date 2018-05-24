@@ -1,9 +1,12 @@
 import _ from 'lodash';
 
 import * as types from './actionTypes';
-import * as createCampaingSelectors from './reducer';
-import { uploadObjectIpfs } from '../../helpers/ipfs/ipfs';
-import { createPixel4Impact } from '../../ethereum/contracts/Pixel4ImpactFactory';
+import * as matchesSelectors from './reducer';
+
+const DATA_SOURCE = "https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json";
+
+// import { uploadObjectIpfs } from '../../helpers/ipfs/ipfs';
+// import { createPixel4Impact } from '../../ethereum/contracts/Pixel4ImpactFactory';
 // import { createEvent } from '../../ethereum/contracts/TaigaEventFactory';
 
 // import * as createTicketActions from '../create-ticket/actions';

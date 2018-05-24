@@ -1,1 +1,0 @@
-export const ETHEREUM_NETWORK = 4; //rinkeby
