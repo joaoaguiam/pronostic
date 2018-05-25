@@ -4,7 +4,8 @@ import Immutable from 'seamless-immutable';
 
 
 const initialState = Immutable({
-    matches:undefined,
+    matches: undefined,
+    bets: undefined,
     isFetched: false
 });
 
@@ -15,6 +16,10 @@ export default function reduce(state = initialState, action = {}) {
                 matches: action.matches,
                 isFetched: true
             });
+        case types.BETS_UPDATED:
+            return state.merge({
+                bets: action.bets,
+            });
         default:
             return state;
     }
@@ -24,6 +29,9 @@ export default function reduce(state = initialState, action = {}) {
 
 export function getMatches(state) {
     return state.matches.matches;
+}
+export function getBets(state) {
+    return state.matches.bets;
 }
 export function isFetched(state) {
     return state.matches.isFetched;

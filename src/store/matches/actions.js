@@ -3,6 +3,9 @@ import _ from 'lodash';
 import * as types from './actionTypes';
 import * as matchesSelectors from './reducer';
 
+import update from 'immutability-helper';
+
+
 const DATA_SOURCE = "https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json";
 
 export function fetchMatches() {
@@ -10,11 +13,30 @@ export function fetchMatches() {
         try {
 
             let response = await fetch(DATA_SOURCE);
-            console.log(response);
             let matches = await response.json();
             console.log(matches);
 
-            dispatch({ type: types.MATCHES_FETCHED, matches});
+            dispatch({ type: types.MATCHES_FETCHED, matches });
+
+            let cachedbets = localStorage.getItem('bets');
+            console.log(cachedbets);
+            if (cachedbets !== null) {
+                // localStorage.removeItem('bets');
+                dispatch({ type: types.BETS_UPDATED, bets: JSON.parse(cachedbets) });
+            }
+            else {
+                let bets = [];
+                for (let i = 0; i < 64; i++)  {
+                    bets.push({
+                        homeBet: undefined,
+                        awayBet: undefined,
+                        winner: undefined,
+                    })
+                }
+                dispatch({ type: types.BETS_UPDATED, bets });
+            }
+
+
         } catch (error) {
             console.error(error);
         }
@@ -25,10 +47,27 @@ export function fetchMatches() {
 export function setGroupHomeBet(phase, subPhase, matchId, bet) {
     return async (dispatch, getState) => {
         try {
-            let matches = _.clone(matchesSelectors.getMatches(getState()));
+            let bets = _.cloneDeep(matchesSelectors.getBets(getState()));
+            bets[matchId - 1].homeBet = bet;
 
-            _.assign(matches[phase][subPhase].matches[matchId - 1], {home_bet: bet});
-            dispatch({ type: types.MATCHES_FETCHED, matches});
+            dispatch({ type: types.BETS_UPDATED, bets });
+            localStorage.setItem('bets', JSON.stringify(bets));
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}
+
+export function setGroupAwayBet(phase, subPhase, matchId, bet) {
+    return async (dispatch, getState) => {
+        try {
+            let bets = _.cloneDeep(matchesSelectors.getBets(getState()));
+            bets[matchId - 1].awayBet = bet;
+
+            dispatch({ type: types.BETS_UPDATED, bets });
+            localStorage.setItem('bets', JSON.stringify(bets));
+
         } catch (error) {
             console.error(error);
         }
