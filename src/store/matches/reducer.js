@@ -23,5 +23,13 @@ export default function reduce(state = initialState, action = {}) {
 // selectors
 
 export function getMatches(state) {
-    return state.matches;
+    return state.matches.matches;
 }
+export function isFetched(state) {
+    return state.matches.isFetched;
+}
+export function getTeam(matches, teamId) {
+    return matches.teams[(teamId - 1)];
+}
+
+
