@@ -73,3 +73,14 @@ export function setGroupAwayBet(phase, subPhase, matchId, bet) {
         }
     };
 }
+
+
+export function selectTab(tab) {
+    return async (dispatch, getState) => {
+        try {
+            dispatch({ type: types.TAB_SELECTED, tab });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}

@@ -6,6 +6,7 @@ import Immutable from 'seamless-immutable';
 const initialState = Immutable({
     matches: undefined,
     bets: undefined,
+    selectedTab: 0,
     isFetched: false
 });
 
@@ -19,6 +20,10 @@ export default function reduce(state = initialState, action = {}) {
         case types.BETS_UPDATED:
             return state.merge({
                 bets: action.bets,
+            });
+        case types.TAB_SELECTED:
+            return state.merge({
+                selectedTab: action.tab,
             });
         default:
             return state;
@@ -40,4 +45,7 @@ export function getTeam(matches, teamId) {
     return matches.teams[(teamId - 1)];
 }
 
+export function getSelectedTab(state) {
+    return state.matches.selectedTab;
+}
 

@@ -78,10 +78,10 @@ class App extends Component {
         return (
             <MuiThemeProvider theme={theme}>
                 <div className="App">
-                    {/* <NotificationGenerator /> */}
                     <Header />
+
                     <CenterContainer>
-                    {this.props.children}
+                        {this.props.children}
                     </CenterContainer>
 
                 </div>
