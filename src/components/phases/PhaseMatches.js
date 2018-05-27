@@ -21,7 +21,11 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import StarsIcon from '@material-ui/icons/Stars';
 
+import Radio from '@material-ui/core/Radio';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 
 import 'flag-icon-css/css/flag-icon.css';
 
@@ -55,6 +59,9 @@ const styles = theme => ({
     rightIcon: {
         marginLeft: theme.spacing.unit,
     },
+    winnerIcon: {
+        fontSize: 20,
+    },
 });
 
 class GroupPhaseContainer extends Component {
@@ -81,13 +88,20 @@ class GroupPhaseContainer extends Component {
             dispatch(matchesActions.setGroupAwayBet(phase, subPhase, matchId, bet))
         }
     }
+    setWinnerBet(phase, subPhase, matchId) {
+        let dispatch = this.props.dispatch;
+        return (e) => {
+            let bet = e.target.value;
+            dispatch(matchesActions.setWinnerBet(phase, subPhase, matchId, bet))
+        }
+    }
     render() {
         const { classes } = this.props;
 
         let phase = this.props.phase;
         let subPhase = this.props.subPhase;
-        let matches = this.props.matches;
         let bets = this.props.bets;
+        let isKnockout = this.props.isKnockout;
         // if(bets !== undefined) {
         //     console.log(bets);
         //     debugger;
@@ -100,35 +114,76 @@ class GroupPhaseContainer extends Component {
                         <TableHead>
                             <TableRow>
                                 <TableCell numeric>Game #</TableCell>
-                                <TableCell>Home Team</TableCell>
-                                <TableCell>Away Team</TableCell>
                                 <TableCell>Date</TableCell>
+                                <TableCell>Home Team</TableCell>
+                                {isKnockout && <TableCell>Winner Bet</TableCell>}
+                                <TableCell>Away Team</TableCell>
                                 <TableCell>Score Bet</TableCell>
-                                {/* <TableCell></TableCell> */}
+                                <TableCell>Final Score</TableCell>
+                                <TableCell>Points</TableCell>
+
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {this.props.matches.map(match => {
                                 let teamHome = matchesSelectors.getTeam(this.props.allMatches, match.home_team);
-                                let teamHomeName = teamHome !==undefined ? teamHome.name : '';
-                                let teamHomeIso = teamHome !==undefined ? teamHome.iso2 : '';
-                                
+                                let teamHomeName = teamHome !== undefined ? teamHome.name : '';
+                                let teamHomeIso = teamHome !== undefined ? teamHome.iso2 : '';
+
                                 let teamAway = matchesSelectors.getTeam(this.props.allMatches, match.away_team);
-                                let teamAwayName = teamAway !==undefined ? teamAway.name : '';
-                                let teamAwayIso = teamAway !==undefined ? teamAway.iso2 : '';
-                                
+                                let teamAwayName = teamAway !== undefined ? teamAway.name : '';
+                                let teamAwayIso = teamAway !== undefined ? teamAway.iso2 : '';
+
                                 let date = moment(match.date).format("MMM DD - hh:mm a");
 
+                                let isFinished = match.finished;
+                                let homeResult = match.home_result;
+                                let awayResult = match.away_result;
+
+                                let isWinnerHome = match.winner === match.home_team;
+                                let isWinnerAway = match.winner === match.away_team;
 
                                 let homeBet = bets !== undefined && _.has(bets[match.name - 1], 'homeBet') ? bets[match.name - 1].homeBet : '';
-                                
                                 let awayBet = bets !== undefined && _.has(bets[match.name - 1], 'awayBet') ? bets[match.name - 1].awayBet : '';
+                                let winnerBet = bets !== undefined && _.has(bets[match.name - 1], 'winnerBet') ? bets[match.name - 1].winnerBet : '';
+
+
                                 return (
                                     <TableRow key={match.name}>
                                         <TableCell component="th" scope="row" className={classes.center}>{match.name}</TableCell>
-                                        <TableCell><span className={"flag-icon flag-icon-" + teamHomeIso}></span> {teamHomeName}</TableCell>
-                                        <TableCell><span className={"flag-icon flag-icon-" + teamAwayIso}></span> {teamAwayName}</TableCell>
                                         <TableCell>{date}</TableCell>
+                                        <TableCell>
+                                            <span className={"flag-icon flag-icon-" + teamHomeIso}></span> {teamHomeName}
+
+                                        </TableCell>
+                                        {isKnockout &&
+                                            <TableCell>
+                                                <Radio
+                                                    checked={winnerBet === 'home'}
+                                                    onChange={this.setWinnerBet(phase, subPhase, match.name)}
+                                                    value="home"
+                                                    color="default"
+                                                    name="radio-button-demo"
+                                                    // aria-label="E"
+                                                    className={classes.size}
+                                                    icon={<RadioButtonUncheckedIcon className={classes.sizeIcon} />}
+                                                    checkedIcon={<RadioButtonCheckedIcon className={classes.sizeIcon} />}
+                                                />
+                                                -
+                                            <Radio
+                                                    checked={winnerBet === 'away'}
+                                                    onChange={this.setWinnerBet(phase, subPhase, match.name)}
+                                                    value="away"
+                                                    color="default"
+                                                    name="radio-button-demo"
+                                                    // aria-label="E"
+                                                    className={classes.size}
+                                                    icon={<RadioButtonUncheckedIcon className={classes.sizeIcon} />}
+                                                    checkedIcon={<RadioButtonCheckedIcon className={classes.sizeIcon} />}
+                                                />
+                                            </TableCell>
+                                        }
+                                        <TableCell><span className={"flag-icon flag-icon-" + teamAwayIso}></span> {teamAwayName}</TableCell>
                                         <TableCell className={classes.betCell}>
                                             <TextField
                                                 id={"homeBet" + match.name}
@@ -140,14 +195,26 @@ class GroupPhaseContainer extends Component {
                                             // value= {bets[matchIndex].homeBet}
                                             />
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <TextField
+                                            <TextField
                                                 id={"awayBet" + match.name}
                                                 value={awayBet}
                                                 onChange={container.changeAwayScoreBet(phase, subPhase, match.name)}
                                                 type="number"
                                                 className={classes.betField}
                                                 margin="dense"
-                                            /></TableCell>
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            {isFinished && 
+                                                <div>
+                                                    {isWinnerHome && <StarsIcon className={classes.winnerIcon} color="primary" />}
+                                                    {homeResult} - {awayResult}
+                                                    {isWinnerAway && <StarsIcon className={classes.winnerIcon} color="primary" />}
+                                                </div>
+                                            }
+                                        </TableCell>
+                                        <TableCell></TableCell>
+
                                     </TableRow>
                                 );
                             })}

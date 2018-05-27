@@ -58,7 +58,7 @@ class CenterContainer extends Component {
                     className={classes.demo}
                     alignItems="stretch"
                     justify="center">
-                    <Grid item xs={12} md={8}>
+                    <Grid item xs={12} md={10}>
                         {this.props.children}
                     </Grid>
                 </Grid>

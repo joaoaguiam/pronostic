@@ -30,7 +30,7 @@ export function fetchMatches() {
                     bets.push({
                         homeBet: undefined,
                         awayBet: undefined,
-                        winner: undefined,
+                        winnerBet: undefined,
                     })
                 }
                 dispatch({ type: types.BETS_UPDATED, bets });
@@ -64,6 +64,21 @@ export function setGroupAwayBet(phase, subPhase, matchId, bet) {
         try {
             let bets = _.cloneDeep(matchesSelectors.getBets(getState()));
             bets[matchId - 1].awayBet = bet;
+
+            dispatch({ type: types.BETS_UPDATED, bets });
+            localStorage.setItem('bets', JSON.stringify(bets));
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}
+
+export function setWinnerBet(phase, subPhase, matchId, bet) {
+    return async (dispatch, getState) => {
+        try {
+            let bets = _.cloneDeep(matchesSelectors.getBets(getState()));
+            bets[matchId - 1].winnerBet = bet;
 
             dispatch({ type: types.BETS_UPDATED, bets });
             localStorage.setItem('bets', JSON.stringify(bets));
