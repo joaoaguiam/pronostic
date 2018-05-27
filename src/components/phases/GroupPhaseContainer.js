@@ -56,6 +56,10 @@ class GroupPhaseContainer extends Component {
             </div>
         )
     }
+
+    handleSubmit() {
+        this.props.dispatch(matchesActions.submitBets("groups", '', this.props.bets));
+    }
     render() {
         if (!this.props.isFetched) {
             return <Typography variant="caption">Loading...</Typography>
@@ -73,13 +77,10 @@ class GroupPhaseContainer extends Component {
                         <Grid
                             container
                             spacing={16}
-                            // className={classes.demo}
-                            // alignItems={alignItems}
-                            // direction={direction}
                             justify={"flex-end"}
                         >
                             <Grid item>
-                                <Button variant="raised" color="primary">Submit to Blockchain</Button>
+                                <Button variant="raised" color="primary" onClick={this.handleSubmit} >Submit to Blockchain</Button>
                             </Grid>
                         </Grid>
                     </Grid>

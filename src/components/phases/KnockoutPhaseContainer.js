@@ -45,6 +45,10 @@ class KnockoutPhaseContainer extends Component {
         }
     }
 
+    handleSubmit() {
+        this.props.dispatch(matchesActions.submitBets('knockout', this.props.subPhase, this.props.bets));
+    }
+
     render() {
         if (!this.props.isFetched) {
             return <Typography variant="caption">Loading...</Typography>
@@ -57,20 +61,19 @@ class KnockoutPhaseContainer extends Component {
 
             <div className={classes.root}>
                 <Typography variant="display2" gutterBottom>{this.props.title}</Typography>
-                <PhaseMatches matches={matches} phase="knockout" subPhase={this.props.subPhase} isKnockout/>
+                <PhaseMatches matches={matches} phase="knockout" subPhase={this.props.subPhase} isKnockout />
                 <Grid container className={classes.btnContainer}>
                     <Grid item xs={12}>
                         <Grid
                             container
                             spacing={16}
-                            // className={classes.demo}
-                            // alignItems={alignItems}
-                            // direction={direction}
                             justify={"flex-end"}
                         >
-                            <Grid item>
-                                <Button variant="raised" color="primary">Submit to Blockchain</Button>
-                            </Grid>
+                            {this.props.subPhase !== 'round_2_loser' &&
+                                <Grid item>
+                                    <Button variant="raised" color="primary" onClick={this.handleSubmit}>Submit to Blockchain</Button>
+                                </Grid>
+                            }
                         </Grid>
                     </Grid>
                 </Grid>

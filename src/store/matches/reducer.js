@@ -7,7 +7,14 @@ const initialState = Immutable({
     matches: undefined,
     bets: undefined,
     selectedTab: 0,
-    isFetched: false
+    isFetched: false,
+    ipfsLinks: {
+        groups: undefined,
+        round16: undefined,
+        round8: undefined,
+        round4: undefined,
+        round2: undefined,
+    }
 });
 
 export default function reduce(state = initialState, action = {}) {
@@ -24,6 +31,10 @@ export default function reduce(state = initialState, action = {}) {
         case types.TAB_SELECTED:
             return state.merge({
                 selectedTab: action.tab,
+            });
+        case types.BETS_SUBMITTED:
+            return state.merge({
+                ipfsLinks: action.ipfsLinks,
             });
         default:
             return state;
@@ -47,5 +58,9 @@ export function getTeam(matches, teamId) {
 
 export function getSelectedTab(state) {
     return state.matches.selectedTab;
+}
+
+export function getIpfsLinks(state) {
+    return state.matches.ipfsLinks;
 }
 
