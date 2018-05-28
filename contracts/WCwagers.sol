@@ -1,34 +1,33 @@
-pragma solidity ^0.4.21;
+pragma solidity ^0.4.22;
 
 import "../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
-import "../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
 
 contract WCwagers is Ownable {
-    uint constant internal USDTOWEI  = 1666666666666666
+    uint constant internal USDTOWEI  = 1666666666666666;
     // 600$ is 1 ETH, but 1 ETH is on 18 digits so 1'000'000'000'000'000'000 / 600 = 166666666666666
-    enum Phase {Group, Round16, Quarters, Semis, Finals};
-    mapping (Phase => uint) phaseDates;
-    phaseDates[Group] = 1529010000;
-    phaseDates[Round16] = 1530388800;
-    phaseDates[Quarters] = 1530907200;
-    phaseDates[Semis] = 1531267200;
-    phaseDates[Finals] = 1531598400; // unix epoch dates for submission deadline
+    // enum Phase {Group, Round16, Quarters, Semis, Finals}
+    //mapping (Phase => uint) phaseDates; //cannot use enum in mapping
+    mapping (string => uint) phaseDates;
     string contestName;
     uint public wagerSize;
     uint public potSize;
     address[] public participants;
-    // this maps the participants to a mapping of phase and URLs
-    mapping (address => mapping(Phase => string)) usersURLs private;
-
+    // this maps the participants to a mapping of phase (string for phase enum) and URLs
+    mapping (address => mapping(string => string)) private usersURLs;
 
     // constuctor takes in input the name of the contest (e.g. NagraStar, soccerNuts) and wager size in USD.
     // The wager size will be converted to Ether using a fixed value
-    function WCwagers(string _name, uint _wagerSize) public {
+    constructor(string _name, uint _wagerSize) public {
         wagerSize = _wagerSize * USDTOWEI;
         contestName = _name;
+        phaseDates["Group"] = 1529010000;
+        phaseDates["Round16"] = 1530388800;
+        phaseDates["Quarters"] = 1530907200;
+        phaseDates["Semis"] = 1531267200;
+        phaseDates["Finals"] = 1531598400; // unix epoch dates for submission deadline
     }
 
-    function getWagerSize() public pure returns uint {
+    function getWagerSize() public view returns (uint) {
       return wagerSize;
     }
 
@@ -46,36 +45,36 @@ contract WCwagers is Ownable {
         _;
     }
 
-    modifier isThereTime(Phase _phase) {
+    modifier isThereTime(string _phase) {
         require(phaseDates[_phase] <= block.timestamp);
         _;
     }
 
-    modifier isItTimeYet(Phase _phase) {
+    modifier isItTimeYet(string _phase) {
         require(phaseDates[_phase] >= block.timestamp);
         _;
     }
 
 
-    function writeURL(string _URL, Phase _phase) public isThereTime(_phase) {
+    function writeURL(string _URL, string _phase) public isThereTime(_phase) {
       usersURLs[msg.sender][_phase]=_URL;
     }
 // Does it make sense to have this function?
 // If I want to retrieve my URLs before the deadline, this is what I'd use
-    function getOwnURL(Phase _phase) public returns string {
-      return[msg.sender][_phase];
+    function getOwnURL(string _phase) public view returns (string) {
+      return usersURLs[msg.sender][_phase];
     }
 
-    function getURL(address _participant, Phase _phase) public returns string isItTimeYet(_phase) {
+    function getURL(address _participant, string _phase) public view isItTimeYet(_phase) returns (string) {
       return usersURLs[_participant][_phase];
     }
 
-    function getParticipants() public pure returns address[] {
+    function getParticipants() public view returns (address[]) {
       return participants;
     }
 
-    function payWinner(uint amount) onlyOwner returns(bool) {
-         require(amount < this.balance);
+    function payWinner(uint amount) public onlyOwner returns(bool) {
+         require(amount < address(this).balance);
          owner.transfer(amount);
          return true;
          // how to account for gas ??
