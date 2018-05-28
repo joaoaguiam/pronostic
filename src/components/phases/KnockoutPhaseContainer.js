@@ -11,6 +11,8 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 
 import 'flag-icon-css/css/flag-icon.css';
@@ -26,26 +28,12 @@ const styles = theme => ({
         'padding-top': "2em",
         'padding-bottom': "2em",
     },
+    btnContainer: {
+        flexGrow: 1,
+        'padding-top': '2em',
+    },
     group: {
         'padding-top': "2em",
-    },
-    center: {
-        'text-align': 'center',
-    },
-    betCell: {
-
-    },
-    betField: {
-        width: '30px',
-        'input': {
-            'text-align': 'center'
-        }
-    },
-    button: {
-        margin: theme.spacing.unit,
-    },
-    rightIcon: {
-        marginLeft: theme.spacing.unit,
     },
 });
 
@@ -55,6 +43,10 @@ class KnockoutPhaseContainer extends Component {
         autoBind(this);
         this.state = {
         }
+    }
+
+    handleSubmit() {
+        this.props.dispatch(matchesActions.submitBets('knockout', this.props.subPhase, this.props.bets));
     }
 
     render() {
@@ -69,8 +61,22 @@ class KnockoutPhaseContainer extends Component {
 
             <div className={classes.root}>
                 <Typography variant="display2" gutterBottom>{this.props.title}</Typography>
-                <PhaseMatches matches={matches} phase="knockout" subPhase={this.props.subPhase} />
-
+                <PhaseMatches matches={matches} phase="knockout" subPhase={this.props.subPhase} isKnockout />
+                <Grid container className={classes.btnContainer}>
+                    <Grid item xs={12}>
+                        <Grid
+                            container
+                            spacing={16}
+                            justify={"flex-end"}
+                        >
+                            {this.props.subPhase !== 'round_2_loser' &&
+                                <Grid item>
+                                    <Button variant="raised" color="primary" onClick={this.handleSubmit}>Submit to Blockchain</Button>
+                                </Grid>
+                            }
+                        </Grid>
+                    </Grid>
+                </Grid>
             </div>
 
         )

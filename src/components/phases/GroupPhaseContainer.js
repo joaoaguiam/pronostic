@@ -11,7 +11,8 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 
-
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 import 'flag-icon-css/css/flag-icon.css';
 
@@ -26,26 +27,12 @@ const styles = theme => ({
         'padding-top': "2em",
         'padding-bottom': "2em",
     },
+    btnContainer: {
+        flexGrow: 1,
+        'padding-top': '2em',
+    },
     group: {
         'padding-top': "2em",
-    },
-    center: {
-        'text-align': 'center',
-    },
-    betCell: {
-
-    },
-    betField: {
-        width: '30px',
-        'input': {
-            'text-align': 'center'
-        }
-    },
-    button: {
-        margin: theme.spacing.unit,
-    },
-    rightIcon: {
-        marginLeft: theme.spacing.unit,
     },
 });
 
@@ -62,18 +49,16 @@ class GroupPhaseContainer extends Component {
 
         let group = this.props.matches.groups[groupKey];
         let matches = group.matches;
-        let bets = this.props.bets;
-        // if(bets !== undefined) {
-        //     console.log(bets);
-        //     debugger;
-        // }
-        let container = this;
         return (
             <div key={groupKey} className={classes.group}>
                 <Typography variant="title" gutterBottom>{group.name}</Typography>
                 <PhaseMatches matches={matches} phase="groups" subPhase={groupKey} />
             </div>
         )
+    }
+
+    handleSubmit() {
+        this.props.dispatch(matchesActions.submitBets("groups", '', this.props.bets));
     }
     render() {
         if (!this.props.isFetched) {
@@ -87,7 +72,20 @@ class GroupPhaseContainer extends Component {
             <div className={classes.root}>
                 <Typography variant="display2" gutterBottom>Groups Phase</Typography>
                 {groupKeys.map(this.renderGroupSection)}
-            </div>
+                <Grid container className={classes.btnContainer}>
+                    <Grid item xs={12}>
+                        <Grid
+                            container
+                            spacing={16}
+                            justify={"flex-end"}
+                        >
+                            <Grid item>
+                                <Button variant="raised" color="primary" onClick={this.handleSubmit} >Submit to Blockchain</Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </div >
 
         )
     }
