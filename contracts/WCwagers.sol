@@ -27,6 +27,10 @@ contract WCwagers is Ownable {
         phaseDates["Finals"] = 1531598400; // unix epoch dates for submission deadline
     }
 
+    function getContestInfo() public view returns (uint _wagerSize, string _contestName, uint _firstPhaseDate) {
+        return (wagerSize, contestName, phaseDates["Group"]);
+    }
+
     function getWagerSize() public view returns (uint) {
       return wagerSize;
     }
