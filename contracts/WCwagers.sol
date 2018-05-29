@@ -20,11 +20,17 @@ contract WCwagers is Ownable {
     constructor(string _name, uint _wagerSize) public {
         wagerSize = _wagerSize * USDTOWEI;
         contestName = _name;
-        phaseDates["Group"] = 1529010000;
+
+        phaseDates["Group"] = 1529010000; // production value
         phaseDates["Round16"] = 1530388800;
         phaseDates["Quarters"] = 1530907200;
         phaseDates["Semis"] = 1531267200;
         phaseDates["Finals"] = 1531598400; // unix epoch dates for submission deadline
+    }
+
+    function toggleTimePast() public onlyOwner {
+      phaseDates["Group"] = 1527389672; // for testing, put this in the past
+      emit DebugStr("Group date put in the past");
     }
 
     function getContestInfo() public view returns (uint _wagerSize, string _contestName, uint _firstPhaseDate) {
@@ -41,8 +47,17 @@ contract WCwagers is Ownable {
         emit ParticipantAdded(msg.sender);
     }
     event ParticipantAdded(address participant);
-    //event DebugStr(string value);
-    //event DebugInt(uint value);
+    event DebugStr(string value);
+    event DebugInt(uint value);
+
+    function compareStrings (string a, string b) pure internal returns (bool){
+      if(bytes(a).length != bytes(b).length) {
+        return false;
+        } else
+        {
+            return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
+        }
+       }
 
     modifier isAtLeastWagerSize() {
         require(msg.value >= wagerSize);
@@ -50,22 +65,32 @@ contract WCwagers is Ownable {
     }
 
     modifier isThereTime(string _phase) {
-        require(phaseDates[_phase] <= block.timestamp);
+    //  emit DebugInt(phaseDates[_phase]);
+    //  emit DebugInt(block.timestamp);
+        require(phaseDates[_phase] >= block.timestamp);
+        _;
+    }
+    modifier isPhaseValid(string _phase) {
+      //require(compareStrings(_phase,"Group"));
+      require(compareStrings(_phase,"Group") || compareStrings(_phase,"Round16") || compareStrings(_phase,"Quarters") || compareStrings(_phase,"Semis") || compareStrings(_phase,"Finals"));
         _;
     }
 
     modifier isItTimeYet(string _phase) {
-        require(phaseDates[_phase] >= block.timestamp);
+        require(phaseDates[_phase] <= block.timestamp);
         _;
     }
-
 
     function writeURL(string _URL, string _phase) public isThereTime(_phase) {
       usersURLs[msg.sender][_phase]=_URL;
     }
 // Does it make sense to have this function?
 // If I want to retrieve my URLs before the deadline, this is what I'd use
-    function getOwnURL(string _phase) public view returns (string) {
+    function getOwnURL(string _phase) public returns (string) {
+      //emit DebugStr("phase");
+      //emit DebugStr(_phase);
+      //emit DebugStr("Stored URL");
+      //emit DebugStr(usersURLs[msg.sender][_phase]);
       return usersURLs[msg.sender][_phase];
     }
 
