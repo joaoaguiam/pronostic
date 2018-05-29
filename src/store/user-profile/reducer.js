@@ -3,52 +3,49 @@ import * as types from './actionTypes';
 import Immutable from 'seamless-immutable';
 
 const initialState = Immutable({
-    userProfile: {
-        ethAddress: '',//'0xee7e80908d1c146495acbd40a20f35d1a9571219',
-        ethNetwork: '',
-        name: '',
-        email: '',
-        avatar: '',
-    },
+    address: '',
+    balanceWei: '',
+    balanceEther: '',
+    network: '',
     isFetched: false,
+    showUserProfileDialog: false,
 });
 
 export default function reduce(state = initialState, action = {}) {
     switch (action.type) {
         case types.USER_FETCHED:
             return state.merge({
-                userProfile: action.userProfile,
-                isFetched: true
+                address: action.address,
+                balanceEther: action.balanceEther,
+                balanceWei: action.balanceWei,
+                network: action.network,
+                isFetched: true,
+            });
+        case types.SHOW_USER_DIALOG:
+            return state.merge({
+                showUserProfileDialog: action.showUserProfileDialog
             });
         default:
             return state;
     }
 }
 
-// selectors
-
 export function isFetched(state) {
     return state.userProfile.isFetched;
 }
 
-
-export function getEthAddress(state) {
-    const userProfile = state.userProfile.userProfile;
-    return userProfile.ethAddress;
+export function getAddress(state) {
+    return state.userProfile.address;
 }
-export function getEthNetwork(state) {
-    const userProfile = state.userProfile.userProfile;
-    return userProfile.ethNetwork;
+export function getBalanceWei(state) {
+    return state.userProfile.balanceWei;
 }
-export function getName(state) {
-    const userProfile = state.userProfile.userProfile;
-    return userProfile.name;
+export function getBalanceEther(state) {
+    return state.userProfile.balanceEther;
 }
-export function getEmail(state) {
-    const userProfile = state.userProfile.userProfile;
-    return userProfile.email;
+export function getNetwork(state) {
+    return state.userProfile.network;
 }
-export function getAvatar(state) {
-    const userProfile = state.userProfile.userProfile;
-    return userProfile.avatar;
+export function isShowUserProfileDialog(state) {
+    return state.userProfile.showUserProfileDialog;
 }
