@@ -52,7 +52,7 @@ contract("WCwagers", async function (accounts) {
 
             assert.equal(betValue * 1666666666666666, _wagerSize, "wager size not correct");
             assert.equal(contestName, _name, "name of contest is not correct");
-            assert.equal(1529010000, _date, "Date is not correct");
+            assert.equal(1528991100, _date, "Date is not correct");
         });
 
         it("should create a new contract and verify participants creation", async function () {

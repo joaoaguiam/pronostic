@@ -21,11 +21,11 @@ contract WCwagers is Ownable {
         wagerSize = _wagerSize * USDTOWEI;
         contestName = _name;
 
-        phaseDates["Group"] = 1529010000; // production value
-        phaseDates["Round16"] = 1530388800;
-        phaseDates["Quarters"] = 1530907200;
-        phaseDates["Semis"] = 1531267200;
-        phaseDates["Finals"] = 1531598400; // unix epoch dates for submission deadline
+        phaseDates["Group"] = 1528991100; // 06/14/2018 15:45:00 UTC - 15 minutes before start of first group match
+        phaseDates["Round16"] = 1530366300; // 06/30/2018 13:45:00 UTC - 15 minutes before start round of 16
+        phaseDates["Quarters"] = 1530884700; // Friday, July 6, 2018 1:45:00 PM - 15 minutes before quarters
+        phaseDates["Semis"] = 1531244700; // Tuesday, July 10, 2018 5:45:00 PM - 15 minutes before semis
+        phaseDates["Finals"] = 1531575900; // Saturday, July 14, 2018 1:45:00 PM - 15 minutes before 3rd place match
     }
 
     function toggleTimePast() public onlyOwner {
@@ -86,7 +86,7 @@ contract WCwagers is Ownable {
     }
 // Does it make sense to have this function?
 // If I want to retrieve my URLs before the deadline, this is what I'd use
-    function getOwnURL(string _phase) public returns (string) {
+    function getOwnURL(string _phase) public view returns (string) {
       //emit DebugStr("phase");
       //emit DebugStr(_phase);
       //emit DebugStr("Stored URL");
