@@ -84,7 +84,7 @@ class App extends Component {
         return (
             <MuiThemeProvider theme={theme}>
                 <div className="App">
-                    <Header />
+                    <Header routeParams={this.props.routeParams}/>
 
                     <CenterContainer>
                         {this.props.children}

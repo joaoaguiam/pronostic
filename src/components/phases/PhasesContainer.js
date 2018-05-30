@@ -6,6 +6,9 @@ import autoBind from 'react-autobind';
 import * as matchesSelectors from '../../store/matches/reducer';
 import * as matchesActions from '../../store/matches/actions';
 
+import * as wcwagersSelectors from '../../store/wc-wagers/reducer';
+import * as wcwagersActions from '../../store/wc-wagers/actions';
+
 // import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -30,6 +33,7 @@ class PhasesContainer extends Component {
     }
 
     componentDidMount() {
+        this.props.dispatch(wcwagersActions.setContractAddress(this.props.routeParams.address));
         this.props.dispatch(matchesActions.fetchMatches());
     }
 
@@ -76,7 +80,6 @@ class PhasesContainer extends Component {
     }
     render() {
         const { classes } = this.props;
-
         return (
             <div className={classes.root}>
                 <PhaseTabs />

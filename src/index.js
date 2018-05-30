@@ -35,7 +35,8 @@ ReactDOM.render((
         <Router history={history}>
             <Route path="/" component={App}>
                 <IndexRoute component={PhasesContainer} />
-                {/* <Route path="show-campaign/:address" component={ShowCampaign} />
+                <Route path="/contest/:address" component={PhasesContainer} />
+                {/* 
                 <Route path="create-campaign" component={CreateCampaign} />
                 <Route path="home" component={Home} /> */}
             </Route>

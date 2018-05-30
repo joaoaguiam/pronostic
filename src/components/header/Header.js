@@ -29,6 +29,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import '../../helpers/web3/Web3Helper';
 import UserProfileDialog from '../user-profile/UserProfileDialog';
+import ContestDetailsDialog from '../contest-details/ContestDetailsDialog';
 
 const styles = {
     root: {
@@ -56,15 +57,16 @@ class Header extends Component {
         };
     }
 
-
-
     componentDidMount() {
 
-        this.props.dispatch(wcwagersActions.fetchParticipants('0x1e0b778e6e3b2924a3715fc785d83ec8509c1009'))
     }
 
     handleUserProfileClick = () => {
         this.props.dispatch(userProfileActions.showUserProfileDialog())
+    };
+
+    handleContestDetailsClick = () => {
+        this.props.dispatch(wcwagersActions.showContestDetailsDialog())
     };
 
     render() {
@@ -74,10 +76,11 @@ class Header extends Component {
         return (
             <div className={classes.root}>
                 <UserProfileDialog />
+                <ContestDetailsDialog />
                 <AppBar position="static">
                     <Toolbar>
                         <Typography variant="title" color="inherit" className={classes.flex}>Pronostic - World Cup 2018 </Typography>
-                        {/* <Button onClick={this.handleClick} color="inherit">Register Participant</Button> */}
+                        <Button onClick={this.handleContestDetailsClick} color="inherit">Contest Details</Button>
                         <IconButton onClick={this.handleUserProfileClick} color="inherit">
                             <AccountCircle />
                         </IconButton>
@@ -111,7 +114,7 @@ class Header extends Component {
 
 function mapStateToProps(state) {
     return {
-        // event: showEventSelectors.getEvent(state),
+        wcwagersAddress: wcwagersSelectors.getAddress(state),
         // isFetched: showEventSelectors.getIsFetched(state)
     };
 }

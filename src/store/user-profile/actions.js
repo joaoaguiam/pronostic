@@ -27,43 +27,57 @@ import web3 from '../../helpers/web3/Web3Helper';
 //     };
 // }
 
+let _fetchEthereumAccount = async (dispatch, getState) => {
+    let currentAddres = userProfileSelectors.getAddress(getState());
+    let address = await web3.eth.getCoinbaseAsync();
 
+    if(currentAddres === address) {
+        return;
+    }
+
+    web3.eth.defaultAccount = address;
+
+    let balanceWei = (await web3.eth.getBalanceAsync(address)).toNumber();
+    let balanceEther = web3.fromWei(balanceWei, 'Ether');
+
+    let networkId = await web3.version.getNetworkAsync();
+    let network;
+    switch (networkId) {
+        case "1":
+            network = "Main";
+            break;
+        case "2":
+            network = "Morden";
+            break;
+        case "3":
+            network = "Ropsten";
+            break;
+        case "4":
+            network = "Rinkeby";
+            break;
+        case "42":
+            network = "Kovan";
+            break;
+        default:
+            network = "Unknown";
+    }
+
+    dispatch({ type: types.USER_FETCHED, address, balanceWei, balanceEther, network });
+}
 
 
 export function fetchEthereumAccount() {
     return async (dispatch, getState) => {
         try {
+            _fetchEthereumAccount(dispatch, getState);
+            let _dispatch = dispatch;
+            let _getState = getState;
 
-            let address = await web3.eth.getCoinbaseAsync();
+            web3.currentProvider.publicConfigStore.on('update', () => {
+                _fetchEthereumAccount(_dispatch, _getState);
+            });
 
-            web3.eth.defaultAccount = address;
-
-            let balanceWei = (await web3.eth.getBalanceAsync(address)).toNumber();
-            let balanceEther = web3.fromWei(balanceWei, 'Ether');
-
-            let networkId = await web3.version.getNetworkAsync();
-            let network;
-            switch (networkId) {
-                case "1":
-                    network = "Main";
-                    break;
-                case "2":
-                    network = "Morden";
-                    break;
-                case "3":
-                    network = "Ropsten";
-                    break;
-                case "4":
-                    network = "Rinkeby";
-                    break;
-                case "42":
-                    network = "Kovan";
-                    break;
-                default:
-                    network = "Unknown";
-            }
-
-            dispatch({ type: types.USER_FETCHED, address, balanceWei, balanceEther, network });
+            
         } catch (error) {
             console.error(error);
         }

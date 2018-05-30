@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import autoBind from 'react-autobind';
 
+
+import _ from 'lodash';
 // import './GroupPhaseContainer.scss';
 
 import * as userProfileSelectors from '../../store/user-profile/reducer';
@@ -30,6 +32,14 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Avatar from '@material-ui/core/Avatar';
+import ImageIcon from '@material-ui/icons/Image';
+
+let blockies = require("../../../lib/blockies/blockies");
+
 const styles = {
     root: {
         flexGrow: 1,
@@ -47,7 +57,7 @@ const styles = {
 };
 
 
-class Header extends Component {
+class UserProfileDialog extends Component {
     constructor(props) {
         super(props);
         autoBind(this);
@@ -59,6 +69,18 @@ class Header extends Component {
 
 
     componentDidMount() {
+        // debugger;
+        // blockies.render({
+        //     seed: this.props.address,
+        //     color: "#dfe",
+        //     bgcolor: "#a71",
+        //     size: 15,
+        //     scale: 3,
+        //     spotcolor: "#000"
+        // }
+        //     , this.canvas);
+    }
+    componentDidUpdate() {
 
     }
     // }
@@ -75,6 +97,7 @@ class Header extends Component {
     render() {
         const { classes } = this.props;
         console.log(this.props.showUserProfileDialog);
+        let isParticipant = _.indexOf(this.props.participants, this.props.address) !== -1;
         return (
             <Dialog
                 open={this.props.showUserProfileDialog}
@@ -92,11 +115,20 @@ class Header extends Component {
                     <br />
                     <Typography>Address</Typography>
                     <Typography color="textSecondary">{this.props.address}</Typography>
+                    {/* <List>
+                        <ListItem>
+                            <Avatar>
+                                {React.createElement("canvas", { ref: canvas => this.canvas = canvas })}
+                            </Avatar>
+                            <ListItemText primary="" secondary={this.props.address} />
+                        </ListItem>
+                    </List> */}
                     <br />
                     <Typography>Balance</Typography>
                     <Typography color="textSecondary">{this.props.balance}</Typography>
                     <br />
-                    <Button onClick={this.registerParticipant} variant="raised" color="primary">Register Participant</Button>
+                    {!isParticipant && <Button onClick={this.registerParticipant} variant="raised" color="primary">Register Participant</Button>}
+                    {isParticipant && <Typography color="primary">Already a participant in this contest</Typography>}
                 </DialogContent>
                 {/* <DialogActions>
                         <Button onClick={this.handleClose} variant="raised" color="primary" disabled>Purchase with USD</Button>
@@ -114,12 +146,13 @@ function mapStateToProps(state) {
         address: userProfileSelectors.getAddress(state),
         balance: userProfileSelectors.getBalanceEther(state),
         network: userProfileSelectors.getNetwork(state),
+        participants: wcwagersSelectors.getParticipants(state),
     };
 }
 
-Header.propTypes = {
+UserProfileDialog.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps)(withStyles(styles)(Header));
+export default connect(mapStateToProps)(withStyles(styles)(UserProfileDialog));
 
