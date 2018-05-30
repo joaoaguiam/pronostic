@@ -1,6 +1,8 @@
 pragma solidity ^0.4.22;
 
 import "../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
+//import "../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol";
+
 
 contract WCwagers is Ownable {
     uint constant internal USDTOWEI  = 1666666666666666;
@@ -8,10 +10,11 @@ contract WCwagers is Ownable {
     // enum Phase {Group, Round16, Quarters, Semis, Finals}
     //mapping (Phase => uint) phaseDates; //cannot use enum in mapping
     mapping (string => uint) phaseDates;
+    mapping (address => string) public participantsNames;
     string contestName;
     uint public wagerSize;
     uint public potSize;
-    address[] public participants;
+    address[] participants;
     // this maps the participants to a mapping of phase (string for phase enum) and URLs
     mapping (address => mapping(string => string)) private usersURLs;
 
@@ -41,23 +44,23 @@ contract WCwagers is Ownable {
       return wagerSize;
     }
 
-    function registerParticipant() public payable isAtLeastWagerSize() {
-        potSize += msg.value; // do I need this, or can I use this.balance to retrieve the pot size ?
+    function registerParticipant(string nickname) public payable isAtLeastWagerSize() {
         participants.push(msg.sender);
+        participantsNames[msg.sender] = nickname;
         emit ParticipantAdded(msg.sender);
     }
     event ParticipantAdded(address participant);
     event DebugStr(string value);
     event DebugInt(uint value);
 
-    function compareStrings (string a, string b) pure internal returns (bool){
+    /* function compareStrings (string a, string b) pure internal returns (bool){
       if(bytes(a).length != bytes(b).length) {
         return false;
         } else
         {
             return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
         }
-       }
+       } */
 
     modifier isAtLeastWagerSize() {
         require(msg.value >= wagerSize);
@@ -70,11 +73,11 @@ contract WCwagers is Ownable {
         require(phaseDates[_phase] >= block.timestamp);
         _;
     }
-    modifier isPhaseValid(string _phase) {
+    /* modifier isPhaseValid(string _phase) {
       //require(compareStrings(_phase,"Group"));
       require(compareStrings(_phase,"Group") || compareStrings(_phase,"Round16") || compareStrings(_phase,"Quarters") || compareStrings(_phase,"Semis") || compareStrings(_phase,"Finals"));
         _;
-    }
+    } */
 
     modifier isItTimeYet(string _phase) {
         require(phaseDates[_phase] <= block.timestamp);
@@ -102,11 +105,18 @@ contract WCwagers is Ownable {
       return participants;
     }
 
-    function payWinner(uint amount) public onlyOwner returns(bool) {
-         require(amount < address(this).balance);
-         owner.transfer(amount);
-         return true;
-         // how to account for gas ??
+    function getNickname(address _participant) public view returns (string) {
+      return participantsNames[_participant];
+    }
+
+    function payWinner(uint _amount, address _payee) public onlyOwner {
+      emit DebugStr("Amount in param");
+      emit DebugInt(_amount);
+      emit DebugStr("Amount in contract");
+      emit DebugInt(address(this).balance);
+  //    require(_amount <= address(this).balance); // probably already handled by intrinsic mechanism
+      require(bytes(participantsNames[_payee]).length > 0);
+      _payee.transfer(_amount);
 
      }
 

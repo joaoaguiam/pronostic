@@ -15,6 +15,15 @@ module.exports = {
             gasPrice: 10000000000,
             network_id: "*" // Match any network id
         },
+        joao: {
+            host: "localhost",
+            port: 8545,
+            //gas: 6721975,
+            //gasPrice: 20000000000,
+            gas: 20000000,   // <--- Twice as much
+            // gasPrice: 10000000000,
+            network_id: "*" // Match any network id
+        },
         ropsten: {
             provider: function() {
                 return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/EZyTApAawdQGy2Xnb6GS")

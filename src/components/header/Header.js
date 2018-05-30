@@ -5,6 +5,11 @@ import autoBind from 'react-autobind';
 
 // import './GroupPhaseContainer.scss';
 
+import * as userProfileSelectors from '../../store/user-profile/reducer';
+import * as userProfileActions from '../../store/user-profile/actions';
+
+import * as wcwagersSelectors from '../../store/wc-wagers/reducer';
+import * as wcwagersActions from '../../store/wc-wagers/actions';
 
 
 // import Dialog from '@material-ui/core/Dialog';
@@ -18,6 +23,12 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import IconButton from '@material-ui/core/IconButton';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+
+
+import '../../helpers/web3/Web3Helper';
+import UserProfileDialog from '../user-profile/UserProfileDialog';
 
 const styles = {
     root: {
@@ -49,14 +60,11 @@ class Header extends Component {
 
     componentDidMount() {
 
-
+        this.props.dispatch(wcwagersActions.fetchParticipants('0x1e0b778e6e3b2924a3715fc785d83ec8509c1009'))
     }
-    handleClick = event => {
-        this.setState({ anchorEl: event.currentTarget });
-    };
 
-    handleClose = () => {
-        this.setState({ anchorEl: null });
+    handleUserProfileClick = () => {
+        this.props.dispatch(userProfileActions.showUserProfileDialog())
     };
 
     render() {
@@ -65,9 +73,14 @@ class Header extends Component {
 
         return (
             <div className={classes.root}>
+                <UserProfileDialog />
                 <AppBar position="static">
                     <Toolbar>
                         <Typography variant="title" color="inherit" className={classes.flex}>Pronostic - World Cup 2018 </Typography>
+                        {/* <Button onClick={this.handleClick} color="inherit">Register Participant</Button> */}
+                        <IconButton onClick={this.handleUserProfileClick} color="inherit">
+                            <AccountCircle />
+                        </IconButton>
                         {/* <div>
                             <Button
                                 aria-owns={anchorEl ? 'simple-menu' : null}

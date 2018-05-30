@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
 
 // import Foundation from 'react-foundation';
 
@@ -26,6 +27,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import './App.scss'
 import Header from './components/header/Header';
 import CenterContainer from './components/layout/center-container/CenterContainer';
+import * as userProfileActions from './store/user-profile/actions';
 
 const theme = createMuiTheme({
     palette: {
@@ -72,6 +74,10 @@ const theme = createMuiTheme({
 
 class App extends Component {
 
+    componentDidMount() {
+        this.props.dispatch(userProfileActions.fetchEthereumAccount());
+    }
+
     render() {
 
 
@@ -91,4 +97,11 @@ class App extends Component {
     }
 }
 
-export default App
+function mapStateToProps(state) {
+    return {
+        //
+    };
+};
+
+
+export default connect(mapStateToProps)(App);

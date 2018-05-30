@@ -1,0 +1,3 @@
+export const PARTICIPANTS_FETCHED = 'wcwager.PARTICIPANTS_FETCHED';
+
+
