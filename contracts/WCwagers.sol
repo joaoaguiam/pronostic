@@ -107,10 +107,10 @@ contract WCwagers is Ownable {
     }
 
     function payWinner(uint _amount, address _payee) public onlyOwner {
-      emit DebugStr("Amount in param");
+      /* emit DebugStr("Amount in param");
       emit DebugInt(_amount);
       emit DebugStr("Amount in contract");
-      emit DebugInt(address(this).balance);
+      emit DebugInt(address(this).balance); */
   //    require(_amount <= address(this).balance); // probably already handled by intrinsic mechanism
       require(bytes(participantsNames[_payee]).length > 0);
       _payee.transfer(_amount);
