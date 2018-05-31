@@ -44,7 +44,7 @@ contract WCwagers is Ownable {
       return wagerSize;
     }
 
-    function registerParticipant(string nickname) public payable isAtLeastWagerSize() {
+    function registerParticipant(string nickname) public payable isValidRegistration(msg.sender) {
         participants.push(msg.sender);
         participantsNames[msg.sender] = nickname;
         emit ParticipantAdded(msg.sender);
@@ -62,8 +62,9 @@ contract WCwagers is Ownable {
         }
        } */
 
-    modifier isAtLeastWagerSize() {
+    modifier isValidRegistration(address _participant) {
         require(msg.value >= wagerSize);
+        require(bytes(participantsNames[_participant]).length == 0);
         _;
     }
 

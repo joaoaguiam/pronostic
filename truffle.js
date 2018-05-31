@@ -1,6 +1,7 @@
 var HDWalletProvider = require("truffle-hdwallet-provider");
 
 var mnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
+var mnemonic_rinkeby = "inflict base away pool initial else hedgehog gap senior derive square mosquito";
 
 console.log(mnemonic);
 
@@ -33,7 +34,7 @@ module.exports = {
         },
         rinkeby: {
             provider: function() {
-                return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/EZyTApAawdQGy2Xnb6GS")
+                return new HDWalletProvider(mnemonic_rinkeby, "https://rinkeby.infura.io/EZyTApAawdQGy2Xnb6GS")
             },
             gas: 4698712,
             network_id: 4

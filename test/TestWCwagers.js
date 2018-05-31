@@ -79,9 +79,15 @@ contract("WCwagers", async function (accounts) {
             assert.equal(participants.length, 2, "participant wasn't added");
 
         });
-        it("should abort with an error", async function() {
+        it("should abort with when registration fee is not enough", async function() {
           const contract = await WCwager.new(contestName, USDregistration, { from: owner });
           await tryCatch(contract.registerParticipant(user4snn, {from: user4, value: registrationFee - 100}), errTypes.revert);
+        });
+
+        it("should prevent one person from paying twice", async function() {
+          const contract = await WCwager.new(contestName, USDregistration, { from: owner });
+          await contract.registerParticipant(user2snn, {from: user2, value: registrationFee});
+          await tryCatch(contract.registerParticipant(user2snn, {from: user2, value: registrationFee}), errTypes.revert);
         });
     });
 
@@ -164,27 +170,41 @@ contract("WCwagers", async function (accounts) {
         let tx = await contract.payWinner(potSize, user3, {from: owner});
         let expectedBalance = Number(usrBalance) + Number(amount);
         console.log("The expected balance is : " + expectedBalance);
+
         let usrBalanceAfterPay = await web3.eth.getBalance(user3);
         console.log("user balance after pay: " + usrBalanceAfterPay);
-        assert.equal(expectedBalance, usrBalanceAfterPay, "Payment failed");
+        assert.equal(expectedBalance, Number(usrBalanceAfterPay), "Payment failed");
         });
-        it("should fail to pay an unregistered participant, fail to pay more, and allow paying the owner", async function () {
+
+        it("should fail to pay an unregistered participant and fail to pay more than available", async function () {
           const contract = await WCwager.new(contestName, USDregistration, { from: owner });
           await contract.registerParticipant(user2snn, {from: user2, value: registrationFee});
           await contract.registerParticipant(user3snn,{from: user3, value: registrationFee});
           await contract.registerParticipant(ownersnn,{from: owner, value: registrationFee});
           let amount = web3.eth.getBalance(contract.address);
           let potSize = Number(amount);
+          console.log("contract pot size amount : " + potSize);
           await tryCatch(contract.payWinner(potSize, user4, {from: owner}), errTypes.revert);
           await tryCatch(contract.payWinner(potSize + 200, user3, {from: owner}), errTypes.revert);
           let newAmount = web3.eth.getBalance(contract.address);
           let newPotSize = Number(amount);
           assert.equal(potSize,newPotSize,"Pot was depleted!")
+
+
+        });
+
+        it("should allow paying the owner", async function () {
+          const contract = await WCwager.new(contestName, USDregistration, { from: owner });
+          await contract.registerParticipant(user2snn, {from: user2, value: registrationFee});
+          await contract.registerParticipant(user3snn,{from: user3, value: registrationFee});
+          await contract.registerParticipant(ownersnn,{from: owner, value: registrationFee});
+          let amount = web3.eth.getBalance(contract.address);
+          let potSize = Number(amount);
+          console.log("contract pot size amount : " + potSize);
           let usrBalance = await web3.eth.getBalance(owner);
           let tx = await contract.payWinner(potSize, owner, {from: owner});
           let usrBalanceAfterPay = await web3.eth.getBalance(owner);
           assert.equal( ( (expectedBalance - usrBalanceAfterPay) > 0 ), true, "Payment failed");
-
 
         });
       });
