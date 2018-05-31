@@ -5,14 +5,10 @@ import "../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
 
 
 contract WCwagers is Ownable {
-    uint constant internal USDTOWEI  = 1666666666666666;
-    // 600$ is 1 ETH, but 1 ETH is on 18 digits so 1'000'000'000'000'000'000 / 600 = 166666666666666
-    // enum Phase {Group, Round16, Quarters, Semis, Finals}
-    //mapping (Phase => uint) phaseDates; //cannot use enum in mapping
     mapping (string => uint) phaseDates;
     mapping (address => string) public participantsNames;
     string contestName;
-    uint public wagerSize;
+    uint public registrationFee;
     uint public potSize;
     address[] participants;
     // this maps the participants to a mapping of phase (string for phase enum) and URLs
@@ -20,8 +16,8 @@ contract WCwagers is Ownable {
 
     // constuctor takes in input the name of the contest (e.g. NagraStar, soccerNuts) and wager size in USD.
     // The wager size will be converted to Ether using a fixed value
-    constructor(string _name, uint _wagerSize) public {
-        wagerSize = _wagerSize * USDTOWEI;
+    constructor(string _name, uint _registrationFee) public {
+        registrationFee = _registrationFee;
         contestName = _name;
 
         phaseDates["Group"] = 1528991100; // 06/14/2018 15:45:00 UTC - 15 minutes before start of first group match
@@ -36,13 +32,13 @@ contract WCwagers is Ownable {
       emit DebugStr("Group date put in the past");
     }
 
-    function getContestInfo() public view returns (uint _wagerSize, string _contestName, uint _firstPhaseDate) {
-        return (wagerSize, contestName, phaseDates["Group"]);
+    function getContestInfo() public view returns (uint _registrationFee, string _contestName, uint _firstPhaseDate) {
+        return (registrationFee, contestName, phaseDates["Group"]);
     }
 
-    function getWagerSize() public view returns (uint) {
-      return wagerSize;
-    }
+    /* function getregistrationFee() public view returns (uint) {
+      return registrationFee;
+    } */
 
     function registerParticipant(string nickname) public payable isValidRegistration(msg.sender) {
         participants.push(msg.sender);
@@ -63,7 +59,7 @@ contract WCwagers is Ownable {
        } */
 
     modifier isValidRegistration(address _participant) {
-        require(msg.value >= wagerSize);
+        require(msg.value >= registrationFee);
         require(bytes(participantsNames[_participant]).length == 0);
         _;
     }

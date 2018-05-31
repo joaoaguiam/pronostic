@@ -31,7 +31,7 @@ contract("WCwagers", async function (accounts) {
     let isEVMException = function (err) {
         return err.toString().includes('revert');
     }
-    const conversionRate = 1666666666666666;
+    const conversionRate = 1600000000000000;
     let owner = accounts[0];
     let ownersnn = "Bob";
     let user2 = accounts[1];
@@ -48,21 +48,21 @@ contract("WCwagers", async function (accounts) {
         it("should create a new contract and check initial values", async function () {
           //  let owner = accounts[0]
 
-            const contract = await WCwager.new(contestName, USDregistration, { from: owner });
+            const contract = await WCwager.new(contestName, registrationFee, { from: owner });
 
             let details = await contract.getContestInfo.call();
 
-            let _wagerSize = details[0];
+            let _registrationFee = details[0];
             let _name = details[1];
             let _date = details[2];
 
-            assert.equal(registrationFee , _wagerSize, "wager size not correct");
+            assert.equal(registrationFee , _registrationFee, "wager size not correct");
             assert.equal(contestName, _name, "name of contest is not correct");
             assert.equal(1528991100, _date, "Date is not correct");
         });
 
         it("should create a new contract and verify participants creation", async function () {
-            const contract = await WCwager.new(contestName, USDregistration, { from: owner });
+            const contract = await WCwager.new(contestName, registrationFee, { from: owner });
             let address = contract.address;
             await contract.registerParticipant(user2snn, {from: user2, value: registrationFee});
             await contract.registerParticipant(user3snn,{from: user3, value: (registrationFee + 1)});
@@ -80,12 +80,12 @@ contract("WCwagers", async function (accounts) {
 
         });
         it("should abort with when registration fee is not enough", async function() {
-          const contract = await WCwager.new(contestName, USDregistration, { from: owner });
+          const contract = await WCwager.new(contestName, registrationFee, { from: owner });
           await tryCatch(contract.registerParticipant(user4snn, {from: user4, value: registrationFee - 100}), errTypes.revert);
         });
 
         it("should prevent one person from paying twice", async function() {
-          const contract = await WCwager.new(contestName, USDregistration, { from: owner });
+          const contract = await WCwager.new(contestName, registrationFee, { from: owner });
           await contract.registerParticipant(user2snn, {from: user2, value: registrationFee});
           await tryCatch(contract.registerParticipant(user2snn, {from: user2, value: registrationFee}), errTypes.revert);
         });
@@ -100,7 +100,7 @@ contract("WCwagers", async function (accounts) {
       let finalsURL = "https://ipfs.finals";
       it("should enter a URL for each phase and retrieve them", async function () {
 
-        const contract = await WCwager.new(contestName, USDregistration, { from: owner });
+        const contract = await WCwager.new(contestName, registrationFee, { from: owner });
         await contract.registerParticipant(user2snn, {from: user2, value: registrationFee});
         await contract.writeURL(groupURL,"Group",{from: user2});
         await contract.toggleTimePast({from: owner});
@@ -128,7 +128,7 @@ contract("WCwagers", async function (accounts) {
 
       });
       it("should enter 2 URLs for a user and have another user retrieve them if deadline is past", async function () {
-        const contract = await WCwager.new(contestName, USDregistration, { from: owner });
+        const contract = await WCwager.new(contestName, registrationFee, { from: owner });
         await contract.registerParticipant(user2snn, {from: user2, value: registrationFee});
         await contract.registerParticipant(user3snn,{from: user3, value: (registrationFee + 1)});
 
@@ -156,7 +156,7 @@ contract("WCwagers", async function (accounts) {
       let semisURL = "https://ipfs.semis";
       let finalsURL = "https://ipfs.finals";
       it("should enter 4 participants and pay one of them", async function () {
-        const contract = await WCwager.new(contestName, USDregistration, { from: owner });
+        const contract = await WCwager.new(contestName, registrationFee, { from: owner });
         await contract.registerParticipant(user2snn, {from: user2, value: registrationFee});
         await contract.registerParticipant(user3snn,{from: user3, value: registrationFee});
         await contract.registerParticipant(user4snn, {from: user4, value: registrationFee});
@@ -177,7 +177,7 @@ contract("WCwagers", async function (accounts) {
         });
 
         it("should fail to pay an unregistered participant and fail to pay more than available", async function () {
-          const contract = await WCwager.new(contestName, USDregistration, { from: owner });
+          const contract = await WCwager.new(contestName, registrationFee, { from: owner });
           await contract.registerParticipant(user2snn, {from: user2, value: registrationFee});
           await contract.registerParticipant(user3snn,{from: user3, value: registrationFee});
           await contract.registerParticipant(ownersnn,{from: owner, value: registrationFee});
@@ -194,7 +194,7 @@ contract("WCwagers", async function (accounts) {
         });
 
         it("should allow paying the owner", async function () {
-          const contract = await WCwager.new(contestName, USDregistration, { from: owner });
+          const contract = await WCwager.new(contestName, registrationFee, { from: owner });
           await contract.registerParticipant(user2snn, {from: user2, value: registrationFee});
           await contract.registerParticipant(user3snn,{from: user3, value: registrationFee});
           await contract.registerParticipant(ownersnn,{from: owner, value: registrationFee});
@@ -203,7 +203,10 @@ contract("WCwagers", async function (accounts) {
           console.log("contract pot size amount : " + potSize);
           let usrBalance = await web3.eth.getBalance(owner);
           let tx = await contract.payWinner(potSize, owner, {from: owner});
+          getEvent(tx.logs, "DebugInt")
+          getEvent(tx.logs, "DebugStr")
           let usrBalanceAfterPay = await web3.eth.getBalance(owner);
+          let expectedBalance = Number(usrBalance) + Number(amount);
           assert.equal( ( (expectedBalance - usrBalanceAfterPay) > 0 ), true, "Payment failed");
 
         });
