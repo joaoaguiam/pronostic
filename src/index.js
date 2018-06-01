@@ -13,6 +13,8 @@ import App from './App'
 
 import * as reducers from './store/reducers';
 import PhasesContainer from './components/phases/PhasesContainer';
+import Home from './components/Home';
+import ContestDetails from './components/contest-details/ContestDetails';
 
 
 const initStore = (reducer, initialState) => {
@@ -30,12 +32,22 @@ const store = initStore();
 
 const history = syncHistoryWithStore(browserHistory, store)
 
+const test = function (component) {
+    return (
+        <div>
+            <p>ola</p>
+            {component}
+        </div>
+    )
+}
+
 ReactDOM.render((
     <Provider store={store}>
         <Router history={history}>
             <Route path="/" component={App}>
-                <IndexRoute component={PhasesContainer} />
-                <Route path="/contest/:address" component={PhasesContainer} />
+                <IndexRoute component={Home} />
+                <Route path="/contest/:address" component={ContestDetails} />
+                <Route path="/contest/:address/bet" component={PhasesContainer} />
                 {/* 
                 <Route path="create-campaign" component={CreateCampaign} />
                 <Route path="home" component={Home} /> */}

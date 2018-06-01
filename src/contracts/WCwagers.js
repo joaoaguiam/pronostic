@@ -1,4 +1,4 @@
-import web3 from '../helpers/web3/Web3Helper';
+import web3, { getTransactionReceiptMined } from '../helpers/web3/Web3Helper';
 import Promise from "bluebird";
 
 import WCwagerArtifact from '../../build/contracts/WCwagers.json';
@@ -18,7 +18,7 @@ export async function getContestInfo(wcwagersAddress) {
             let contract = WCwagers(wcwagersAddress);
             let details = await contract.getContestInfoAsync();
 
-            contract.getContestInfo((err, res) => { console.log(res);});
+            contract.getContestInfo((err, res) => { console.log(res); });
             console.log(details);
             let participationFeeWei = details[0].toNumber();
             let participationFeeEther = web3.fromWei(participationFeeWei, 'ether');
@@ -44,9 +44,15 @@ export async function getParticipants(wcwagersAddress) {
     return new Promise(async (resolve, reject) => {
         try {
             let contract = WCwagers(wcwagersAddress);
-            let participants = await contract.getParticipantsAsync();
+            let participantsAddresses = await contract.getParticipantsAsync();
+            let participants = [];
+            for(let i = 0; i < participantsAddresses.length; i++) {
+                let participant = participantsAddresses[i];
+                let nickname = await contract.getNicknameAsync(participant);
+                participants.push({address: participant, nickname});
+            }
             console.log(participants);
-            resolve(participants);
+            resolve({participants});
         } catch (e) {
             console.log(e);
             reject(e);
@@ -54,13 +60,15 @@ export async function getParticipants(wcwagersAddress) {
     });
 }
 
-export async function registerParticipant(wcwagersAddress,contestDetails) {
+export async function registerParticipant(wcwagersAddress, contestDetails, nickname) {
     return new Promise(async (resolve, reject) => {
         try {
             let contract = WCwagers(wcwagersAddress);
-            let tx = await contract.registerParticipantAsync({value: web3.toWei(contestDetails.participationFeeEther, 'ether')});
+            let tx = await contract.registerParticipantAsync(nickname, { value: web3.toWei(contestDetails.participationFeeEther, 'ether') });
             console.log(tx);
-            resolve(tx);
+            let result = await getTransactionReceiptMined(tx);
+            console.log(result);
+            resolve(result);
         } catch (e) {
             console.log(e);
             reject(e);
@@ -68,3 +76,19 @@ export async function registerParticipant(wcwagersAddress,contestDetails) {
     });
 }
 
+export async function writeUrl(wcwagersAddress, url, phase) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let contract = WCwagers(wcwagersAddress);
+
+            let tx = await contract.writeURLAsync(url, phase);
+            console.log(tx);
+            let result = await getTransactionReceiptMined(tx);
+            console.log(result);
+            resolve(result);
+        } catch (e) {
+            console.log(e);
+            reject(e);
+        }
+    });
+}

@@ -2,11 +2,13 @@ import _ from 'lodash';
 
 import * as types from './actionTypes';
 import * as matchesSelectors from './reducer';
+import * as wcwagersSelectors from '../wc-wagers/reducer';
 
 import update from 'immutability-helper';
 
 import Web3 from 'web3';
 import { uploadObjectIpfs } from '../../helpers/ipfs/ipfs';
+import { writeUrl } from '../../contracts/WCwagers';
 
 
 const DATA_SOURCE = "https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json";
@@ -29,9 +31,9 @@ export function fetchMatches() {
             }
             else {
                 let bets = [];
-                for (let i = 0; i < 64; i++)  {
+                for (let i = 0; i < 64; i++) {
                     bets.push({
-                        match: i+1,
+                        match: i + 1,
                         homeBet: undefined,
                         awayBet: undefined,
                         winnerBet: undefined,
@@ -110,14 +112,36 @@ export function submitBets(phase, subPhase, bets) {
             console.log(res);
             let url = res.url;
             let ipfsLinks = _.cloneDeep(matchesSelectors.getIpfsLinks(getState()));
-            if(phase === 'groups') {
+            let contractPhase = '';
+            if (phase === 'groups') {
                 ipfsLinks.groups = url;
+                contractPhase = 'Group';
             }
             else {
                 let subPhaseId = subPhase.replace('_', '');
                 ipfsLinks[subPhaseId] = url;
+                switch (subPhaseId) {
+                    case 'round16':
+                        contractPhase = 'Round16';
+                        break;
+                    case 'round8':
+                        contractPhase = 'Quarters';
+                        break;
+                    case 'round4':
+                        contractPhase = 'Semis';
+                        break;
+                    case 'round2':
+                        contractPhase = 'Finals';
+                        break;
+                    default:
+                        break;
+                }
+
             }
 
+
+            let address = wcwagersSelectors.getAddress(getState());
+            let txResult = await writeUrl(address, url, contractPhase);
             dispatch({ type: types.BETS_SUBMITTED, ipfsLinks });
         } catch (error) {
             console.error(error);

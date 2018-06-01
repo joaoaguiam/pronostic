@@ -116,7 +116,7 @@ class GroupPhaseContainer extends Component {
                                 <TableCell numeric>Game #</TableCell>
                                 <TableCell>Date</TableCell>
                                 <TableCell>Home Team</TableCell>
-                                {isKnockout && <TableCell>Predicted winner</TableCell>}
+                                {isKnockout && <TableCell>Predicted Winner</TableCell>}
                                 <TableCell>Away Team</TableCell>
                                 <TableCell>Prediction</TableCell>
                                 <TableCell>Result</TableCell>

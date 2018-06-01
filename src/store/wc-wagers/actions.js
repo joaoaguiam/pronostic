@@ -10,12 +10,12 @@ export function fetchParticipants(wcwagersAddress) {
         try {
 
             let details = await WCwagers.getContestInfo(wcwagersAddress);
-            
-            dispatch({ type: types.CONTEST_DETAILS, details});
+
+            dispatch({ type: types.CONTEST_DETAILS, details });
 
             let participants = await WCwagers.getParticipants(wcwagersAddress);
-
-            dispatch({ type: types.PARTICIPANTS_FETCHED, participants});
+            
+            dispatch({ type: types.PARTICIPANTS_FETCHED, participants });
 
         } catch (error) {
             console.error(error);
@@ -25,12 +25,12 @@ export function fetchParticipants(wcwagersAddress) {
 
 
 
-export function registerParticipant() {
+export function registerParticipant(nickname) {
     return async (dispatch, getState) => {
         try {
             let contestDetails = wcwagerSelectors.getContestDetails(getState());
             let wcwagersAddress = wcwagerSelectors.getAddress(getState());
-            await WCwagers.registerParticipant(wcwagersAddress, contestDetails);
+            await WCwagers.registerParticipant(wcwagersAddress, contestDetails, nickname);
 
             dispatch(fetchParticipants(contestDetails.address));
         } catch (error) {
@@ -44,7 +44,7 @@ export function registerParticipant() {
 export function setContractAddress(wcwagersAddress) {
     return async (dispatch, getState) => {
         try {
-            dispatch({ type: types.SET_CONTRACT_ADDRESS, address: wcwagersAddress});
+            dispatch({ type: types.SET_CONTRACT_ADDRESS, address: wcwagersAddress });
             dispatch(fetchParticipants(wcwagersAddress));
         } catch (error) {
             console.error(error);

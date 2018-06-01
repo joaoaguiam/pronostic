@@ -20,7 +20,7 @@ export default function reduce(state = initialState, action = {}) {
     switch (action.type) {
         case types.PARTICIPANTS_FETCHED:
             return state.merge({
-                participants: action.participants,
+                participants: action.participants.participants,
                 isFetched: true,
             });
         case types.SET_CONTRACT_ADDRESS:

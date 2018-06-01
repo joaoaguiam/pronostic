@@ -17,6 +17,7 @@ import PhaseTabs from './PhaseTabs';
 import GroupPhaseContainer from './GroupPhaseContainer';
 import Typography from '@material-ui/core/Typography';
 import KnockoutPhaseContainer from './KnockoutPhaseContainer';
+import CenterContainerLarge from '../layout/center-container/CenterContainerLarge';
 
 const styles = {
     root: {
@@ -39,7 +40,7 @@ class PhasesContainer extends Component {
 
     renderSelectedPhase() {
         switch (this.props.selectedPhase) {
-            case 0: { 
+            case 0: {
                 return (
                     <GroupPhaseContainer />
                 )
@@ -81,10 +82,12 @@ class PhasesContainer extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.root}>
-                <PhaseTabs />
-                {this.renderSelectedPhase()}
-            </div>
+            <CenterContainerLarge>
+                <div className={classes.root}>
+                    <PhaseTabs />
+                    {this.renderSelectedPhase()}
+                </div>
+            </CenterContainerLarge>
         )
     }
 }

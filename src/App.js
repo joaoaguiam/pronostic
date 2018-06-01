@@ -26,8 +26,17 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import './App.scss'
 import Header from './components/header/Header';
-import CenterContainer from './components/layout/center-container/CenterContainer';
 import * as userProfileActions from './store/user-profile/actions';
+
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import RestoreIcon from '@material-ui/icons/Restore';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import Typography from '@material-ui/core/Typography';
 
 const theme = createMuiTheme({
     palette: {
@@ -71,6 +80,15 @@ const theme = createMuiTheme({
     // },
 });
 
+const styles = theme => ({
+    bottomBar: {
+        position: 'absolute',
+        bottom: 0,
+        left:0,
+        right: 0,
+    }
+
+});
 
 class App extends Component {
 
@@ -84,12 +102,21 @@ class App extends Component {
         return (
             <MuiThemeProvider theme={theme}>
                 <div className="App">
-                    <Header routeParams={this.props.routeParams}/>
+                    <Header routeParams={this.props.routeParams} />
 
-                    <CenterContainer>
-                        {this.props.children}
-                    </CenterContainer>
+                    {this.props.children}
+                    <BottomNavigation
+                        value={0}
+                        // onChange={this.handleChange}
+                        showLabels
+                        className={this.props.classes.bottomBar}
+                    >
+                                        <Typography>Participation Fee</Typography>
 
+                        {/* <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
+                        <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
+                        <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} /> */}
+                    </BottomNavigation>
                 </div>
             </MuiThemeProvider>
 
@@ -104,4 +131,9 @@ function mapStateToProps(state) {
 };
 
 
-export default connect(mapStateToProps)(App);
+App.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default connect(mapStateToProps)(withStyles(styles)(App));
+

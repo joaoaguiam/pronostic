@@ -91,13 +91,10 @@ class UserProfileDialog extends Component {
     handleDialogClose = () => {
         this.props.dispatch(userProfileActions.hideUserProfileDialog())
     };
-    registerParticipant = () => {
-        this.props.dispatch(wcwagersActions.registerParticipant())
-    };
+    
     render() {
         const { classes } = this.props;
         console.log(this.props.showUserProfileDialog);
-        let isParticipant = _.indexOf(this.props.participants, this.props.address) !== -1;
         return (
             <Dialog
                 open={this.props.showUserProfileDialog}
@@ -126,9 +123,7 @@ class UserProfileDialog extends Component {
                     <br />
                     <Typography>Balance</Typography>
                     <Typography color="textSecondary">{this.props.balance}</Typography>
-                    <br />
-                    {!isParticipant && <Button onClick={this.registerParticipant} variant="raised" color="primary">Register Participant</Button>}
-                    {isParticipant && <Typography color="primary">Already a participant in this contest</Typography>}
+                    
                 </DialogContent>
                 {/* <DialogActions>
                         <Button onClick={this.handleClose} variant="raised" color="primary" disabled>Purchase with USD</Button>
@@ -146,7 +141,6 @@ function mapStateToProps(state) {
         address: userProfileSelectors.getAddress(state),
         balance: userProfileSelectors.getBalanceEther(state),
         network: userProfileSelectors.getNetwork(state),
-        participants: wcwagersSelectors.getParticipants(state),
     };
 }
 

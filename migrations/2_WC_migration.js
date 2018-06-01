@@ -6,7 +6,7 @@ module.exports = async function(deployer, network, accounts) {
     //console.log(accounts);
     let contestOwner = accounts[0];
     await Promise.all([
-        deployer.deploy(WCwagers, "WC contest", 20, { from: contestOwner })
+        deployer.deploy(WCwagers, "World Cup 2018 Contest", 30000000000000000, { from: contestOwner })
     ]);
     instances = await Promise.all([
         WCwagers.deployed()

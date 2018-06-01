@@ -3,11 +3,11 @@ import { promisifyAll } from "bluebird";
 
 let web3;
 // Instantiate new web3 global instance
-if (typeof window !== 'undefined' && // Check we're on the client-side
-    (typeof window.web3 === 'undefined' ||
-        typeof window.web3.currentProvider === 'undefined')) {
-    window.web3 = new Web3('ws://127.0.0.1:8546');
-}
+// if (typeof window !== 'undefined' && // Check we're on the client-side
+//     (typeof window.web3 === 'undefined' ||
+//         typeof window.web3.currentProvider === 'undefined')) {
+//     window.web3 = new Web3('ws://127.0.0.1:8546');
+// }
 
 // Instantiate new web3 local instance
 if (typeof window !== 'undefined' && // Check we're on the client-side
@@ -24,37 +24,39 @@ export function getCurrentProvider() {
 // Export web3 object instance
 const web3ForExport = web3; // To avoid error from exporting non-read-only variable
 
-const promisify = (inner) =>
-    new Promise((resolve, reject) =>
-        inner((err, res) => {
-            if (err) { reject(err) }
-
-            resolve(res);
-        })
-    );
-
-// simple proxy to promisify the web3 api. It doesn't deal with edge cases like web3.eth.filter and contracts.
-const proxiedWeb3Handler = {
-    // override getter                               
-    get: (target, name) => {
-        const inner = target[name];
-        if (inner instanceof Function) {
-            // Return a function with the callback already set.  
-            return (...args) => promisify(cb => inner(...args, cb));
-        } else if (typeof inner === 'object') {
-            // wrap inner web3 stuff                             
-            return new Proxy(inner, proxiedWeb3Handler);
-        } else {
-            return inner;
-        }
-    },
-};
-const proxiedWeb3 = new Proxy(web3, proxiedWeb3Handler);
-
 web3ForExport.eth = promisifyAll(web3ForExport.eth);
 web3ForExport.version = promisifyAll(web3ForExport.version);
 web3ForExport.net = promisifyAll(web3ForExport.net);
 // export const web3 = uWeb3;
 
 // export const web3Async = proxiedWeb3;
+
+
 export default web3ForExport;
+
+export const getTransactionReceiptMined = (txHash, interval) => {
+    const transactionReceiptAsync = function(resolve, reject) {
+        web3.eth.getTransactionReceipt(txHash, (error, receipt) => {
+            if (error) {
+                reject(error);
+            } else if (receipt == null) {
+                console.log('waiting for tx '+txHash+' to be mined...');
+                setTimeout(
+                    () => transactionReceiptAsync(resolve, reject),
+                    interval ? interval : 1000);
+            } else {
+                resolve(receipt);
+            }
+        });
+    };
+
+    if (Array.isArray(txHash)) {
+        return Promise.all(txHash.map(
+            oneTxHash => self.getTransactionReceiptMined(oneTxHash, interval)));
+    } else if (typeof txHash === "string") {
+        return new Promise(transactionReceiptAsync);
+    } else {
+        throw new Error("Invalid Type: " + txHash);
+    }
+};
+

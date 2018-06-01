@@ -19,9 +19,6 @@ import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -29,7 +26,10 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import '../../helpers/web3/Web3Helper';
 import UserProfileDialog from '../user-profile/UserProfileDialog';
-import ContestDetailsDialog from '../contest-details/ContestDetailsDialog';
+
+import { browserHistory } from 'react-router'
+
+// import ContestDetailsDialog from '../contest-details/ContestDetailsDialog';
 
 const styles = {
     root: {
@@ -37,6 +37,10 @@ const styles = {
     },
     flex: {
         flex: 1,
+        cursor: 'pointer',
+        // ':hover': {
+        //     color:
+        // }
     },
     menuButton: {
         marginLeft: -12,
@@ -69,6 +73,15 @@ class Header extends Component {
         this.props.dispatch(wcwagersActions.showContestDetailsDialog())
     };
 
+    goToContestHome() {
+        let address = this.props.wcwagersAddress;
+        if(address !== '') {
+            browserHistory.push('/contest/'+address);
+        }
+        else {
+            browserHistory.push('/');
+        }
+    }
     render() {
         const { classes } = this.props;
         const { anchorEl } = this.state;
@@ -76,11 +89,11 @@ class Header extends Component {
         return (
             <div className={classes.root}>
                 <UserProfileDialog />
-                <ContestDetailsDialog />
+                {/* <ContestDetailsDialog /> */}
                 <AppBar position="static">
                     <Toolbar>
-                        <Typography variant="title" color="inherit" className={classes.flex}>Pronostic - World Cup 2018 </Typography>
-                        <Button onClick={this.handleContestDetailsClick} color="inherit">Contest Details</Button>
+                        <Typography variant="title" color="inherit" className={classes.flex} onClick={this.goToContestHome}>Pronostic - World Cup 2018</Typography>
+                        {/* <Button onClick={this.handleContestDetailsClick} color="inherit">Contest Details</Button> */}
                         <IconButton onClick={this.handleUserProfileClick} color="inherit">
                             <AccountCircle />
                         </IconButton>
