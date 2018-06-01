@@ -51,7 +51,7 @@ contract("WCwagers", async function (accounts) {
             const contract = await WCwager.new(contestName, registrationFee, { from: owner });
 
             let details = await contract.getContestInfo.call();
-
+            let GroupDate = await contract.getPhaseDate.call("Group");
             let _registrationFee = details[0];
             let _name = details[1];
             let _date = details[2];
@@ -59,6 +59,7 @@ contract("WCwagers", async function (accounts) {
             assert.equal(registrationFee , _registrationFee, "wager size not correct");
             assert.equal(contestName, _name, "name of contest is not correct");
             assert.equal(1528991100, _date, "Date is not correct");
+            assert.equal(1528991100, GroupDate, "Date is not correct");
         });
 
         it("should create a new contract and verify participants creation", async function () {

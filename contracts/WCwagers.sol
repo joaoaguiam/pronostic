@@ -36,6 +36,10 @@ contract WCwagers is Ownable {
         return (registrationFee, contestName, phaseDates["Group"]);
     }
 
+    function getPhaseDate(string _phase) public view returns (uint) {
+      return phaseDates[_phase];
+    }
+
     /* function getregistrationFee() public view returns (uint) {
       return registrationFee;
     } */
