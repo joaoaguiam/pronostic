@@ -116,10 +116,10 @@ class GroupPhaseContainer extends Component {
                                 <TableCell numeric>Game #</TableCell>
                                 <TableCell>Date</TableCell>
                                 <TableCell>Home Team</TableCell>
-                                {isKnockout && <TableCell>Winner Bet</TableCell>}
+                                {isKnockout && <TableCell>Predicted winner</TableCell>}
                                 <TableCell>Away Team</TableCell>
-                                <TableCell>Score Bet</TableCell>
-                                <TableCell>Final Score</TableCell>
+                                <TableCell>Prediction</TableCell>
+                                <TableCell>Result</TableCell>
                                 <TableCell>Points</TableCell>
 
                             </TableRow>
@@ -205,7 +205,7 @@ class GroupPhaseContainer extends Component {
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            {isFinished && 
+                                            {isFinished &&
                                                 <div>
                                                     {isWinnerHome && <StarsIcon className={classes.winnerIcon} color="primary" />}
                                                     {homeResult} - {awayResult}
@@ -240,4 +240,3 @@ GroupPhaseContainer.propTypes = {
 };
 
 export default connect(mapStateToProps)(withStyles(styles)(GroupPhaseContainer));
-
