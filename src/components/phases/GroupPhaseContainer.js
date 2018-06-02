@@ -7,6 +7,9 @@ import autoBind from 'react-autobind';
 import * as matchesSelectors from '../../store/matches/reducer';
 import * as matchesActions from '../../store/matches/actions';
 
+import * as wcwagersSelectors from '../../store/wc-wagers/reducer';
+import * as wcwagersActions from '../../store/wc-wagers/actions';
+
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
@@ -19,6 +22,7 @@ import 'flag-icon-css/css/flag-icon.css';
 import _ from 'lodash';
 import PhaseMatches from '../phases/PhaseMatches';
 
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
     root: {
@@ -33,6 +37,17 @@ const styles = theme => ({
     },
     group: {
         'padding-top': "2em",
+    },
+    wrapper: {
+        margin: theme.spacing.unit,
+        position: 'relative',
+    },
+    buttonProgress: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12,
     },
 });
 
@@ -67,7 +82,7 @@ class GroupPhaseContainer extends Component {
         }
         let groupKeys = _.keys(this.props.matches.groups);
         const { classes } = this.props;
-
+        let isMining = this.props.betsTxStatus === wcwagersSelectors.TX_STATUS.PENDING;
         return (
             <div className={classes.root}>
                 <Typography variant="display2" gutterBottom>Groups Phase</Typography>
@@ -79,24 +94,24 @@ class GroupPhaseContainer extends Component {
                             spacing={16}
                             justify={"flex-end"}
                         >
-                            <Grid item>
-                                <Button variant="raised" color="primary" onClick={this.handleSubmit} >Submit to Blockchain</Button>
+                            <Grid item className={classes.wrapper}>
+                                <Button variant="raised" color="primary" onClick={this.handleSubmit} disabled={isMining} >Submit to Blockchain</Button>
+                                {isMining && <CircularProgress size={24} className={classes.buttonProgress} />}
                             </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
-            </div >
-
+            </div>
         )
     }
 }
-
 
 function mapStateToProps(state) {
     return {
         matches: matchesSelectors.getMatches(state),
         bets: matchesSelectors.getBets(state),
-        isFetched: matchesSelectors.isFetched(state)
+        isFetched: matchesSelectors.isFetched(state),
+        betsTxStatus: wcwagersSelectors.getBetsTxStatus(state),
     };
 }
 

@@ -9,6 +9,9 @@ import * as userProfileActions from '../../store/user-profile/actions';
 import * as wcwagersSelectors from '../../store/wc-wagers/reducer';
 import * as wcwagersActions from '../../store/wc-wagers/actions';
 
+import * as notificationsSelectors from '../../store/notifications/reducer';
+import * as notificationsActions from '../../store/notifications/actions';
+
 // import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -37,6 +40,7 @@ import ImageIcon from '@material-ui/icons/Image';
 import Badge from '@material-ui/core/Badge';
 import TextField from '@material-ui/core/TextField';
 import CenterContainerSmall from '../layout/center-container/CenterContainerSmall';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { browserHistory } from 'react-router'
 
@@ -55,7 +59,21 @@ const styles = theme => ({
         height: '100%',
     },
     registerBtn: {
-        marginLeft: '1em',
+        margin: '1.5em',
+    },
+    parentFlex: {
+        display: 'flex',
+    },
+    wrapper: {
+        margin: theme.spacing.unit,
+        position: 'relative',
+    },
+    buttonProgress: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12,
     },
 
 });
@@ -75,6 +93,7 @@ class ContestDetails extends Component {
     componentDidMount() {
         this.props.dispatch(wcwagersActions.setContractAddress(this.props.routeParams.address));
         // this.props.dispatch(matchesActions.fetchMatches());
+        // this.props.dispatch(notificationsActions.addNotification(this.props.routeParams.address));
     }
     // }
     // handleClick = event => {
@@ -114,7 +133,7 @@ class ContestDetails extends Component {
         );
     }
     openBets() {
-        browserHistory.push('/contest/'+this.props.address+'/bet');
+        browserHistory.push('/contest/' + this.props.address + '/bet');
     }
     render() {
         const { classes } = this.props;
@@ -123,8 +142,11 @@ class ContestDetails extends Component {
         let isParticipant = _.findIndex(this.props.participants, function (participant) { return participant.address == userAddress; }) !== -1;
 
         let hasParticipants = this.props.participants.length > 0;
+        let isMining = this.props.participantRegistrationTxStatus === wcwagersSelectors.TX_STATUS.PENDING;
+        let isRegisterDisabled = this.state.nickname.trim() === '' || isMining;
 
-        let isRegisterDisabled = this.state.nickname.trim() === '';
+        
+
         // debugger;
         return (
             <CenterContainerSmall>
@@ -152,7 +174,7 @@ class ContestDetails extends Component {
                     <Typography>Pot Size</Typography>
                     <Typography color="textSecondary">{this.props.contestDetails.contestBalanceEther}</Typography>
                     {!isParticipant &&
-                        <div>
+                        <div className={classes.parentFlex}>
                             <TextField
                                 required
                                 id="nickname"
@@ -163,8 +185,10 @@ class ContestDetails extends Component {
                                 onChange={this.handleNicknameChange}
 
                             />
-
-                            <Button onClick={this.registerParticipant} className={classes.registerBtn} variant="raised" color="primary" disabled={isRegisterDisabled}>Register</Button>
+                            <div className={classes.wrapper}>
+                                <Button onClick={this.registerParticipant} className={classes.registerBtn} variant="raised" color="primary" disabled={isRegisterDisabled}>Register</Button>
+                                {isMining && <CircularProgress size={24} className={classes.buttonProgress} />}
+                            </div>
                         </div>
                     }
 
@@ -172,7 +196,7 @@ class ContestDetails extends Component {
                         <div>
                             <br />
                             <Typography color="primary">Already a participant in this contest</Typography>
-                            <br/>
+                            <br />
                             <Button variant="raised" onClick={this.openBets} className={classes.registerBtn} color="primary">Start Participation</Button>
                         </div>
                     }
@@ -198,6 +222,7 @@ function mapStateToProps(state) {
         address: wcwagersSelectors.getAddress(state),
         contestDetails: wcwagersSelectors.getContestDetails(state),
         participants: wcwagersSelectors.getParticipants(state),
+        participantRegistrationTxStatus: wcwagersSelectors.getParticipantRegistrationTxStatus(state),
     };
 }
 

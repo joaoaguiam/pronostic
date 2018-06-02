@@ -3,21 +3,24 @@ import * as types from './actionTypes';
 import Immutable from 'seamless-immutable';
 
 const initialState = Immutable({
-    queue: []
+    notif: undefined
 });
 
 export default function reduce(state = initialState, action = {}) {
     switch (action.type) {
-        case types.ADD_NOTIF:
+        case types.SHOW_NOTIF:
+            return state.merge({
+                notif: action.notif,
+            });
         case types.REMOVE_NOTIF:
             return state.merge({
-                queue: action.queue,
+                notif: undefined,
             });
         default:
             return state;
     }
 }
 
-export function getQueue(state) {
-    return state.notifications.queue;
+export function getNotif(state) {
+    return state.notifications.notif;
 }

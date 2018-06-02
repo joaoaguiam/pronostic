@@ -6,12 +6,22 @@ import * as notificationsSelectors from './reducer';
 export function addNotification(message) {
     return async (dispatch, getState) => {
         try {
-            let queue = _.clone(notificationsSelectors.getQueue(getState()));
-            queue.push({
+            let notif = {
                 message,
                 key: new Date().getTime(),
-            });
-            dispatch({ type: types.ADD_NOTIF, queue });
+            };
+            dispatch({ type: types.REMOVE_NOTIF });
+            dispatch({ type: types.SHOW_NOTIF, notif });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}
+
+export function removeNotification() {
+    return async (dispatch, getState) => {
+        try {
+            dispatch({ type: types.REMOVE_NOTIF });
         } catch (error) {
             console.error(error);
         }

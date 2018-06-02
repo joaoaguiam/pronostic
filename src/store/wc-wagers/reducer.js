@@ -2,6 +2,13 @@ import _ from 'lodash';
 import * as types from './actionTypes';
 import Immutable from 'seamless-immutable';
 
+export const TX_STATUS = {
+    NONE: 0,
+    PENDING: 1,
+    MINED: 2,
+}
+
+
 const initialState = Immutable({
     participants: [],
     address: '0x1e0b778e6e3b2924a3715fc785d83ec8509c1009',
@@ -14,6 +21,8 @@ const initialState = Immutable({
         contestBalanceEther: 0
     },
     isFetched: false,
+    participantRegistrationTxStatus: TX_STATUS.NONE,
+    betsTxStatus: TX_STATUS.NONE,
 });
 
 export default function reduce(state = initialState, action = {}) {
@@ -34,6 +43,14 @@ export default function reduce(state = initialState, action = {}) {
         case types.CONTEST_DETAILS:
             return state.merge({
                 contestDetails: action.details,
+            });
+        case types.PARTICIPANT_REGISTRATION_TX_STATUS:
+            return state.merge({
+                participantRegistrationTxStatus: action.status,
+            });
+        case types.BETS_TX_STATUS:
+            return state.merge({
+                betsTxStatus: action.status,
             });
         default:
             return state;
@@ -58,4 +75,12 @@ export function isShowContestDetailsDialog(state) {
 
 export function getContestDetails(state) {
     return state.wcwagers.contestDetails;
+}
+
+export function getParticipantRegistrationTxStatus(state) {
+    return state.wcwagers.participantRegistrationTxStatus;
+}
+
+export function getBetsTxStatus(state) {
+    return state.wcwagers.betsTxStatus;
 }

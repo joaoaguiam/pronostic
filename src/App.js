@@ -37,6 +37,7 @@ import RestoreIcon from '@material-ui/icons/Restore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Typography from '@material-ui/core/Typography';
+import NotificationSnackbar from './components/notifications/NotificationSnackbar';
 
 const theme = createMuiTheme({
     palette: {
@@ -82,7 +83,7 @@ const theme = createMuiTheme({
 
 const styles = theme => ({
     bottomBar: {
-        position: 'absolute',
+        position: '',
         bottom: 0,
         left:0,
         right: 0,
@@ -103,9 +104,9 @@ class App extends Component {
             <MuiThemeProvider theme={theme}>
                 <div className="App">
                     <Header routeParams={this.props.routeParams} />
-
+                    <NotificationSnackbar />
                     {this.props.children}
-                    <BottomNavigation
+                    {/* <BottomNavigation
                         value={0}
                         // onChange={this.handleChange}
                         showLabels
@@ -113,10 +114,8 @@ class App extends Component {
                     >
                                         <Typography>Participation Fee</Typography>
 
-                        {/* <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
-                        <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
-                        <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} /> */}
-                    </BottomNavigation>
+                        
+                    </BottomNavigation> */}
                 </div>
             </MuiThemeProvider>
 

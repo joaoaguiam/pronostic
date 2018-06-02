@@ -77,14 +77,14 @@ class GroupPhaseContainer extends Component {
         let dispatch = this.props.dispatch;
 
         return (e) => {
-            let bet = e.target.value;
+            let bet = Math.max(0, e.target.value);
             dispatch(matchesActions.setGroupHomeBet(phase, subPhase, matchId, bet))
         }
     }
     changeAwayScoreBet(phase, subPhase, matchId) {
         let dispatch = this.props.dispatch;
         return (e) => {
-            let bet = e.target.value;
+            let bet = Math.max(0, e.target.value);
             dispatch(matchesActions.setGroupAwayBet(phase, subPhase, matchId, bet))
         }
     }

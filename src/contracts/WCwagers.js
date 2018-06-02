@@ -3,6 +3,9 @@ import Promise from "bluebird";
 
 import WCwagerArtifact from '../../build/contracts/WCwagers.json';
 
+import * as wcwagersActions from '../store/wc-wagers/actions';
+import * as notificationsActions from '../store/notifications/actions';
+import { TX_STATUS } from '../store/wc-wagers/reducer';
 
 export const WCwagers = function (address) {
     let abiStr = JSON.stringify(WCwagerArtifact.abi);
@@ -60,13 +63,18 @@ export async function getParticipants(wcwagersAddress) {
     });
 }
 
-export async function registerParticipant(wcwagersAddress, contestDetails, nickname) {
+export async function registerParticipant(wcwagersAddress, contestDetails, nickname, dispatch) {
     return new Promise(async (resolve, reject) => {
         try {
             let contract = WCwagers(wcwagersAddress);
+            dispatch(notificationsActions.addNotification("Registration transaction needs to be validated on Metamask"));
             let tx = await contract.registerParticipantAsync(nickname, { value: web3.toWei(contestDetails.participationFeeEther, 'ether') });
+            dispatch(wcwagersActions.setParticipantRegistrationTxStatus(TX_STATUS.PENDING));
+            dispatch(notificationsActions.addNotification("Waiting registration transaction "+tx+" to be mined by the blockchain"));
             console.log(tx);
             let result = await getTransactionReceiptMined(tx);
+            dispatch(wcwagersActions.setParticipantRegistrationTxStatus(TX_STATUS.MINED));
+            dispatch(notificationsActions.addNotification("Participant successfully registered"));
             console.log(result);
             resolve(result);
         } catch (e) {
@@ -76,14 +84,21 @@ export async function registerParticipant(wcwagersAddress, contestDetails, nickn
     });
 }
 
-export async function writeUrl(wcwagersAddress, url, phase) {
+export async function writeUrl(wcwagersAddress, url, phase, dispatch) {
     return new Promise(async (resolve, reject) => {
         try {
             let contract = WCwagers(wcwagersAddress);
+            dispatch(notificationsActions.addNotification("Submission transaction needs to be validated on Metamask"));
 
             let tx = await contract.writeURLAsync(url, phase);
+            dispatch(notificationsActions.addNotification("Waiting submission transaction "+tx+" to be mined by the blockchain"));
+
+            dispatch(wcwagersActions.setBetsTxStatus(TX_STATUS.PENDING));
+
             console.log(tx);
             let result = await getTransactionReceiptMined(tx);
+            dispatch(notificationsActions.addNotification("Submission successfully registered on the blockchain"));
+            dispatch(wcwagersActions.setBetsTxStatus(TX_STATUS.MINED));
             console.log(result);
             resolve(result);
         } catch (e) {

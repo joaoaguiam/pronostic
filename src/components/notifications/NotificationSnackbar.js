@@ -3,11 +3,8 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import autoBind from 'react-autobind';
 
-import * as userProfileSelectors from '../../store/user-profile/reducer';
-import * as userProfileActions from '../../store/user-profile/actions';
-
-import * as wcwagersSelectors from '../../store/wc-wagers/reducer';
-import * as wcwagersActions from '../../store/wc-wagers/actions';
+import * as notificationsSelectors from '../../store/notifications/reducer';
+import * as notificationsActions from '../../store/notifications/actions';
 
 // import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
@@ -38,6 +35,7 @@ import Badge from '@material-ui/core/Badge';
 import TextField from '@material-ui/core/TextField';
 import CenterContainerSmall from '../layout/center-container/CenterContainerSmall';
 import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { browserHistory } from 'react-router'
 
@@ -62,7 +60,7 @@ const styles = theme => ({
 });
 
 
-class ContestDetails extends Component {
+class NotificationSnackbar extends Component {
     constructor(props) {
         super(props);
         autoBind(this);
@@ -72,52 +70,18 @@ class ContestDetails extends Component {
         };
     }
 
-    componentDidMount() {
-        this.props.dispatch(wcwagersActions.setContractAddress(this.props.routeParams.address));
-        // this.props.dispatch(matchesActions.fetchMatches());
+    handleClose() {
+        this.props.dispatch(notificationsActions.removeNotification());
     }
-    // }
-    // handleClick = event => {
-    //     this.setState({ anchorEl: event.currentTarget });
-    // };
-
-    handleDialogClose = () => {
-        this.props.dispatch(wcwagersActions.hideContestDetailsDialog())
-    };
-    // registerParticipant = () => {
-    //     this.props.dispatch(wcwagersActions.registerParticipant())
-    // };
-    handleNicknameChange(e) {
-        this.setState({ nickname: e.target.value });
-    }
-    registerParticipant = () => {
-        this.props.dispatch(wcwagersActions.registerParticipant(this.state.nickname))
-    };
-    renderParticipant = (participant) => {
-        let isMe = participant.address === this.props.userAddress;
-        return (
-            <ListItem key={participant}>
-                <Avatar>
-                    <AccountCircle />
-                </Avatar>
-                {isMe &&
-                    <ListItemText primary={participant.address} secondary={participant.nickname} />
-                }
-                {!isMe &&
-                    <div>
-                        <div></div>
-                        <ListItemText primary="" secondary={participant.address} />
-                        <ListItemText primary="" secondary={participant.nickname} />
-                    </div>
-                }
-            </ListItem>
-        );
-    }
-    openBets() {
-        browserHistory.push('/contest/' + this.props.address + '/bet');
+    handleExited() {
+        // this.props.dispatch(notificationsActions.removeNotification());
+        debugger;
     }
     render() {
         const { classes } = this.props;
+        let open = this.props.notif !== undefined;
+        let message = open ? this.props.notif.message : '';
+        let key = open ? this.props.notif.key : 'key';
 
         return (
             <Snackbar
@@ -126,8 +90,8 @@ class ContestDetails extends Component {
                     vertical: 'bottom',
                     horizontal: 'left',
                 }}
-                open={this.state.open}
-                autoHideDuration={6000}
+                open={open}
+                autoHideDuration={10000}
                 onClose={this.handleClose}
                 onExited={this.handleExited}
                 ContentProps={{
@@ -135,9 +99,9 @@ class ContestDetails extends Component {
                 }}
                 message={<span id="message-id">{message}</span>}
                 action={[
-                    <Button key="undo" color="secondary" size="small" onClick={this.handleClose}>
-                        UNDO
-            </Button>,
+            //         <Button key="undo" color="secondary" size="small" onClick={this.handleClose}>
+            //             UNDO
+            // </Button>,
                     <IconButton
                         key="close"
                         aria-label="Close"
@@ -156,17 +120,13 @@ class ContestDetails extends Component {
 
 function mapStateToProps(state) {
     return {
-        userAddress: userProfileSelectors.getAddress(state),
-        showContestDetailsDialog: wcwagersSelectors.isShowContestDetailsDialog(state),
-        address: wcwagersSelectors.getAddress(state),
-        contestDetails: wcwagersSelectors.getContestDetails(state),
-        participants: wcwagersSelectors.getParticipants(state),
+        notif: notificationsSelectors.getNotif(state),
     };
 }
 
-ContestDetails.propTypes = {
+NotificationSnackbar.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps)(withStyles(styles)(ContestDetails));
+export default connect(mapStateToProps)(withStyles(styles)(NotificationSnackbar));
 

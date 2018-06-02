@@ -141,7 +141,7 @@ export function submitBets(phase, subPhase, bets) {
 
 
             let address = wcwagersSelectors.getAddress(getState());
-            let txResult = await writeUrl(address, url, contractPhase);
+            let txResult = await writeUrl(address, url, contractPhase, dispatch);
             dispatch({ type: types.BETS_SUBMITTED, ipfsLinks });
         } catch (error) {
             console.error(error);

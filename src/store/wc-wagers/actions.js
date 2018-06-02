@@ -8,7 +8,7 @@ import * as WCwagers from '../../contracts/WCwagers';
 export function fetchParticipants(wcwagersAddress) {
     return async (dispatch, getState) => {
         try {
-
+            debugger;
             let details = await WCwagers.getContestInfo(wcwagersAddress);
 
             dispatch({ type: types.CONTEST_DETAILS, details });
@@ -30,9 +30,9 @@ export function registerParticipant(nickname) {
         try {
             let contestDetails = wcwagerSelectors.getContestDetails(getState());
             let wcwagersAddress = wcwagerSelectors.getAddress(getState());
-            await WCwagers.registerParticipant(wcwagersAddress, contestDetails, nickname);
+            await WCwagers.registerParticipant(wcwagersAddress, contestDetails, nickname, dispatch);
 
-            dispatch(fetchParticipants(contestDetails.address));
+            dispatch(fetchParticipants(wcwagersAddress));
         } catch (error) {
             console.error(error);
         }
@@ -70,6 +70,26 @@ export function hideContestDetailsDialog() {
         try {
 
             dispatch({ type: types.SHOW_CONTEST_DETAILS_DIALOG, showContestDetailsDialog: false });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}
+
+export function setParticipantRegistrationTxStatus(status) {
+    return async (dispatch, getState) => {
+        try {
+            dispatch({ type: types.PARTICIPANT_REGISTRATION_TX_STATUS, status });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}
+
+export function setBetsTxStatus(status) {
+    return async (dispatch, getState) => {
+        try {
+            dispatch({ type: types.BETS_TX_STATUS, status });
         } catch (error) {
             console.error(error);
         }
