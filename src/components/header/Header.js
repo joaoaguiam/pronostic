@@ -20,6 +20,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
+import Button from '@material-ui/core/Button';
+
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
@@ -69,14 +71,19 @@ class Header extends Component {
         this.props.dispatch(userProfileActions.showUserProfileDialog())
     };
 
-    handleContestDetailsClick = () => {
-        this.props.dispatch(wcwagersActions.showContestDetailsDialog())
-    };
+    handleRulesClick = () => {
+        let address = this.props.wcwagersAddress;
+        browserHistory.push('/contest/' + address + '/rules');
 
+    };
+    handlePredictionsClick = () => {
+        let address = this.props.wcwagersAddress;
+        browserHistory.push('/contest/' + address + '/bet');
+    };
     goToContestHome() {
         let address = this.props.wcwagersAddress;
-        if(address !== '') {
-            browserHistory.push('/contest/'+address);
+        if (address !== '') {
+            browserHistory.push('/contest/' + address);
         }
         else {
             browserHistory.push('/');
@@ -85,7 +92,7 @@ class Header extends Component {
     render() {
         const { classes } = this.props;
         const { anchorEl } = this.state;
-
+        let isContestPage = window.location.pathname.includes('/contest/');
         return (
             <div className={classes.root}>
                 <UserProfileDialog />
@@ -93,10 +100,16 @@ class Header extends Component {
                 <AppBar position="static">
                     <Toolbar>
                         <Typography variant="title" color="inherit" className={classes.flex} onClick={this.goToContestHome}>Pronostic - World Cup 2018</Typography>
-                        {/* <Button onClick={this.handleContestDetailsClick} color="inherit">Contest Details</Button> */}
-                        <IconButton onClick={this.handleUserProfileClick} color="inherit">
-                            <AccountCircle />
-                        </IconButton>
+                        {isContestPage &&
+                            <div>
+                                <Button onClick={this.handlePredictionsClick} color="inherit">Your Predictions</Button>
+                                <Button onClick={this.handleRulesClick} color="inherit">Contest Rules</Button>
+
+                                <IconButton onClick={this.handleUserProfileClick} color="inherit">
+                                    <AccountCircle />
+                                </IconButton>
+                            </div>
+                        }
                         {/* <div>
                             <Button
                                 aria-owns={anchorEl ? 'simple-menu' : null}

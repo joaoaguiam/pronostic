@@ -131,6 +131,7 @@ export function loadPhasesDates() {
                 let phaseDate = await WCwagers.getPhaseDate(address, phase.smartcontract);
                 phasesDates[phase.json] = phaseDate;
             }
+            // phasesDates['round_16'] = 1527915600;
             console.log(phasesDates);
             dispatch({ type: types.PHASES_DATES_FETCHED, phasesDates });
         } catch (error) {

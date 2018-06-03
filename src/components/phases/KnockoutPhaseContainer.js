@@ -74,10 +74,15 @@ class KnockoutPhaseContainer extends Component {
         const { classes } = this.props;
         let matches = this.props.matches.knockout[this.props.subPhase].matches;
         let isMining = this.props.betsTxStatus === wcwagersSelectors.TX_STATUS.PENDING;
+        
         let phaseDate = this.props.phasesDates[this.props.subPhase];
 
-        let date = moment.unix(phaseDate).format("MMM DD - hh:mm a");
+        let submissionDate = moment.unix(phaseDate);
+        let submissionDateStr = submissionDate.format("MMM DD - hh:mm a");
+        let now = moment();
+        let submissionDenied = submissionDate.isBefore(now);
 
+        let isDisabled = isMining || submissionDenied;
         return (
 
             <div className={classes.root}>
@@ -93,7 +98,7 @@ class KnockoutPhaseContainer extends Component {
                             >
 
                                 <Grid item className={classes.wrapper}>
-                                    <Button variant="raised" color="primary" onClick={this.handleSubmit} disabled={isMining} >Submit to Blockchain</Button>
+                                    <Button variant="raised" color="primary" onClick={this.handleSubmit} disabled={isDisabled} >Submit to Blockchain</Button>
                                     {isMining && <CircularProgress size={24} className={classes.buttonProgress} />}
                                 </Grid>
 
@@ -103,9 +108,8 @@ class KnockoutPhaseContainer extends Component {
                                 spacing={16}
                                 justify={"flex-end"}
                             >
-                                                                <Grid item className={classes.wrapper}>
-
-                                    <Typography variant="caption" >Submissions allowed until: {date}</Typography>
+                                <Grid item className={classes.wrapper}>
+                                    <Typography variant="caption" >Submissions allowed until: {submissionDateStr}</Typography>
 
                                 </Grid>
 

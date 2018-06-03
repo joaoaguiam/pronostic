@@ -7,6 +7,9 @@ import autoBind from 'react-autobind';
 import * as matchesSelectors from '../../store/matches/reducer';
 import * as matchesActions from '../../store/matches/actions';
 
+import * as wcwagersSelectors from '../../store/wc-wagers/reducer';
+import * as wcwagersActions from '../../store/wc-wagers/actions';
+
 import moment from 'moment-timezone';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -106,6 +109,19 @@ class GroupPhaseContainer extends Component {
         //     console.log(bets);
         //     debugger;
         // }
+
+        let timePhase = 'groups';
+        if(phase !== 'groups') {
+            timePhase = subPhase;
+            timePhase = timePhase.replace('_loser', '');
+        }
+        let phaseDate = this.props.phasesDates[timePhase];
+        let submissionDate = moment.unix(phaseDate);
+        let submissionDateStr = submissionDate.format("MMM DD - hh:mm a");
+        let now = moment();
+        let submissionDenied = submissionDate.isBefore(now);
+
+        console.log(submissionDateStr);
         let container = this;
         return (
             <div className={classes.group}>
@@ -168,6 +184,7 @@ class GroupPhaseContainer extends Component {
                                                     className={classes.size}
                                                     icon={<RadioButtonUncheckedIcon className={classes.sizeIcon} />}
                                                     checkedIcon={<RadioButtonCheckedIcon className={classes.sizeIcon} />}
+                                                    disabled={submissionDenied}
                                                 />
                                                 -
                                             <Radio
@@ -180,6 +197,7 @@ class GroupPhaseContainer extends Component {
                                                     className={classes.size}
                                                     icon={<RadioButtonUncheckedIcon className={classes.sizeIcon} />}
                                                     checkedIcon={<RadioButtonCheckedIcon className={classes.sizeIcon} />}
+                                                    disabled={submissionDenied}
                                                 />
                                             </TableCell>
                                         }
@@ -192,6 +210,7 @@ class GroupPhaseContainer extends Component {
                                                 type="number"
                                                 className={classes.betField}
                                                 margin="dense"
+                                                disabled={submissionDenied}
                                             // value= {bets[matchIndex].homeBet}
                                             />
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -202,6 +221,7 @@ class GroupPhaseContainer extends Component {
                                                 type="number"
                                                 className={classes.betField}
                                                 margin="dense"
+                                                disabled={submissionDenied}
                                             />
                                         </TableCell>
                                         <TableCell>
@@ -232,6 +252,8 @@ function mapStateToProps(state) {
         allMatches: matchesSelectors.getMatches(state),
 
         bets: matchesSelectors.getBets(state),
+        phasesDates: wcwagersSelectors.getPhaseDates(state),
+
     };
 }
 

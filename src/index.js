@@ -15,6 +15,7 @@ import * as reducers from './store/reducers';
 import PhasesContainer from './components/phases/PhasesContainer';
 import Home from './components/Home';
 import ContestDetails from './components/contest-details/ContestDetails';
+import Rules from './components/Rules';
 
 
 const initStore = (reducer, initialState) => {
@@ -48,9 +49,7 @@ ReactDOM.render((
                 <IndexRoute component={Home} />
                 <Route path="/contest/:address" component={ContestDetails} />
                 <Route path="/contest/:address/bet" component={PhasesContainer} />
-                {/* 
-                <Route path="create-campaign" component={CreateCampaign} />
-                <Route path="home" component={Home} /> */}
+                <Route path="/contest/:address/rules" component={Rules} />
             </Route>
         </Router>
     </Provider>
