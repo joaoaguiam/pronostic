@@ -10,10 +10,10 @@ const initialState = Immutable({
     isFetched: false,
     ipfsLinks: {
         groups: undefined,
-        round16: undefined,
-        round8: undefined,
-        round4: undefined,
-        round2: undefined,
+        round_16: undefined,
+        round_8: undefined,
+        round_4: undefined,
+        round_2: undefined,
     }
 });
 

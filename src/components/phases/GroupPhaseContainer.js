@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import autoBind from 'react-autobind';
 
+import moment from 'moment-timezone';
 
 import * as matchesSelectors from '../../store/matches/reducer';
 import * as matchesActions from '../../store/matches/actions';
@@ -73,16 +74,19 @@ class GroupPhaseContainer extends Component {
     }
 
     handleSubmit() {
-        this.props.dispatch(matchesActions.submitBets("groups", '', this.props.bets));
+        this.props.dispatch(wcwagersActions.submitBets("groups", '', this.props.bets));
     }
     render() {
         if (!this.props.isFetched) {
             return <Typography variant="caption">Loading...</Typography>
-
         }
         let groupKeys = _.keys(this.props.matches.groups);
         const { classes } = this.props;
         let isMining = this.props.betsTxStatus === wcwagersSelectors.TX_STATUS.PENDING;
+        let phasesDates = this.props.phasesDates;
+        let phaseDate = phasesDates.groups;
+        let date = moment.unix(phaseDate).format("MMM DD - hh:mm a");
+
         return (
             <div className={classes.root}>
                 <Typography variant="display2" gutterBottom>Groups Phase</Typography>
@@ -98,8 +102,22 @@ class GroupPhaseContainer extends Component {
                                 <Button variant="raised" color="primary" onClick={this.handleSubmit} disabled={isMining} >Submit to Blockchain</Button>
                                 {isMining && <CircularProgress size={24} className={classes.buttonProgress} />}
                             </Grid>
+
                         </Grid>
+                        <Grid
+                            container
+                            spacing={16}
+                            justify={"flex-end"}
+                        >
+                                <Grid item className={classes.wrapper}>
+                                <Typography variant="caption">Submissions allowed until: {date}</Typography>
+                            </Grid>
+
+                        </Grid>
+
+
                     </Grid>
+
                 </Grid>
             </div>
         )
@@ -112,6 +130,7 @@ function mapStateToProps(state) {
         bets: matchesSelectors.getBets(state),
         isFetched: matchesSelectors.isFetched(state),
         betsTxStatus: wcwagersSelectors.getBetsTxStatus(state),
+        phasesDates: wcwagersSelectors.getPhaseDates(state),
     };
 }
 

@@ -7,8 +7,6 @@ export const TX_STATUS = {
     PENDING: 1,
     MINED: 2,
 }
-
-
 const initialState = Immutable({
     participants: [],
     address: '0x1e0b778e6e3b2924a3715fc785d83ec8509c1009',
@@ -23,6 +21,13 @@ const initialState = Immutable({
     isFetched: false,
     participantRegistrationTxStatus: TX_STATUS.NONE,
     betsTxStatus: TX_STATUS.NONE,
+    phasesDates: {
+        groups: 0,
+        round_16: 0,
+        round_8: 0,
+        round_4: 0,
+        round_2: 0
+    },
 });
 
 export default function reduce(state = initialState, action = {}) {
@@ -52,9 +57,36 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 betsTxStatus: action.status,
             });
+        case types.PHASES_DATES_FETCHED:
+            return state.merge({
+                phasesDates: action.phasesDates,
+            });
         default:
             return state;
     }
+}
+export function subPhaseIdToSCPhase(subPhaseId) {
+    switch (subPhaseId) {
+        case 'round_16':
+            return 'Round16';
+        case 'round_8':
+            return 'Quarters';
+        case 'round_4':
+            return 'Semis';
+        case 'round_2':
+            return 'Finals';
+        default:
+            return 'unknown';
+    }
+}
+export function getAllPhases() {
+    return [
+        { json: 'groups', smartcontract: 'Group' },
+        { json: 'round_16', smartcontract: 'Round16' },
+        { json: 'round_8', smartcontract: 'Quarters' },
+        { json: 'round_4', smartcontract: 'Semis' },
+        { json: 'round_2', smartcontract: 'Finals' }
+    ];
 }
 
 export function isFetched(state) {
@@ -83,4 +115,8 @@ export function getParticipantRegistrationTxStatus(state) {
 
 export function getBetsTxStatus(state) {
     return state.wcwagers.betsTxStatus;
+}
+
+export function getPhaseDates(state) {
+    return state.wcwagers.phasesDates;
 }

@@ -7,8 +7,7 @@ import * as wcwagersSelectors from '../wc-wagers/reducer';
 import update from 'immutability-helper';
 
 import Web3 from 'web3';
-import { uploadObjectIpfs } from '../../helpers/ipfs/ipfs';
-import { writeUrl } from '../../contracts/WCwagers';
+
 
 
 const DATA_SOURCE = "https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json";
@@ -41,7 +40,6 @@ export function fetchMatches() {
                 }
                 dispatch({ type: types.BETS_UPDATED, bets });
             }
-
 
         } catch (error) {
             console.error(error);
@@ -105,46 +103,3 @@ export function selectTab(tab) {
     };
 }
 
-export function submitBets(phase, subPhase, bets) {
-    return async (dispatch, getState) => {
-        try {
-            let res = await uploadObjectIpfs(bets);
-            console.log(res);
-            let url = res.url;
-            let ipfsLinks = _.cloneDeep(matchesSelectors.getIpfsLinks(getState()));
-            let contractPhase = '';
-            if (phase === 'groups') {
-                ipfsLinks.groups = url;
-                contractPhase = 'Group';
-            }
-            else {
-                let subPhaseId = subPhase.replace('_', '');
-                ipfsLinks[subPhaseId] = url;
-                switch (subPhaseId) {
-                    case 'round16':
-                        contractPhase = 'Round16';
-                        break;
-                    case 'round8':
-                        contractPhase = 'Quarters';
-                        break;
-                    case 'round4':
-                        contractPhase = 'Semis';
-                        break;
-                    case 'round2':
-                        contractPhase = 'Finals';
-                        break;
-                    default:
-                        break;
-                }
-
-            }
-
-
-            let address = wcwagersSelectors.getAddress(getState());
-            let txResult = await writeUrl(address, url, contractPhase, dispatch);
-            dispatch({ type: types.BETS_SUBMITTED, ipfsLinks });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-}

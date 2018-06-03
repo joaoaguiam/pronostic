@@ -107,3 +107,18 @@ export async function writeUrl(wcwagersAddress, url, phase, dispatch) {
         }
     });
 }
+
+
+export async function getPhaseDate(wcwagersAddress, phase) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let contract = WCwagers(wcwagersAddress);
+            let phaseDate = await contract.getPhaseDateAsync(phase);
+            
+            resolve(phaseDate.toNumber());
+        } catch (e) {
+            console.log(e);
+            reject(e);
+        }
+    });
+}

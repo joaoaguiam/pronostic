@@ -36,6 +36,8 @@ class PhasesContainer extends Component {
     componentDidMount() {
         this.props.dispatch(wcwagersActions.setContractAddress(this.props.routeParams.address));
         this.props.dispatch(matchesActions.fetchMatches());
+        this.props.dispatch(wcwagersActions.loadPhasesDates());
+        
     }
 
     renderSelectedPhase() {
