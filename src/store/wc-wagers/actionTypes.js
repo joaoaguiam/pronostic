@@ -9,3 +9,7 @@ export const BETS_TX_STATUS = 'wcwagers.BETS_TX_STATUS';
 export const PHASES_DATES_FETCHED = 'wcwagers.PHASES_DATES_FETCHED';
 
 
+export const BETS_SUBMITTED_FETCHED = 'wcwagers.BETS_SUBMITTED_FETCHED';
+
+
+BETS_SUBMITTED_FETCHED

@@ -110,7 +110,6 @@ export function submitBets(phase, subPhase, bets) {
                 contractPhase = wcwagersSelectors.subPhaseIdToSCPhase(subPhase);
             }
 
-            debugger;
             let address = wcwagersSelectors.getAddress(getState());
             await writeUrl(address, url, contractPhase, dispatch);
             dispatch({ type: types.BETS_SUBMITTED, ipfsLinks });
@@ -134,6 +133,28 @@ export function loadPhasesDates() {
             // phasesDates['round_16'] = 1527915600;
             console.log(phasesDates);
             dispatch({ type: types.PHASES_DATES_FETCHED, phasesDates });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}
+
+export function loadBetsSubmitted() {
+    return async (dispatch, getState) => {
+        try {
+            let address = wcwagersSelectors.getAddress(getState());
+            let allPhases = wcwagersSelectors.getAllPhases();
+            let betsSubmitted = {};
+            for (let i = 0; i < allPhases.length; i++) {
+                let phase = allPhases[i];
+                console.log('WCwagers.getOwnURL(' + address + ', ' + phase.smartcontract + ')');
+                let url = await WCwagers.getOwnURL(address, phase.smartcontract);
+                // debugger;
+                betsSubmitted[phase.json] = url;
+            }
+            // phasesDates['round_16'] = 1527915600;
+            console.log(betsSubmitted);
+            dispatch({ type: types.BETS_SUBMITTED_FETCHED, betsSubmitted });
         } catch (error) {
             console.error(error);
         }

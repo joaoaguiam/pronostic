@@ -28,6 +28,13 @@ const initialState = Immutable({
         round_4: 0,
         round_2: 0
     },
+    betsSubmitted: {
+        groups: undefined,
+        round_16: undefined,
+        round_8: undefined,
+        round_4: undefined,
+        round_2: undefined
+    },
 });
 
 export default function reduce(state = initialState, action = {}) {
@@ -61,12 +68,18 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 phasesDates: action.phasesDates,
             });
+        case types.BETS_SUBMITTED_FETCHED:
+            return state.merge({
+                betsSubmitted: action.betsSubmitted,
+            });
         default:
             return state;
     }
 }
 export function subPhaseIdToSCPhase(subPhaseId) {
     switch (subPhaseId) {
+        case 'groups':
+            return 'Group';
         case 'round_16':
             return 'Round16';
         case 'round_8':

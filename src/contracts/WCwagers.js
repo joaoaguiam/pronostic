@@ -89,8 +89,9 @@ export async function writeUrl(wcwagersAddress, url, phase, dispatch) {
         try {
             let contract = WCwagers(wcwagersAddress);
             dispatch(notificationsActions.addNotification("Submission transaction needs to be validated on Metamask"));
-
+            console.log('contract.writeURLAsync('+url+', '+phase+')');
             let tx = await contract.writeURLAsync(url, phase);
+
             dispatch(notificationsActions.addNotification("Waiting submission transaction "+tx+" to be mined by the blockchain"));
 
             dispatch(wcwagersActions.setBetsTxStatus(TX_STATUS.PENDING));
@@ -116,6 +117,20 @@ export async function getPhaseDate(wcwagersAddress, phase) {
             let phaseDate = await contract.getPhaseDateAsync(phase);
             
             resolve(phaseDate.toNumber());
+        } catch (e) {
+            console.log(e);
+            reject(e);
+        }
+    });
+}
+
+export async function getOwnURL(wcwagersAddress, phase) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let contract = WCwagers(wcwagersAddress);
+            let url = await contract.getOwnURLAsync(phase);
+            
+            resolve(url);
         } catch (e) {
             console.log(e);
             reject(e);
