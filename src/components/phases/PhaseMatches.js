@@ -111,7 +111,7 @@ class GroupPhaseContainer extends Component {
         // }
 
         let timePhase = 'groups';
-        if(phase !== 'groups') {
+        if (phase !== 'groups') {
             timePhase = subPhase;
             timePhase = timePhase.replace('_loser', '');
         }
@@ -120,6 +120,8 @@ class GroupPhaseContainer extends Component {
         let submissionDateStr = submissionDate.format("MMM DD - hh:mm a");
         let now = moment();
         let submissionDenied = submissionDate.isBefore(now);
+
+        // let savedBetsPhase = this.props.savedBets[timePhase];
 
         console.log(submissionDateStr);
         let container = this;
@@ -163,7 +165,15 @@ class GroupPhaseContainer extends Component {
                                 let awayBet = bets !== undefined && _.has(bets[match.name - 1], 'awayBet') ? bets[match.name - 1].awayBet : '';
                                 let winnerBet = bets !== undefined && _.has(bets[match.name - 1], 'winnerBet') ? bets[match.name - 1].winnerBet : '';
 
+                                let savedBet = this.props.savedBets[timePhase];
+                                let changedHomeBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'homeBet') ? (savedBet[match.name - 1].homeBet === homeBet) : (homeBet !== '');
+                                let changedAwayBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'awayBet') ? (savedBet[match.name - 1].homeBet === homeBet) : (homeBet !== '');
+                                let changedWinnerBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'winnerBet') ? (savedBet[match.name - 1].homeBet === homeBet ? 'default' : 'secondary') : 'secondary';
+                                    
 
+                                // if(match.name === 49) {
+                                //     debugger;
+                                // }
                                 return (
                                     <TableRow key={match.name}>
                                         <TableCell component="th" scope="row" className={classes.center}>{match.name}</TableCell>
@@ -178,7 +188,7 @@ class GroupPhaseContainer extends Component {
                                                     checked={winnerBet === 'home'}
                                                     onChange={this.setWinnerBet(phase, subPhase, match.name)}
                                                     value="home"
-                                                    color="default"
+                                                    color={changedWinnerBet}
                                                     name="radio-button-demo"
                                                     // aria-label="E"
                                                     className={classes.size}
@@ -191,7 +201,7 @@ class GroupPhaseContainer extends Component {
                                                     checked={winnerBet === 'away'}
                                                     onChange={this.setWinnerBet(phase, subPhase, match.name)}
                                                     value="away"
-                                                    color="default"
+                                                    color={changedWinnerBet}
                                                     name="radio-button-demo"
                                                     // aria-label="E"
                                                     className={classes.size}
@@ -211,6 +221,7 @@ class GroupPhaseContainer extends Component {
                                                 className={classes.betField}
                                                 margin="dense"
                                                 disabled={submissionDenied}
+                                                error={changedHomeBet}
                                             // value= {bets[matchIndex].homeBet}
                                             />
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -222,6 +233,8 @@ class GroupPhaseContainer extends Component {
                                                 className={classes.betField}
                                                 margin="dense"
                                                 disabled={submissionDenied}
+                                                error={changedAwayBet}
+
                                             />
                                         </TableCell>
                                         <TableCell>
@@ -253,7 +266,7 @@ function mapStateToProps(state) {
 
         bets: matchesSelectors.getBets(state),
         phasesDates: wcwagersSelectors.getPhaseDates(state),
-
+        savedBets: matchesSelectors.getSavedBets(state),
     };
 }
 

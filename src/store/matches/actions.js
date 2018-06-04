@@ -12,6 +12,7 @@ import Web3 from 'web3';
 
 const DATA_SOURCE = "https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json";
 
+
 export function fetchMatches() {
     return async (dispatch, getState) => {
         try {
@@ -31,12 +32,25 @@ export function fetchMatches() {
             }
             else {
                 let bets = [];
+                let savedBets = matchesSelectors.getSavedBets(getState());
                 for (let i = 0; i < 64; i++) {
+                    let phase = matchesSelectors.getPhaseFromGameNumber(i);
+                    
+                    // load from blockchain values
+                    let homeBet = undefined;
+                    let awayBet =  undefined;
+                    let winnerBet = undefined;
+
+                    if(savedBets[phase] !== undefined) {
+                        homeBet = savedBets[phase][i].homeBet;
+                        awayBet = savedBets[phase][i].awayBet;
+                        winnerBet = savedBets[phase][i].winnerBet;
+                    }
                     bets.push({
                         match: i + 1,
-                        homeBet: undefined,
-                        awayBet: undefined,
-                        winnerBet: undefined,
+                        homeBet,
+                        awayBet,
+                        winnerBet,
                     })
                 }
                 dispatch({ type: types.BETS_UPDATED, bets });
@@ -121,14 +135,24 @@ export function fetchSavedBets() {
                 round_4: undefined,
                 round_2: undefined,
             };
-            // _.forOwn(submissionLinks, async function (value, key) {
-            //     let response = await fetch(value);
-            //     let bets = await response.json();
-            //     console.log(bets);
-            //     savedBets[key] = bets;
-            // });
+
+            for (var key in submissionLinks) {
+                // check also if property is not inherited from prototype
+                if (submissionLinks.hasOwnProperty(key)) {
+                    var value = submissionLinks[key];
+                    console.log(key + ' : ' + value);
+                    if (value !== '') {
+                        let response = await fetch(value);
+                        let bets = await response.json();
+                        console.log(bets);
+                        savedBets[key] = bets;
+                    }
+
+                }
+            }
             console.log(savedBets);
             dispatch({ type: types.SAVED_BETS_FETCHED, savedBets });
+            dispatch(fetchMatches());
         } catch (error) {
             console.error(error);
         }

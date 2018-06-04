@@ -24,6 +24,16 @@ const initialState = Immutable({
     }
 });
 
+
+
+export const gamesPhases = {
+    groups: {from: 0, to: 47},
+    round_16: {from: 48, to: 55},
+    round_8: {from: 56, to: 59},
+    round_4: {from: 60, to: 61},
+    round_2: {from: 62, to: 63},
+}
+
 export default function reduce(state = initialState, action = {}) {
     switch (action.type) {
         case types.MATCHES_FETCHED:
@@ -77,4 +87,24 @@ export function getIpfsLinks(state) {
 
 export function getSavedBets(state) {
     return state.matches.savedBets;
+}
+
+
+export function getPhaseFromGameNumber(i){
+    if(i < 48) {
+        return 'groups';
+    }
+    else if(i < 56) {
+        return 'round_16';
+    }
+    else if(i < 60) {
+        return 'round_8';
+    }
+    else if(i < 62) {
+        return 'round_4';
+    }
+    else if(i < 64) {
+        return 'round_2';
+    }
+    return 'unknown'
 }

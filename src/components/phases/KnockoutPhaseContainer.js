@@ -143,7 +143,6 @@ function mapStateToProps(state) {
         betsTxStatus: wcwagersSelectors.getBetsTxStatus(state),
         phasesDates: wcwagersSelectors.getPhaseDates(state),
         betsSubmitted: wcwagersSelectors.getBetsSubmitted(state),
-
     };
 }
 
