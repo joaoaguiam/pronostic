@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import _ from 'lodash';
-
 import autoBind from 'react-autobind';
 
 import * as matchesSelectors from '../../store/matches/reducer';
@@ -10,11 +8,8 @@ import * as matchesActions from '../../store/matches/actions';
 
 import * as wcwagersSelectors from '../../store/wc-wagers/reducer';
 import * as wcwagersActions from '../../store/wc-wagers/actions';
-
 import * as userProfileSelectors from '../../store/user-profile/reducer';
 import * as userProfileActions from '../../store/user-profile/actions';
-
-
 // import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -24,9 +19,7 @@ import GroupPhaseContainer from './GroupPhaseContainer';
 import Typography from '@material-ui/core/Typography';
 import KnockoutPhaseContainer from './KnockoutPhaseContainer';
 import CenterContainerLarge from '../layout/center-container/CenterContainerLarge';
-
 import { browserHistory } from 'react-router'
-
 
 const styles = {
     root: {
@@ -105,9 +98,7 @@ class PhasesContainer extends Component {
                 )
         }
     }
-
     render() {
-
         const { classes } = this.props;
         return (
             <CenterContainerLarge>

@@ -55,8 +55,6 @@ export function setGroupHomeBet(phase, subPhase, matchId, bet) {
             let bets = _.cloneDeep(matchesSelectors.getBets(getState()));
             bets[matchId - 1].homeBet = bet;
 
-            let contractAddress = wcwagersSelectors.getAddress(getState());
-
             dispatch({ type: types.BETS_UPDATED, bets });
             localStorage.setItem('pronostic-bets-' + contractAddress, JSON.stringify(bets));
 
@@ -72,8 +70,6 @@ export function setGroupAwayBet(phase, subPhase, matchId, bet) {
             let bets = _.cloneDeep(matchesSelectors.getBets(getState()));
             bets[matchId - 1].awayBet = bet;
 
-            let contractAddress = wcwagersSelectors.getAddress(getState());
-
             dispatch({ type: types.BETS_UPDATED, bets });
             localStorage.setItem('pronostic-bets-' + contractAddress, JSON.stringify(bets));
 
@@ -88,8 +84,6 @@ export function setWinnerBet(phase, subPhase, matchId, bet) {
         try {
             let bets = _.cloneDeep(matchesSelectors.getBets(getState()));
             bets[matchId - 1].winnerBet = bet;
-
-            let contractAddress = wcwagersSelectors.getAddress(getState());
 
             dispatch({ type: types.BETS_UPDATED, bets });
             localStorage.setItem('pronostic-bets-' + contractAddress, JSON.stringify(bets));

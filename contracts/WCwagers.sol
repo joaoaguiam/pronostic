@@ -86,7 +86,7 @@ contract WCwagers is Ownable {
     }
 
     function writeURL(string _URL, string _phase) public isThereTime(_phase) {
-        usersURLs[msg.sender][_phase] = _URL;
+      usersURLs[msg.sender][_phase]=_URL;
     }
 // Does it make sense to have this function?
 // If I want to retrieve my URLs before the deadline, this is what I'd use

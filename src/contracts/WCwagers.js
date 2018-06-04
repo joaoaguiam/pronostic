@@ -129,6 +129,7 @@ export async function getOwnURL(wcwagersAddress, phase) {
         try {
             let contract = WCwagers(wcwagersAddress);
             let url = await contract.getOwnURLAsync(phase);
+            
             resolve(url);
         } catch (e) {
             console.log(e);
