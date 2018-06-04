@@ -43,6 +43,11 @@ const styles = theme => ({
         margin: theme.spacing.unit,
         position: 'relative',
     },
+    wrapperText: {
+        margin: theme.spacing.unit,
+        textAlign: 'right',
+        position: 'relative',
+    },
     buttonProgress: {
         position: 'absolute',
         top: '50%',
@@ -90,10 +95,10 @@ class GroupPhaseContainer extends Component {
         let submissionDateStr = submissionDate.format("MMM DD - hh:mm a");
         let now = moment();
         let submissionDenied = submissionDate.isBefore(now);
-        
+
         let isMining = this.props.betsTxStatus === wcwagersSelectors.TX_STATUS.PENDING;
         let isDisabled = this.props.betsTxStatus === wcwagersSelectors.TX_STATUS.PENDING || submissionDenied;
-        
+        let phaseLink = this.props.betsSubmitted.groups;
         return (
             <div className={classes.root}>
                 <Typography variant="display2" gutterBottom>Groups Phase</Typography>
@@ -116,8 +121,11 @@ class GroupPhaseContainer extends Component {
                             spacing={16}
                             justify={"flex-end"}
                         >
-                                <Grid item className={classes.wrapper}>
+                            <Grid item className={classes.wrapperText} >
                                 <Typography variant="caption">Submissions allowed until: {submissionDateStr}</Typography>
+                                {phaseLink !== '' &&
+                                    <Typography variant="caption">Last submission: <a href={phaseLink} target="_balnk">{phaseLink}</a></Typography>
+                                }
                             </Grid>
 
                         </Grid>
@@ -138,6 +146,7 @@ function mapStateToProps(state) {
         isFetched: matchesSelectors.isFetched(state),
         betsTxStatus: wcwagersSelectors.getBetsTxStatus(state),
         phasesDates: wcwagersSelectors.getPhaseDates(state),
+        betsSubmitted: wcwagersSelectors.getBetsSubmitted(state),
     };
 }
 

@@ -45,6 +45,11 @@ const styles = theme => ({
         margin: theme.spacing.unit,
         position: 'relative',
     },
+    wrapperText: {
+        margin: theme.spacing.unit,
+        textAlign: 'right',
+        position: 'relative',
+    },
     buttonProgress: {
         position: 'absolute',
         top: '50%',
@@ -74,7 +79,7 @@ class KnockoutPhaseContainer extends Component {
         const { classes } = this.props;
         let matches = this.props.matches.knockout[this.props.subPhase].matches;
         let isMining = this.props.betsTxStatus === wcwagersSelectors.TX_STATUS.PENDING;
-        
+
         let phaseDate = this.props.phasesDates[this.props.subPhase];
 
         let submissionDate = moment.unix(phaseDate);
@@ -83,6 +88,9 @@ class KnockoutPhaseContainer extends Component {
         let submissionDenied = submissionDate.isBefore(now);
 
         let isDisabled = isMining || submissionDenied;
+
+        let phaseLink = this.props.betsSubmitted[this.props.subPhase];
+
         return (
 
             <div className={classes.root}>
@@ -108,9 +116,11 @@ class KnockoutPhaseContainer extends Component {
                                 spacing={16}
                                 justify={"flex-end"}
                             >
-                                <Grid item className={classes.wrapper}>
+                                <Grid item className={classes.wrapperText}>
                                     <Typography variant="caption" >Submissions allowed until: {submissionDateStr}</Typography>
-
+                                    {phaseLink !== '' &&
+                                        <Typography variant="caption">Last submission: <a href={phaseLink} target="_balnk">{phaseLink}</a></Typography>
+                                    }
                                 </Grid>
 
                             </Grid>
@@ -132,6 +142,7 @@ function mapStateToProps(state) {
         isFetched: matchesSelectors.isFetched(state),
         betsTxStatus: wcwagersSelectors.getBetsTxStatus(state),
         phasesDates: wcwagersSelectors.getPhaseDates(state),
+        betsSubmitted: wcwagersSelectors.getBetsSubmitted(state),
 
     };
 }

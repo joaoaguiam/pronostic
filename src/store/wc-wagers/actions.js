@@ -3,6 +3,7 @@ import _ from 'lodash';
 import * as types from './actionTypes';
 import * as wcwagersSelectors from './reducer';
 import * as matchesSelectors from '../matches/reducer';
+import * as matchesActions from '../matches/actions';
 
 import * as WCwagers from '../../contracts/WCwagers';
 
@@ -112,7 +113,7 @@ export function submitBets(phase, subPhase, bets) {
 
             let address = wcwagersSelectors.getAddress(getState());
             await writeUrl(address, url, contractPhase, dispatch);
-            dispatch({ type: types.BETS_SUBMITTED, ipfsLinks });
+            dispatch(loadBetsSubmitted());
         } catch (error) {
             console.error(error);
         }
@@ -155,6 +156,7 @@ export function loadBetsSubmitted() {
             // phasesDates['round_16'] = 1527915600;
             console.log(betsSubmitted);
             dispatch({ type: types.BETS_SUBMITTED_FETCHED, betsSubmitted });
+            dispatch(matchesActions.fetchSavedBets());
         } catch (error) {
             console.error(error);
         }

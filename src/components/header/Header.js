@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import _ from 'lodash'
 import autoBind from 'react-autobind';
 
 // import './GroupPhaseContainer.scss';
@@ -93,16 +93,22 @@ class Header extends Component {
         const { classes } = this.props;
         const { anchorEl } = this.state;
         let isContestPage = window.location.pathname.includes('/contest/');
+
+        let userAddress = this.props.userAddress;
+        let isParticipant = _.findIndex(this.props.participants, function (participant) { return participant.address == userAddress; }) !== -1;
+
         return (
             <div className={classes.root}>
                 <UserProfileDialog />
-                {/* <ContestDetailsDialog /> */}
                 <AppBar position="static">
                     <Toolbar>
                         <Typography variant="title" color="inherit" className={classes.flex} onClick={this.goToContestHome}>Pronostic - World Cup 2018</Typography>
                         {isContestPage &&
                             <div>
-                                <Button onClick={this.handlePredictionsClick} color="inherit">Your Predictions</Button>
+                                {isParticipant &&
+
+                                    <Button onClick={this.handlePredictionsClick} color="inherit">Your Predictions</Button>
+                                }
                                 <Button onClick={this.handleRulesClick} color="inherit">Contest Rules</Button>
 
                                 <IconButton onClick={this.handleUserProfileClick} color="inherit">
@@ -110,26 +116,6 @@ class Header extends Component {
                                 </IconButton>
                             </div>
                         }
-                        {/* <div>
-                            <Button
-                                aria-owns={anchorEl ? 'simple-menu' : null}
-                                aria-haspopup="true"
-                                onClick={this.handleClick}
-                                color="inherit"
-                            >
-                                Open Menu
-        </Button>
-                            <Menu
-                                id="simple-menu"
-                                anchorEl={anchorEl}
-                                open={Boolean(anchorEl)}
-                                onClose={this.handleClose}
-                            >
-                                <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                                <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                                <MenuItem onClick={this.handleClose}>Logout</MenuItem>
-                            </Menu>
-                        </div> */}
                     </Toolbar>
                 </AppBar>
             </div>
@@ -141,7 +127,9 @@ class Header extends Component {
 function mapStateToProps(state) {
     return {
         wcwagersAddress: wcwagersSelectors.getAddress(state),
-        // isFetched: showEventSelectors.getIsFetched(state)
+        participants: wcwagersSelectors.getParticipants(state),
+        userAddress: userProfileSelectors.getAddress(state),
+        wcwagersAddress: wcwagersSelectors.getAddress(state),
     };
 }
 

@@ -49,12 +49,11 @@ class PhasesContainer extends Component {
         this.props.dispatch(wcwagersActions.loadBetsSubmitted());
     }
 
-    componentWillMount() {
-        let userAddress = this.props.userAddress;
-        let isParticipant = _.findIndex(this.props.participants, function (participant) { return participant.address == userAddress; }) !== -1;
-
-        if(!isParticipant) {
-            let address = this.props.wcwagersAddress;
+    componentWillUpdate(nextProps, nextState) {
+        let userAddress = nextProps.userAddress;
+        let isParticipant = _.findIndex(nextProps.participants, function (participant) { return participant.address == userAddress; }) !== -1;
+        if(nextProps.isParticipantFetched && !isParticipant) {
+            let address = nextProps.routeParams.address;
             if (address !== '') {
                 browserHistory.push('/contest/' + address);
             }
@@ -129,7 +128,7 @@ function mapStateToProps(state) {
         userAddress: userProfileSelectors.getAddress(state),
         wcwagersAddress: wcwagersSelectors.getAddress(state),
 
-
+        isParticipantFetched: wcwagersSelectors.isFetched(state),
     };
 }
 

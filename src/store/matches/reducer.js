@@ -6,6 +6,13 @@ import Immutable from 'seamless-immutable';
 const initialState = Immutable({
     matches: undefined,
     bets: undefined,
+    savedBets: {
+        groups: undefined,
+        round_16: undefined,
+        round_8: undefined,
+        round_4: undefined,
+        round_2: undefined,
+    },
     selectedTab: 0,
     isFetched: false,
     ipfsLinks: {
@@ -36,6 +43,10 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 ipfsLinks: action.ipfsLinks,
             });
+        case types.SAVED_BETS_FETCHED:
+            return state.merge({
+                savedBets: action.savedBets,
+            });
         default:
             return state;
     }
@@ -64,3 +75,6 @@ export function getIpfsLinks(state) {
     return state.matches.ipfsLinks;
 }
 
+export function getSavedBets(state) {
+    return state.matches.savedBets;
+}

@@ -197,7 +197,7 @@ class ContestDetails extends Component {
                             <br />
                             <Typography color="primary">Already a participant in this contest</Typography>
                             <br />
-                            <Button variant="raised" onClick={this.openBets} className={classes.registerBtn} color="primary">Start Participation</Button>
+                            <Button variant="raised" onClick={this.openBets} className={classes.registerBtn} color="primary">Set your predictions</Button>
                         </div>
                     }
                     <br />

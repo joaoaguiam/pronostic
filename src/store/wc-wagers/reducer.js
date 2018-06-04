@@ -9,7 +9,7 @@ export const TX_STATUS = {
 }
 const initialState = Immutable({
     participants: [],
-    address: '0x1e0b778e6e3b2924a3715fc785d83ec8509c1009',
+    address: '',
     showContestDetailsDialog: false,
     contestDetails: {
         participationFeeWei: 0,
@@ -132,4 +132,7 @@ export function getBetsTxStatus(state) {
 
 export function getPhaseDates(state) {
     return state.wcwagers.phasesDates;
+}
+export function getBetsSubmitted(state) {
+    return state.wcwagers.betsSubmitted;
 }

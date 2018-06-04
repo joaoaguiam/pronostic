@@ -20,10 +20,10 @@ export function fetchMatches() {
             let matches = await response.json();
             console.log(matches);
             let contractAddress = wcwagersSelectors.getAddress(getState());
-            
+
             dispatch({ type: types.MATCHES_FETCHED, matches });
 
-            let cachedbets = localStorage.getItem('pronostic-bets-'+contractAddress);
+            let cachedbets = localStorage.getItem('pronostic-bets-' + contractAddress);
             console.log(cachedbets);
             if (cachedbets !== null) {
                 // localStorage.removeItem('bets');
@@ -58,7 +58,7 @@ export function setGroupHomeBet(phase, subPhase, matchId, bet) {
             let contractAddress = wcwagersSelectors.getAddress(getState());
 
             dispatch({ type: types.BETS_UPDATED, bets });
-            localStorage.setItem('pronostic-bets-'+contractAddress, JSON.stringify(bets));
+            localStorage.setItem('pronostic-bets-' + contractAddress, JSON.stringify(bets));
 
         } catch (error) {
             console.error(error);
@@ -75,7 +75,7 @@ export function setGroupAwayBet(phase, subPhase, matchId, bet) {
             let contractAddress = wcwagersSelectors.getAddress(getState());
 
             dispatch({ type: types.BETS_UPDATED, bets });
-            localStorage.setItem('pronostic-bets-'+contractAddress, JSON.stringify(bets));
+            localStorage.setItem('pronostic-bets-' + contractAddress, JSON.stringify(bets));
 
         } catch (error) {
             console.error(error);
@@ -92,7 +92,7 @@ export function setWinnerBet(phase, subPhase, matchId, bet) {
             let contractAddress = wcwagersSelectors.getAddress(getState());
 
             dispatch({ type: types.BETS_UPDATED, bets });
-            localStorage.setItem('pronostic-bets-'+contractAddress, JSON.stringify(bets));
+            localStorage.setItem('pronostic-bets-' + contractAddress, JSON.stringify(bets));
 
         } catch (error) {
             console.error(error);
@@ -110,3 +110,27 @@ export function selectTab(tab) {
     };
 }
 
+export function fetchSavedBets() {
+    return async (dispatch, getState) => {
+        try {
+            let submissionLinks = wcwagersSelectors.getBetsSubmitted(getState());
+            let savedBets = {
+                groups: undefined,
+                round_16: undefined,
+                round_8: undefined,
+                round_4: undefined,
+                round_2: undefined,
+            };
+            // _.forOwn(submissionLinks, async function (value, key) {
+            //     let response = await fetch(value);
+            //     let bets = await response.json();
+            //     console.log(bets);
+            //     savedBets[key] = bets;
+            // });
+            console.log(savedBets);
+            dispatch({ type: types.SAVED_BETS_FETCHED, savedBets });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}
