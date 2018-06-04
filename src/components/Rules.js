@@ -162,8 +162,7 @@ Rules.propTypes = {
 };
 
 export default connect(mapStateToProps)(withStyles(styles)(Rules));
-<<<<<<< HEAD
-=======
+
 
 // Group stage :
 // 10 points if you predict the exact score
@@ -174,11 +173,11 @@ export default connect(mapStateToProps)(withStyles(styles)(Rules));
 
 // 0 point for a wrong prediction
 
- 
+
 
 // Knockout stages:
 
-// For the knockout stage the scoring is slightly different from the group stage. Thus you will need to predict the final score (before the PKs) AND the winning team. 
+// For the knockout stage the scoring is slightly different from the group stage. Thus you will need to predict the final score (before the PKs) AND the winning team.
 
 // Where things are different is if you predict a draw. Because then you can get points for predicting the correct score AND points for predicting the correct winner.
 
@@ -192,7 +191,7 @@ export default connect(mapStateToProps)(withStyles(styles)(Rules));
 
 // I predicted Uruguay as a winner, but I have the wrong score. I collect 5 points.
 
- 
+
 
 // B/
 
@@ -202,13 +201,13 @@ export default connect(mapStateToProps)(withStyles(styles)(Rules));
 
 // I have the exact score. I collect 10 points.
 
- 
+
 
 // C/
 
 // I predict Uruguay-Argentina 1-1 and Uruguay as an winner.
 
-// Results : a draw 1-1 after 90 minutes. Uruguay wins in overtime 2-1. 
+// Results : a draw 1-1 after 90 minutes. Uruguay wins in overtime 2-1.
 
 // I have the right score after 90 minutes, but only the final score matters! I collect 5 points for predicting the correct winner.
 
@@ -222,7 +221,7 @@ export default connect(mapStateToProps)(withStyles(styles)(Rules));
 
 // I have the right score after overtime. I collect 10 points. On top of that I collect 5 points for predicting the correct winner, for a total of 15 points!
 
- 
+
 
 // E/
 
@@ -232,7 +231,3 @@ export default connect(mapStateToProps)(withStyles(styles)(Rules));
 
 // I have predicted a draw, but the wrong score. I collect 3 points.
 // As I didn't predict the correct winner, I only collect 3 points.
-
- 
-
->>>>>>> ec70a9df42fc2d948bcbe774d874486fee762e96
