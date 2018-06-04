@@ -19,10 +19,11 @@ export function fetchMatches() {
             let response = await fetch(DATA_SOURCE);
             let matches = await response.json();
             console.log(matches);
-
+            let contractAddress = wcwagersSelectors.getAddress(getState());
+            
             dispatch({ type: types.MATCHES_FETCHED, matches });
 
-            let cachedbets = localStorage.getItem('bets');
+            let cachedbets = localStorage.getItem('pronostic-bets-'+contractAddress);
             console.log(cachedbets);
             if (cachedbets !== null) {
                 // localStorage.removeItem('bets');
@@ -54,8 +55,10 @@ export function setGroupHomeBet(phase, subPhase, matchId, bet) {
             let bets = _.cloneDeep(matchesSelectors.getBets(getState()));
             bets[matchId - 1].homeBet = bet;
 
+            let contractAddress = wcwagersSelectors.getAddress(getState());
+
             dispatch({ type: types.BETS_UPDATED, bets });
-            localStorage.setItem('bets', JSON.stringify(bets));
+            localStorage.setItem('pronostic-bets-'+contractAddress, JSON.stringify(bets));
 
         } catch (error) {
             console.error(error);
@@ -69,8 +72,10 @@ export function setGroupAwayBet(phase, subPhase, matchId, bet) {
             let bets = _.cloneDeep(matchesSelectors.getBets(getState()));
             bets[matchId - 1].awayBet = bet;
 
+            let contractAddress = wcwagersSelectors.getAddress(getState());
+
             dispatch({ type: types.BETS_UPDATED, bets });
-            localStorage.setItem('bets', JSON.stringify(bets));
+            localStorage.setItem('pronostic-bets-'+contractAddress, JSON.stringify(bets));
 
         } catch (error) {
             console.error(error);
@@ -84,8 +89,10 @@ export function setWinnerBet(phase, subPhase, matchId, bet) {
             let bets = _.cloneDeep(matchesSelectors.getBets(getState()));
             bets[matchId - 1].winnerBet = bet;
 
+            let contractAddress = wcwagersSelectors.getAddress(getState());
+
             dispatch({ type: types.BETS_UPDATED, bets });
-            localStorage.setItem('bets', JSON.stringify(bets));
+            localStorage.setItem('pronostic-bets-'+contractAddress, JSON.stringify(bets));
 
         } catch (error) {
             console.error(error);

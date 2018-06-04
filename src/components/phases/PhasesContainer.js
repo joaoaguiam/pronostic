@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import _ from 'lodash';
+
 import autoBind from 'react-autobind';
 
 import * as matchesSelectors from '../../store/matches/reducer';
@@ -8,6 +10,10 @@ import * as matchesActions from '../../store/matches/actions';
 
 import * as wcwagersSelectors from '../../store/wc-wagers/reducer';
 import * as wcwagersActions from '../../store/wc-wagers/actions';
+
+import * as userProfileSelectors from '../../store/user-profile/reducer';
+import * as userProfileActions from '../../store/user-profile/actions';
+
 
 // import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
@@ -18,6 +24,9 @@ import GroupPhaseContainer from './GroupPhaseContainer';
 import Typography from '@material-ui/core/Typography';
 import KnockoutPhaseContainer from './KnockoutPhaseContainer';
 import CenterContainerLarge from '../layout/center-container/CenterContainerLarge';
+
+import { browserHistory } from 'react-router'
+
 
 const styles = {
     root: {
@@ -38,6 +47,22 @@ class PhasesContainer extends Component {
         this.props.dispatch(matchesActions.fetchMatches());
         this.props.dispatch(wcwagersActions.loadPhasesDates());
         this.props.dispatch(wcwagersActions.loadBetsSubmitted());
+    }
+
+    componentWillMount() {
+        let userAddress = this.props.userAddress;
+        let isParticipant = _.findIndex(this.props.participants, function (participant) { return participant.address == userAddress; }) !== -1;
+
+        if(!isParticipant) {
+            let address = this.props.wcwagersAddress;
+            if (address !== '') {
+                browserHistory.push('/contest/' + address);
+            }
+            else {
+                browserHistory.push('/');
+            }
+        }
+
     }
 
     renderSelectedPhase() {
@@ -81,7 +106,9 @@ class PhasesContainer extends Component {
                 )
         }
     }
+
     render() {
+
         const { classes } = this.props;
         return (
             <CenterContainerLarge>
@@ -97,7 +124,12 @@ class PhasesContainer extends Component {
 
 function mapStateToProps(state) {
     return {
-        selectedPhase: matchesSelectors.getSelectedTab(state)
+        selectedPhase: matchesSelectors.getSelectedTab(state),
+        participants: wcwagersSelectors.getParticipants(state),
+        userAddress: userProfileSelectors.getAddress(state),
+        wcwagersAddress: wcwagersSelectors.getAddress(state),
+
+
     };
 }
 
