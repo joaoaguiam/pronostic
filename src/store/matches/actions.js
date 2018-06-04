@@ -56,6 +56,8 @@ export function setGroupHomeBet(phase, subPhase, matchId, bet) {
             bets[matchId - 1].homeBet = bet;
 
             dispatch({ type: types.BETS_UPDATED, bets });
+            let contractAddress = wcwagersSelectors.getAddress(getState());
+
             localStorage.setItem('pronostic-bets-' + contractAddress, JSON.stringify(bets));
 
         } catch (error) {
@@ -71,6 +73,8 @@ export function setGroupAwayBet(phase, subPhase, matchId, bet) {
             bets[matchId - 1].awayBet = bet;
 
             dispatch({ type: types.BETS_UPDATED, bets });
+            let contractAddress = wcwagersSelectors.getAddress(getState());
+
             localStorage.setItem('pronostic-bets-' + contractAddress, JSON.stringify(bets));
 
         } catch (error) {
@@ -86,6 +90,8 @@ export function setWinnerBet(phase, subPhase, matchId, bet) {
             bets[matchId - 1].winnerBet = bet;
 
             dispatch({ type: types.BETS_UPDATED, bets });
+            let contractAddress = wcwagersSelectors.getAddress(getState());
+
             localStorage.setItem('pronostic-bets-' + contractAddress, JSON.stringify(bets));
 
         } catch (error) {

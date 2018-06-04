@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import _ from 'lodash';
 import autoBind from 'react-autobind';
 
 import * as matchesSelectors from '../../store/matches/reducer';
