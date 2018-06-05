@@ -10,14 +10,15 @@ import Web3 from 'web3';
 
 
 
-const DATA_SOURCE = "https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json";
-
+// const DATA_SOURCE = "https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json";
+const DATA_SOURCE = "/data/wc-results.json";
 
 export function fetchMatches() {
     return async (dispatch, getState) => {
         try {
 
             let response = await fetch(DATA_SOURCE);
+            // debugger;
             let matches = await response.json();
             console.log(matches);
             let contractAddress = wcwagersSelectors.getAddress(getState());

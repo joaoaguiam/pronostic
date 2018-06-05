@@ -158,8 +158,8 @@ class GroupPhaseContainer extends Component {
                                 let homeResult = match.home_result;
                                 let awayResult = match.away_result;
 
-                                let isWinnerHome = match.winner === match.home_team;
-                                let isWinnerAway = match.winner === match.away_team;
+                                let isWinnerHome = match.winner === match.home_team || match.home_result > match.away_result;
+                                let isWinnerAway = match.winner === match.away_team || match.home_result < match.away_result;
 
                                 let homeBet = bets !== undefined && _.has(bets[match.name - 1], 'homeBet') ? bets[match.name - 1].homeBet : '';
                                 let awayBet = bets !== undefined && _.has(bets[match.name - 1], 'awayBet') ? bets[match.name - 1].awayBet : '';
@@ -169,9 +169,11 @@ class GroupPhaseContainer extends Component {
                                 let changedHomeBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'homeBet') ? (savedBet[match.name - 1].homeBet !== homeBet) : (homeBet !== '');
                                 let changedAwayBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'awayBet') ? (savedBet[match.name - 1].awayBet !== awayBet) : (awayBet !== '');
                                 let changedWinnerBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'winnerBet') ? (savedBet[match.name - 1].winnerBet == winnerBet ? 'default' : 'secondary') : 'secondary';
-                                // if(match.name === 1) {
-                                //     // debugger;
+                                // if(match.name === 18) {
+                                //     debugger;
                                 // }
+
+                                let pointsForMatch = matchesSelectors.calculateMatchPoints(match, savedBet, timePhase);
 
                                 if(match.name === 49) {
                                     // debugger;
@@ -242,13 +244,13 @@ class GroupPhaseContainer extends Component {
                                         <TableCell>
                                             {isFinished &&
                                                 <div>
-                                                    {isWinnerHome && <StarsIcon className={classes.winnerIcon} color="primary" />}
+                                                    {/* {isWinnerHome && <StarsIcon className={classes.winnerIcon} color="primary" />} */}
                                                     {homeResult} - {awayResult}
-                                                    {isWinnerAway && <StarsIcon className={classes.winnerIcon} color="primary" />}
+                                                    {/* {isWinnerAway && <StarsIcon className={classes.winnerIcon} color="primary" />} */}
                                                 </div>
                                             }
                                         </TableCell>
-                                        <TableCell></TableCell>
+                                        <TableCell>{pointsForMatch}</TableCell>
 
                                     </TableRow>
                                 );

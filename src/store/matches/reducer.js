@@ -120,3 +120,48 @@ export function getPhaseFromGameNumber(i) {
     }
     return 'unknown'
 }
+
+export function calculateMatchPoints(match, savedBets, phase) {
+    if (savedBets === undefined) {
+        return undefined;
+    }
+    // debugger;
+    let matchNum = match.name;
+    let matchId = matchNum - 1;
+
+    let homeResult = match.home_result;
+    let awayResult = match.away_result;
+    if (homeResult === undefined || awayResult === undefined || homeResult === null || awayResult === null) {
+        return undefined;
+    }
+    // let homeResult = match.home_result;
+
+    let savedBet = savedBets[matchId];
+    let homeBet = (savedBet !== undefined && _.has(savedBet, 'homeBet')) ? savedBet.homeBet : undefined;
+    let awayBet = (savedBet !== undefined && _.has(savedBet, 'awayBet')) ? savedBet.awayBet : undefined;
+    // let winnerBet = (savedBet !== undefined && _.has(savedBet[match.name - 1], 'winnerBet')) ? savedBet[match.name - 1].winnerBet  : undefined;
+
+    if (homeBet === undefined || awayBet === undefined) {
+        return undefined;
+    }
+    if (matchNum === 15)
+        debugger;
+    if (phase === 'groups') {
+        // 10 points if you predict the exact score
+        if (homeBet === homeResult && awayBet === awayResult) {
+            return 10;
+        }
+
+        // 5 points if you predict the winner
+        if ((homeBet > awayBet && homeResult > awayResult) || (awayBet > homeBet && awayResult > homeResult)) {
+            return 5;
+        }
+
+        // 3 points if you predict a draw
+        if ((homeBet === awayBet && homeResult === awayResult)) {
+            return 3;
+        }
+        return 0;
+    }
+
+}
