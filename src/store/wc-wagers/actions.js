@@ -12,6 +12,7 @@ import { writeUrl } from '../../contracts/WCwagers';
 
 export function fetchParticipants(wcwagersAddress) {
     return async (dispatch, getState) => {
+
         try {
             let details = await WCwagers.getContestInfo(wcwagersAddress);
 
@@ -46,6 +47,8 @@ export function setContractAddress(wcwagersAddress) {
         try {
             dispatch({ type: types.SET_CONTRACT_ADDRESS, address: wcwagersAddress });
             dispatch(fetchParticipants(wcwagersAddress));
+            dispatch(loadPhasesDates());
+            dispatch(loadBetsSubmitted());
         } catch (error) {
             console.error(error);
         }
@@ -144,12 +147,15 @@ export function loadBetsSubmitted() {
     return async (dispatch, getState) => {
         try {
             let address = wcwagersSelectors.getAddress(getState());
+            console.log("ADDRESS: "+address);
             let allPhases = wcwagersSelectors.getAllPhases();
             let betsSubmitted = {};
             for (let i = 0; i < allPhases.length; i++) {
                 let phase = allPhases[i];
-                console.log('WCwagers.getOwnURL(' + address + ', ' + phase.smartcontract + ')');
                 let url = await WCwagers.getOwnURL(address, phase.smartcontract);
+                console.log('WCwagers.getOwnURL(' + address + ', ' + phase.smartcontract + ') = '+url);
+                // url = await WCwagers.getOwnURL(address, phase.smartcontract);
+                // console.log('WCwagers.getOwnURL(' + address + ', ' + phase.smartcontract + ') = '+url);
                 // debugger;
                 betsSubmitted[phase.json] = url;
             }

@@ -9,6 +9,9 @@ import * as userProfileActions from '../../store/user-profile/actions';
 import * as wcwagersSelectors from '../../store/wc-wagers/reducer';
 import * as wcwagersActions from '../../store/wc-wagers/actions';
 
+import * as matchesSelectors from '../../store/matches/reducer';
+import * as matchesActions from '../../store/matches/actions';
+
 import * as notificationsSelectors from '../../store/notifications/reducer';
 import * as notificationsActions from '../../store/notifications/actions';
 
@@ -43,6 +46,7 @@ import CenterContainerSmall from '../layout/center-container/CenterContainerSmal
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { browserHistory } from 'react-router'
+import PhasesContainer from '../phases/PhasesContainer';
 
 const styles = theme => ({
     root: {
@@ -133,13 +137,14 @@ class ContestDetails extends Component {
         );
     }
     openBets() {
-        browserHistory.push('/contest/' + this.props.address + '/bet');
+        // browserHistory.push('/contest/' + this.props.address + '/bet');
+        this.props.dispatch(matchesActions.openBetsPage());
     }
     render() {
         const { classes } = this.props;
         // let isParticipant = _.indexOf(this.props.participants, this.props.userAddress) !== -1;
         let userAddress = this.props.userAddress;
-        let isParticipant = _.findIndex(this.props.participants, function (participant) { return participant.address == userAddress; }) !== -1;
+        let isParticipant = _.findIndex(this.props.participants, function (participant) { return participant.address === userAddress; }) !== -1;
 
         let hasParticipants = this.props.participants.length > 0;
         let isMining = this.props.participantRegistrationTxStatus === wcwagersSelectors.TX_STATUS.PENDING;
@@ -147,7 +152,11 @@ class ContestDetails extends Component {
 
         
 
-        // debugger;
+        if(this.props.openBetsPage){
+            return (
+                <PhasesContainer routeParams={{address: this.props.routeParams.address}} />
+            )
+        }
         return (
             <CenterContainerSmall>
                 <div className={classes.root}>
@@ -223,6 +232,7 @@ function mapStateToProps(state) {
         contestDetails: wcwagersSelectors.getContestDetails(state),
         participants: wcwagersSelectors.getParticipants(state),
         participantRegistrationTxStatus: wcwagersSelectors.getParticipantRegistrationTxStatus(state),
+        openBetsPage: matchesSelectors.getOpenBetsPage(state),
     };
 }
 

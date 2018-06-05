@@ -11,6 +11,8 @@ import * as userProfileActions from '../../store/user-profile/actions';
 import * as wcwagersSelectors from '../../store/wc-wagers/reducer';
 import * as wcwagersActions from '../../store/wc-wagers/actions';
 
+import * as mathcesSelectors from '../../store/matches/reducer';
+import * as matchesActions from '../../store/matches/actions';
 
 // import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
@@ -78,12 +80,16 @@ class Header extends Component {
     };
     handlePredictionsClick = () => {
         let address = this.props.wcwagersAddress;
-        browserHistory.push('/contest/' + address + '/bet');
+        browserHistory.push('/contest/' + address);
+        this.props.dispatch(matchesActions.openBetsPage());
+
     };
     goToContestHome() {
         let address = this.props.wcwagersAddress;
         if (address !== '') {
             browserHistory.push('/contest/' + address);
+            this.props.dispatch(matchesActions.closeBetsPage());
+
         }
         else {
             browserHistory.push('/');

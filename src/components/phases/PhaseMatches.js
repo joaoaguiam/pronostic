@@ -166,14 +166,16 @@ class GroupPhaseContainer extends Component {
                                 let winnerBet = bets !== undefined && _.has(bets[match.name - 1], 'winnerBet') ? bets[match.name - 1].winnerBet : '';
 
                                 let savedBet = this.props.savedBets[timePhase];
-                                let changedHomeBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'homeBet') ? (savedBet[match.name - 1].homeBet === homeBet) : (homeBet !== '');
-                                let changedAwayBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'awayBet') ? (savedBet[match.name - 1].homeBet === homeBet) : (homeBet !== '');
-                                let changedWinnerBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'winnerBet') ? (savedBet[match.name - 1].homeBet === homeBet ? 'default' : 'secondary') : 'secondary';
-                                    
-
-                                // if(match.name === 49) {
-                                //     debugger;
+                                let changedHomeBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'homeBet') ? (savedBet[match.name - 1].homeBet !== homeBet) : (homeBet !== '');
+                                let changedAwayBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'awayBet') ? (savedBet[match.name - 1].awayBet !== awayBet) : (awayBet !== '');
+                                let changedWinnerBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'winnerBet') ? (savedBet[match.name - 1].winnerBet == winnerBet ? 'default' : 'secondary') : 'secondary';
+                                // if(match.name === 1) {
+                                //     // debugger;
                                 // }
+
+                                if(match.name === 49) {
+                                    // debugger;
+                                }
                                 return (
                                     <TableRow key={match.name}>
                                         <TableCell component="th" scope="row" className={classes.center}>{match.name}</TableCell>

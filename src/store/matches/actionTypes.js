@@ -4,3 +4,5 @@ export const TAB_SELECTED = 'matches.TAB_SELECTED';
 export const BETS_SUBMITTED = 'matches.BETS_SUBMITTED';
 export const SAVED_BETS_FETCHED = 'matches.SAVED_BETS_FETCHED';
 
+export const OPEN_BETS_PAGE = 'matches.OPEN_BETS_PAGE';
+export const CLOSE_BETS_PAGE = 'matches.CLOSE_BETS_PAGE';

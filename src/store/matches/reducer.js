@@ -21,17 +21,18 @@ const initialState = Immutable({
         round_8: undefined,
         round_4: undefined,
         round_2: undefined,
-    }
+    },
+    openBetsPage: false,
 });
 
 
 
 export const gamesPhases = {
-    groups: {from: 0, to: 47},
-    round_16: {from: 48, to: 55},
-    round_8: {from: 56, to: 59},
-    round_4: {from: 60, to: 61},
-    round_2: {from: 62, to: 63},
+    groups: { from: 0, to: 47 },
+    round_16: { from: 48, to: 55 },
+    round_8: { from: 56, to: 59 },
+    round_4: { from: 60, to: 61 },
+    round_2: { from: 62, to: 63 },
 }
 
 export default function reduce(state = initialState, action = {}) {
@@ -56,6 +57,14 @@ export default function reduce(state = initialState, action = {}) {
         case types.SAVED_BETS_FETCHED:
             return state.merge({
                 savedBets: action.savedBets,
+            });
+        case types.OPEN_BETS_PAGE:
+            return state.merge({
+                openBetsPage: true,
+            });
+        case types.CLOSE_BETS_PAGE:
+            return state.merge({
+                openBetsPage: false,
             });
         default:
             return state;
@@ -89,21 +98,24 @@ export function getSavedBets(state) {
     return state.matches.savedBets;
 }
 
+export function getOpenBetsPage(state) {
+    return state.matches.openBetsPage;
+}
 
-export function getPhaseFromGameNumber(i){
-    if(i < 48) {
+export function getPhaseFromGameNumber(i) {
+    if (i < 48) {
         return 'groups';
     }
-    else if(i < 56) {
+    else if (i < 56) {
         return 'round_16';
     }
-    else if(i < 60) {
+    else if (i < 60) {
         return 'round_8';
     }
-    else if(i < 62) {
+    else if (i < 62) {
         return 'round_4';
     }
-    else if(i < 64) {
+    else if (i < 64) {
         return 'round_2';
     }
     return 'unknown'

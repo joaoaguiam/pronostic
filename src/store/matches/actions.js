@@ -158,3 +158,21 @@ export function fetchSavedBets() {
         }
     };
 }
+export function openBetsPage() {
+    return async (dispatch, getState) => {
+        try {
+            dispatch({ type: types.OPEN_BETS_PAGE });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}
+export function closeBetsPage() {
+    return async (dispatch, getState) => {
+        try {
+            dispatch({ type: types.CLOSE_BETS_PAGE });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}

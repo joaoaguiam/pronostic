@@ -70,7 +70,7 @@ export async function registerParticipant(wcwagersAddress, contestDetails, nickn
             dispatch(notificationsActions.addNotification("Registration transaction needs to be validated on Metamask"));
             let tx = await contract.registerParticipantAsync(nickname, { value: web3.toWei(contestDetails.participationFeeEther, 'ether') });
             dispatch(wcwagersActions.setParticipantRegistrationTxStatus(TX_STATUS.PENDING));
-            dispatch(notificationsActions.addNotification("Waiting registration transaction "+tx+" to be mined by the blockchain"));
+            dispatch(notificationsActions.addNotification("Waiting for registration transaction "+tx+" to be mined by the blockchain"));
             console.log(tx);
             let result = await getTransactionReceiptMined(tx);
             dispatch(wcwagersActions.setParticipantRegistrationTxStatus(TX_STATUS.MINED));
@@ -92,7 +92,7 @@ export async function writeUrl(wcwagersAddress, url, phase, dispatch) {
             console.log('contract.writeURLAsync('+url+', '+phase+')');
             let tx = await contract.writeURLAsync(url, phase);
 
-            dispatch(notificationsActions.addNotification("Waiting submission transaction "+tx+" to be mined by the blockchain"));
+            dispatch(notificationsActions.addNotification("Waiting for submission transaction "+tx+" to be mined by the blockchain"));
 
             dispatch(wcwagersActions.setBetsTxStatus(TX_STATUS.PENDING));
 
