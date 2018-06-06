@@ -10,6 +10,7 @@ import * as userProfileSelectors from './reducer';
 
 import web3 from '../../helpers/web3/Web3Helper';
 
+import * as matchesActions from '../matches/actions';
 
 // export function loginUser(userLoggedInCallback = () => { }) {
 //     return async (dispatch, getState) => {
@@ -31,8 +32,13 @@ let _fetchEthereumAccount = async (dispatch, getState) => {
     let currentAddres = userProfileSelectors.getAddress(getState());
     let address = await web3.eth.getCoinbaseAsync();
 
-    if(currentAddres === address) {
+    if (currentAddres === address) {
         return;
+    }
+    if (currentAddres !== '') {
+        location.reload();
+        return;
+        // matchesActions.closeBetsPage();
     }
 
     web3.eth.defaultAccount = address;
@@ -77,7 +83,7 @@ export function fetchEthereumAccount() {
                 _fetchEthereumAccount(_dispatch, _getState);
             });
 
-            
+
         } catch (error) {
             console.error(error);
         }

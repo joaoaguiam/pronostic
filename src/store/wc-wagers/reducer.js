@@ -16,7 +16,8 @@ const initialState = Immutable({
         participationFeeEther: 0,
         contestName: '',
         contestStartDate: 0,
-        contestBalanceEther: 0
+        contestBalanceEther: 0,
+        owner: '',
     },
     isFetched: false,
     participantRegistrationTxStatus: TX_STATUS.NONE,
@@ -35,6 +36,19 @@ const initialState = Immutable({
         round_4: undefined,
         round_2: undefined
     },
+    otherParticipantsBets: [],
+    // [
+    //     {
+    //         address: '',
+    //         betsSubmitted: {
+    //             groups: undefined,
+    //             round_16: undefined,
+    //             round_8: undefined,
+    //             round_4: undefined,
+    //             round_2: undefined
+    //         },
+    //     }
+    // ]
 });
 
 export default function reduce(state = initialState, action = {}) {
@@ -71,6 +85,10 @@ export default function reduce(state = initialState, action = {}) {
         case types.BETS_SUBMITTED_FETCHED:
             return state.merge({
                 betsSubmitted: action.betsSubmitted,
+            });
+        case types.OTHER_PARTICIPANTS_BETS_FETCHED:
+            return state.merge({
+                otherParticipantsBets: action.otherParticipantsBets,
             });
         default:
             return state;
@@ -135,4 +153,7 @@ export function getPhaseDates(state) {
 }
 export function getBetsSubmitted(state) {
     return state.wcwagers.betsSubmitted;
+}
+export function getOtherParticipantsBets(state) {
+    return state.wcwagers.otherParticipantsBets;
 }

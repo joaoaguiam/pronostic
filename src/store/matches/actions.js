@@ -3,6 +3,7 @@ import _ from 'lodash';
 import * as types from './actionTypes';
 import * as matchesSelectors from './reducer';
 import * as wcwagersSelectors from '../wc-wagers/reducer';
+import * as wcwagersActions from '../wc-wagers/actions';
 
 import update from 'immutability-helper';
 
@@ -12,6 +13,9 @@ import Web3 from 'web3';
 
 // const DATA_SOURCE = "https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json";
 const DATA_SOURCE = "/data/wc-results.json";
+
+
+
 
 export function fetchMatches() {
     return async (dispatch, getState) => {
@@ -23,8 +27,34 @@ export function fetchMatches() {
             console.log(matches);
             let contractAddress = wcwagersSelectors.getAddress(getState());
 
-            dispatch({ type: types.MATCHES_FETCHED, matches });
 
+            // flat matches 
+            let flatMatches = new Array(64);
+            let iterator = (match) => {
+                flatMatches[match.name - 1] = match;
+            };
+            matches.groups.a.matches.forEach(iterator);
+            matches.groups.b.matches.forEach(iterator);
+            matches.groups.c.matches.forEach(iterator);
+            matches.groups.d.matches.forEach(iterator);
+            matches.groups.e.matches.forEach(iterator);
+            matches.groups.f.matches.forEach(iterator);
+            matches.groups.g.matches.forEach(iterator);
+            matches.groups.h.matches.forEach(iterator);
+            matches.knockout.round_16.matches.forEach(iterator);
+            matches.knockout.round_8.matches.forEach(iterator);
+            matches.knockout.round_4.matches.forEach(iterator);
+            matches.knockout.round_2_loser.matches.forEach(iterator);
+            matches.knockout.round_2.matches.forEach(iterator);
+            console.log("FLAT MATCHES");
+            console.log(flatMatches);
+
+            dispatch({ type: types.MATCHES_FETCHED, matches, flatMatches });
+
+            dispatch(wcwagersActions.loadOtherParticipantBets());
+
+            
+            // Load cached bets
             let cachedbets = localStorage.getItem('pronostic-bets-' + contractAddress);
             console.log(cachedbets);
             if (cachedbets !== null) {

@@ -95,6 +95,9 @@ class Header extends Component {
             browserHistory.push('/');
         }
     }
+    handleToggleTimePastClick() {
+        this.props.dispatch(wcwagersActions.toggleTimePast());
+    }
     render() {
         const { classes } = this.props;
         const { anchorEl } = this.state;
@@ -111,6 +114,7 @@ class Header extends Component {
                         <Typography variant="title" color="inherit" className={classes.flex} onClick={this.goToContestHome}>Pronostic - World Cup 2018</Typography>
                         {isContestPage &&
                             <div>
+                                <Button onClick={this.handleToggleTimePastClick} color="inherit">Toggle Time Past</Button>
                                 {isParticipant &&
 
                                     <Button onClick={this.handlePredictionsClick} color="inherit">Your Predictions</Button>

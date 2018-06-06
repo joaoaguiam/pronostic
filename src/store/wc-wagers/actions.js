@@ -6,6 +6,7 @@ import * as matchesSelectors from '../matches/reducer';
 import * as matchesActions from '../matches/actions';
 
 import * as WCwagers from '../../contracts/WCwagers';
+import moment from 'moment-timezone';
 
 import { uploadObjectIpfs } from '../../helpers/ipfs/ipfs';
 import { writeUrl } from '../../contracts/WCwagers';
@@ -21,7 +22,7 @@ export function fetchParticipants(wcwagersAddress) {
             let participants = await WCwagers.getParticipants(wcwagersAddress);
 
             dispatch({ type: types.PARTICIPANTS_FETCHED, participants });
-
+            dispatch(loadOtherParticipantBets());
         } catch (error) {
             console.error(error);
         }
@@ -137,6 +138,7 @@ export function loadPhasesDates() {
             // phasesDates['round_16'] = 1527915600;
             console.log(phasesDates);
             dispatch({ type: types.PHASES_DATES_FETCHED, phasesDates });
+
         } catch (error) {
             console.error(error);
         }
@@ -147,13 +149,13 @@ export function loadBetsSubmitted() {
     return async (dispatch, getState) => {
         try {
             let address = wcwagersSelectors.getAddress(getState());
-            console.log("ADDRESS: "+address);
+            console.log("ADDRESS: " + address);
             let allPhases = wcwagersSelectors.getAllPhases();
             let betsSubmitted = {};
             for (let i = 0; i < allPhases.length; i++) {
                 let phase = allPhases[i];
                 let url = await WCwagers.getOwnURL(address, phase.smartcontract);
-                console.log('WCwagers.getOwnURL(' + address + ', ' + phase.smartcontract + ') = '+url);
+                console.log('WCwagers.getOwnURL(' + address + ', ' + phase.smartcontract + ') = ' + url);
                 // url = await WCwagers.getOwnURL(address, phase.smartcontract);
                 // console.log('WCwagers.getOwnURL(' + address + ', ' + phase.smartcontract + ') = '+url);
                 // debugger;
@@ -163,6 +165,79 @@ export function loadBetsSubmitted() {
             console.log(betsSubmitted);
             dispatch({ type: types.BETS_SUBMITTED_FETCHED, betsSubmitted });
             dispatch(matchesActions.fetchSavedBets());
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}
+
+export function toggleTimePast() {
+    return async (dispatch, getState) => {
+        try {
+            let address = wcwagersSelectors.getAddress(getState());
+
+            await WCwagers.toggleTimePast(address);
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}
+
+
+export function loadOtherParticipantBets() {
+    return async (dispatch, getState) => {
+        try {
+            let address = wcwagersSelectors.getAddress(getState());
+
+            let allPhases = wcwagersSelectors.getAllPhases(getState());
+            let phasesDates = wcwagersSelectors.getPhaseDates(getState());
+            let participants = wcwagersSelectors.getParticipants(getState());
+            let otherParticipantsBets = {};
+            let currentTime = moment();
+            let matches = matchesSelectors.getFlatMatches(getState());
+
+            for (let i = 0; i < participants.length; i++) {
+                let participant = participants[i];
+                console.log("Participant: "+participant.address);
+                let betsSubmitted = {
+                    groups: undefined,
+                    round_16: undefined,
+                    round_8: undefined,
+                    round_4: undefined,
+                    round_2: undefined
+                };
+                let participantPoints = 0;
+                for (let j = 0; j < allPhases.length; j++) {
+                    let phase = allPhases[j];
+
+                    let phaseDate = moment.unix(phasesDates[phase.json]);
+                    if (phaseDate.isBefore(currentTime)) {
+                        
+                        let url = await WCwagers.getURL(address, participant.address, phase.smartcontract);
+
+                        let response = await fetch(url);
+                        let bets = await response.json();
+                        
+                        let points = matchesSelectors.calculatePoints(matches, bets, phase.json);
+                        participantPoints += points;
+                        // debugger;
+                        betsSubmitted[phase.json] = {
+                            url,
+                            bets,
+                            points
+                        };
+                    }
+                }
+
+                otherParticipantsBets[participant.address] = {
+                    betsSubmitted,
+                    points: participantPoints,
+                };
+            };
+
+            console.log(otherParticipantsBets);
+            dispatch({ type: types.OTHER_PARTICIPANTS_BETS_FETCHED, otherParticipantsBets });
         } catch (error) {
             console.error(error);
         }

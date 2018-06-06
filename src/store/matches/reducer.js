@@ -5,6 +5,7 @@ import Immutable from 'seamless-immutable';
 
 const initialState = Immutable({
     matches: undefined,
+    flatMatches: undefined,
     bets: undefined,
     savedBets: {
         groups: undefined,
@@ -40,6 +41,7 @@ export default function reduce(state = initialState, action = {}) {
         case types.MATCHES_FETCHED:
             return state.merge({
                 matches: action.matches,
+                flatMatches: action.flatMatches,
                 isFetched: true
             });
         case types.BETS_UPDATED:
@@ -75,6 +77,9 @@ export default function reduce(state = initialState, action = {}) {
 
 export function getMatches(state) {
     return state.matches.matches;
+}
+export function getFlatMatches(state) {
+    return state.matches.flatMatches;
 }
 export function getBets(state) {
     return state.matches.bets;
@@ -163,5 +168,25 @@ export function calculateMatchPoints(match, savedBets, phase) {
         }
         return 0;
     }
+}
 
+export function calculatePoints(matches, bets, phase) {
+    if(matches === undefined) {
+        return 0;
+    }
+    let totalPoints = 0;
+    for(let i = 0; i < 64; i++) {
+        let phaseI = getPhaseFromGameNumber(i);
+        if(phaseI === phase) {
+            // debugger;
+            let match = matches[i];
+            if(match === undefined) {
+                debugger;
+            }
+            let points = calculateMatchPoints(match, bets, phase) ;
+            
+            totalPoints += points !== undefined ? points : 0;
+        }
+    }
+    return totalPoints;
 }

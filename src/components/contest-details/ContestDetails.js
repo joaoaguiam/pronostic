@@ -47,6 +47,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { browserHistory } from 'react-router'
 import PhasesContainer from '../phases/PhasesContainer';
+import ParticipantsList from './ParticipantsList';
+import CenterContainerMedium from '../layout/center-container/CenterContainerMedium';
 
 const styles = theme => ({
     root: {
@@ -116,26 +118,26 @@ class ContestDetails extends Component {
     registerParticipant = () => {
         this.props.dispatch(wcwagersActions.registerParticipant(this.state.nickname))
     };
-    renderParticipant = (participant) => {
-        let isMe = participant.address === this.props.userAddress;
-        return (
-            <ListItem key={participant}>
-                <Avatar>
-                    <AccountCircle />
-                </Avatar>
-                {isMe &&
-                    <ListItemText primary={participant.address} secondary={participant.nickname} />
-                }
-                {!isMe &&
-                    <div>
-                        <div></div>
-                        <ListItemText primary="" secondary={participant.address} />
-                        <ListItemText primary="" secondary={participant.nickname} />
-                    </div>
-                }
-            </ListItem>
-        );
-    }
+    // renderParticipant = (participant) => {
+    //     let isMe = participant.address === this.props.userAddress;
+    //     return (
+    //         <ListItem key={participant}>
+    //             <Avatar>
+    //                 <AccountCircle />
+    //             </Avatar>
+    //             {isMe &&
+    //                 <ListItemText primary={participant.address} secondary={participant.nickname} />
+    //             }
+    //             {!isMe &&
+    //                 <div>
+    //                     <div></div>
+    //                     <ListItemText primary="" secondary={participant.address} />
+    //                     <ListItemText primary="" secondary={participant.nickname} />
+    //                 </div>
+    //             }
+    //         </ListItem>
+    //     );
+    // }
     openBets() {
         // browserHistory.push('/contest/' + this.props.address + '/bet');
         this.props.dispatch(matchesActions.openBetsPage());
@@ -150,17 +152,18 @@ class ContestDetails extends Component {
         let isMining = this.props.participantRegistrationTxStatus === wcwagersSelectors.TX_STATUS.PENDING;
         let isRegisterDisabled = this.state.nickname.trim() === '' || isMining;
 
-        
 
-        if(this.props.openBetsPage){
+
+        if (this.props.openBetsPage) {
             return (
-                <PhasesContainer routeParams={{address: this.props.routeParams.address}} />
+                <PhasesContainer routeParams={{ address: this.props.routeParams.address }} />
             )
         }
         return (
-            <CenterContainerSmall>
-                <div className={classes.root}>
-                    {/* <Dialog
+            <div>
+                <CenterContainerSmall>
+                    <div className={classes.root}>
+                        {/* <Dialog
                  open={this.props.showContestDetailsDialog}
                  onClose={this.handleDialogClose}
                  aria-labelledby="contest-details-dialog-title"
@@ -171,54 +174,55 @@ class ContestDetails extends Component {
 
                  <DialogTitle id="contest-details-dialog-title">Contest Details</DialogTitle>
                  <DialogContent id="contest-details-dialog-content"> */}
-                    <Typography>Contest Address</Typography>
-                    <Typography color="textSecondary">{this.props.address}</Typography>
-                    <br />
-                    <Typography>Contest Name</Typography>
-                    <Typography color="textSecondary">{this.props.contestDetails.contestName}</Typography>
-                    <br />
-                    <Typography>Participation Fee</Typography>
-                    <Typography color="textSecondary">{this.props.contestDetails.participationFeeEther}</Typography>
-                    <br />
-                    <Typography>Pot Size</Typography>
-                    <Typography color="textSecondary">{this.props.contestDetails.contestBalanceEther}</Typography>
-                    {!isParticipant &&
-                        <div className={classes.parentFlex}>
-                            <TextField
-                                required
-                                id="nickname"
-                                label="Nickname"
-                                value={this.state.nickname}
-                                className={classes.textField}
-                                margin="normal"
-                                onChange={this.handleNicknameChange}
+                        <Typography>Contest Address</Typography>
+                        <Typography color="textSecondary">{this.props.address}</Typography>
+                        <br />
+                        <Typography>Contest Name</Typography>
+                        <Typography color="textSecondary">{this.props.contestDetails.contestName}</Typography>
+                        <br />
+                        <Typography>Contest Owner</Typography>
+                        <Typography color="textSecondary">{this.props.contestDetails.owner}</Typography>
+                        <br />
+                        <Typography>Participation Fee</Typography>
+                        <Typography color="textSecondary">{this.props.contestDetails.participationFeeEther}</Typography>
+                        <br />
+                        <Typography>Pot Size</Typography>
+                        <Typography color="textSecondary">{this.props.contestDetails.contestBalanceEther}</Typography>
+                        {!isParticipant &&
+                            <div className={classes.parentFlex}>
+                                <TextField
+                                    required
+                                    id="nickname"
+                                    label="Nickname"
+                                    value={this.state.nickname}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    onChange={this.handleNicknameChange}
 
-                            />
-                            <div className={classes.wrapper}>
-                                <Button onClick={this.registerParticipant} className={classes.registerBtn} variant="raised" color="primary" disabled={isRegisterDisabled}>Register</Button>
-                                {isMining && <CircularProgress size={24} className={classes.buttonProgress} />}
+                                />
+                                <div className={classes.wrapper}>
+                                    <Button onClick={this.registerParticipant} className={classes.registerBtn} variant="raised" color="primary" disabled={isRegisterDisabled}>Register</Button>
+                                    {isMining && <CircularProgress size={24} className={classes.buttonProgress} />}
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
 
-                    {isParticipant &&
-                        <div>
-                            <br />
-                            <Typography color="primary">Already a participant in this contest</Typography>
-                            <br />
-                            <Button variant="raised" onClick={this.openBets} className={classes.registerBtn} color="primary">Set your predictions</Button>
-                        </div>
-                    }
-                    <br />
-                    <br />
-                    <Typography>Participants</Typography>
-                    {!hasParticipants && <Typography color="textSecondary">No participants registered yet!</Typography>}
-                    {hasParticipants && this.props.participants.map(this.renderParticipant)}
-                    {/* </DialogContent>
-                
-            </Dialog> */}
-                </div>
-            </CenterContainerSmall>
+                        {isParticipant &&
+                            <div>
+                                {/* <Typography color="primary">Already a participant in this contest</Typography> */}
+
+                                <Button variant="raised" onClick={this.openBets} className={classes.registerBtn} color="primary">Set your predictions</Button>
+                            </div>
+                        }
+                        {/* <Typography>Participants</Typography>
+                        {!hasParticipants && <Typography color="textSecondary">No participants registered yet!</Typography>}
+                        {hasParticipants && this.props.participants.map(this.renderParticipant)} */}
+                    </div>
+                </CenterContainerSmall>
+                <CenterContainerMedium>
+                    <ParticipantsList />
+                </CenterContainerMedium>
+            </div>
         )
     }
 }

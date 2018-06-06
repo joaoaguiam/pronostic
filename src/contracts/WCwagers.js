@@ -29,12 +29,15 @@ export async function getContestInfo(wcwagersAddress) {
             let contestStartDate = details[2].toNumber();
             let contestBalanceWei = (await web3.eth.getBalanceAsync(wcwagersAddress)).toNumber();
             let contestBalanceEther = web3.fromWei(contestBalanceWei, 'ether');
+
+            let owner = await contract.ownerAsync();
             resolve({
                 participationFeeWei,
                 participationFeeEther,
                 contestName,
                 contestStartDate,
-                contestBalanceEther
+                contestBalanceEther,
+                owner
             });
         } catch (e) {
             console.log(e);
@@ -131,6 +134,37 @@ export async function getOwnURL(wcwagersAddress, phase) {
             let url = await contract.getOwnURLAsync(phase);
             
             resolve(url);
+        } catch (e) {
+            console.log(e);
+            reject(e);
+        }
+    });
+}
+
+export async function getURL(wcwagersAddress, participantAddress, phase) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let contract = WCwagers(wcwagersAddress);
+            let url = await contract.getURLAsync(participantAddress, phase);
+            
+            resolve(url);
+        } catch (e) {
+            console.log(e);
+            reject(e);
+        }
+    });
+}
+
+export async function toggleTimePast(wcwagersAddress) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let contract = WCwagers(wcwagersAddress);
+            
+            let tx = await contract.toggleTimePastAsync();
+
+            let result = await getTransactionReceiptMined(tx);
+            console.log(result);
+            resolve(result);
         } catch (e) {
             console.log(e);
             reject(e);
