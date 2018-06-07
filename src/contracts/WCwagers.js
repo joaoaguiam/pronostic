@@ -52,13 +52,13 @@ export async function getParticipants(wcwagersAddress) {
             let contract = WCwagers(wcwagersAddress);
             let participantsAddresses = await contract.getParticipantsAsync();
             let participants = [];
-            for(let i = 0; i < participantsAddresses.length; i++) {
+            for (let i = 0; i < participantsAddresses.length; i++) {
                 let participant = participantsAddresses[i];
                 let nickname = await contract.getNicknameAsync(participant);
-                participants.push({address: participant, nickname});
+                participants.push({ address: participant, nickname });
             }
             console.log(participants);
-            resolve({participants});
+            resolve({ participants });
         } catch (e) {
             console.log(e);
             reject(e);
@@ -73,7 +73,7 @@ export async function registerParticipant(wcwagersAddress, contestDetails, nickn
             dispatch(notificationsActions.addNotification("Registration transaction needs to be validated on Metamask"));
             let tx = await contract.registerParticipantAsync(nickname, { value: web3.toWei(contestDetails.participationFeeEther, 'ether') });
             dispatch(wcwagersActions.setParticipantRegistrationTxStatus(TX_STATUS.PENDING));
-            dispatch(notificationsActions.addNotification("Waiting for registration transaction "+tx+" to be mined by the blockchain"));
+            dispatch(notificationsActions.addNotification("Waiting for registration transaction " + tx + " to be mined by the blockchain"));
             console.log(tx);
             let result = await getTransactionReceiptMined(tx);
             dispatch(wcwagersActions.setParticipantRegistrationTxStatus(TX_STATUS.MINED));
@@ -92,10 +92,10 @@ export async function writeUrl(wcwagersAddress, url, phase, dispatch) {
         try {
             let contract = WCwagers(wcwagersAddress);
             dispatch(notificationsActions.addNotification("Submission transaction needs to be validated on Metamask"));
-            console.log('contract.writeURLAsync('+url+', '+phase+')');
+            console.log('contract.writeURLAsync(' + url + ', ' + phase + ')');
             let tx = await contract.writeURLAsync(url, phase);
 
-            dispatch(notificationsActions.addNotification("Waiting for submission transaction "+tx+" to be mined by the blockchain"));
+            dispatch(notificationsActions.addNotification("Waiting for submission transaction " + tx + " to be mined by the blockchain"));
 
             dispatch(wcwagersActions.setBetsTxStatus(TX_STATUS.PENDING));
 
@@ -118,7 +118,7 @@ export async function getPhaseDate(wcwagersAddress, phase) {
         try {
             let contract = WCwagers(wcwagersAddress);
             let phaseDate = await contract.getPhaseDateAsync(phase);
-            
+
             resolve(phaseDate.toNumber());
         } catch (e) {
             console.log(e);
@@ -132,7 +132,7 @@ export async function getOwnURL(wcwagersAddress, phase) {
         try {
             let contract = WCwagers(wcwagersAddress);
             let url = await contract.getOwnURLAsync(phase);
-            
+
             resolve(url);
         } catch (e) {
             console.log(e);
@@ -146,7 +146,7 @@ export async function getURL(wcwagersAddress, participantAddress, phase) {
         try {
             let contract = WCwagers(wcwagersAddress);
             let url = await contract.getURLAsync(participantAddress, phase);
-            
+
             resolve(url);
         } catch (e) {
             console.log(e);
@@ -159,12 +159,46 @@ export async function toggleTimePast(wcwagersAddress) {
     return new Promise(async (resolve, reject) => {
         try {
             let contract = WCwagers(wcwagersAddress);
-            
+
             let tx = await contract.toggleTimePastAsync();
 
             let result = await getTransactionReceiptMined(tx);
             console.log(result);
             resolve(result);
+        } catch (e) {
+            console.log(e);
+            reject(e);
+        }
+    });
+}
+
+
+export async function payWinner(wcwagersAddress, winnerAddress, winnerName, amountWei, dispatch) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let contract = WCwagers(wcwagersAddress);
+            dispatch(notificationsActions.addNotification("Confirm payment to " + winnerName + " in Metamask"));
+            let tx = await contract.payWinnerAsync(amountWei,winnerAddress);
+
+            dispatch(notificationsActions.addNotification("Waiting validation of payment by the blockchain"));
+
+            dispatch(wcwagersActions.setBetsTxStatus(TX_STATUS.PENDING));
+
+            console.log(tx);
+            let result = await getTransactionReceiptMined(tx);
+            dispatch(notificationsActions.addNotification("Payment to " + winnerName + " confirmed"));
+        } catch (e) {
+            console.log(e);
+            reject(e);
+        }
+    });
+}
+
+export async function getBalanceWei(wcwagersAddress) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let contestBalanceWei = (await web3.eth.getBalanceAsync(wcwagersAddress)).toNumber();
+            resolve(contestBalanceWei);
         } catch (e) {
             console.log(e);
             reject(e);

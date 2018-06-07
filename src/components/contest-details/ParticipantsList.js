@@ -57,7 +57,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import { Grid } from '@material-ui/core';
 
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 const styles = theme => ({
     root: {
@@ -93,6 +96,10 @@ const styles = theme => ({
     center: {
         'text-align': 'center',
     },
+    payBtn: {
+        float: 'right',
+        margin: 2 * theme.spacing.unit,
+    }
 
 });
 
@@ -102,7 +109,8 @@ class ParticipantsList extends Component {
         super(props);
         autoBind(this);
         this.state = {
-            nickname: '',
+            showPayWinnerConfirmation: false,
+            isConfirmed: false,
         };
     }
 
@@ -121,52 +129,88 @@ class ParticipantsList extends Component {
     handleDialogClose = () => {
         // this.props.dispatch(wcwagersActions.hideContestDetailsDialog())
     };
-    // registerParticipant = () => {
-    //     this.props.dispatch(wcwagersActions.registerParticipant())
-    // };
+    payWinner() {
+        this.props.dispatch(wcwagersActions.payWinners());
+        this.setState({ showPayWinnerConfirmation: false });
+    }
+    payWinnerConfirmation() {
+        this.setState({ showPayWinnerConfirmation: true, isConfirmed: false });
+    }
+    hidePayWinnerConfirmation() {
+        this.setState({ showPayWinnerConfirmation: false });
+    }
+    setIsConfirmed(event) {
+        // debugger;
+        this.setState({ isConfirmed: event.target.checked });
+    }
+    renderPayWinnerConfirmation() {
+        let isOkDisabled = !this.state.isConfirmed;
+        let winners = this.props.winners;
+        let winnerTxt = winners.length > 1 ? 'Winners' : 'Winner';
+        let potSizeEther = this.props.contestDetails.contestBalanceEther;
+        let ammountPayee = potSizeEther / winners.length;
+        return (
+            <Dialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                // maxWidth="xm"
+                aria-labelledby="payWinner-confirmation-dialog-title"
+                open={this.state.showPayWinnerConfirmation}
+            >
+                <DialogTitle id="payWinner-confirmation-dialog-title">Confirm {winnerTxt}</DialogTitle>
+                <DialogContent>
+                    <Typography>{winnerTxt}:</Typography>
+                    <List dense={true}>
+                        {winners.map((participant) => {
+                            return (
+                                <div className={this.props.classes.wrapper}>
 
-    // renderParticipant = (participant) => {
-    //     let isMe = participant.address === this.props.userAddress;
-    //     return (
-    //         <ListItem key={participant}>
-    //             <Avatar>
-    //                 <AccountCircle />
-    //             </Avatar>
-    //             {isMe &&
-    //                 <ListItemText primary={participant.address} secondary={participant.nickname} />
-    //             }
-    //             {!isMe &&
-    //                 <div>
-    //                     <div></div>
-    //                     <ListItemText primary="" secondary={participant.address} />
-    //                     <ListItemText primary="" secondary={participant.nickname} />
-    //                 </div>
-    //             }
-    //         </ListItem>
-    //     );
-    // }
-    // openBets() {
-    //     // browserHistory.push('/contest/' + this.props.address + '/bet');
-    //     this.props.dispatch(matchesActions.openBetsPage());
-    // }
+                                <ListItem>
+                                    <ListItemText
+                                        primary={participant.nickname}
+                                        secondary={participant.address}
+                                    />
+                                </ListItem>
+                                {/* <CircularProgress size={24} className={this.props.classes.buttonProgress} /> */}
+                                </div>
+                            );
+                        })}
+                    </List>
+                    <br/>
+                    <Typography>Pot Size:</Typography>
+                    <Typography color="textSecondary">{potSizeEther}</Typography>
+                    <br/>
+                    <Typography>Ammount per winner:</Typography>
+                    <Typography color="textSecondary">{ammountPayee}</Typography>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={this.state.isConfirmed}
+                                // {this.state.checkedB}
+                                onChange={this.setIsConfirmed}
+                                // value="checkedB"
+                                color="primary"
+                            />
+                        }
+                        label={"Confirm "+winnerTxt}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.hidePayWinnerConfirmation} color="primary">Cancel</Button>
+                    <Button onClick={this.payWinner} color="primary" disabled={isOkDisabled}>Ok</Button>
+                </DialogActions>
+            </Dialog>
+        )
+    }
     render() {
         const { classes } = this.props;
-        // let isParticipant = _.indexOf(this.props.participants, this.props.userAddress) !== -1;
-        let userAddress = this.props.userAddress;
-        let isParticipant = _.findIndex(this.props.participants, function (participant) { return participant.address === userAddress; }) !== -1;
+        // let userAddress = this.props.userAddress;
+        // let isParticipant = _.findIndex(this.props.participants, function (participant) { return participant.address === userAddress; }) !== -1;
 
         let isMining = this.props.participantRegistrationTxStatus === wcwagersSelectors.TX_STATUS.PENDING;
-        let isRegisterDisabled = this.state.nickname.trim() === '' || isMining;
 
-
-
-        // if (this.props.openBetsPage) {
-        //     return (
-        //         <PhasesContainer routeParams={{ address: this.props.routeParams.address }} />
-        //     )
-        // }
         let hasParticipants = this.props.participants.length > 0;
-
+        let isPayDisabled = this.props.isOwner;
         if (!hasParticipants) {
             return (
                 <div>
@@ -177,13 +221,13 @@ class ParticipantsList extends Component {
         }
         let rank = 1;
         let otherParticipantsBets = this.props.otherParticipantsBets;
-        let sortedparticipantList = _.sortBy(this.props.participants, [function(participant) { 
+        let sortedparticipantList = _.sortBy(this.props.participants, [function (participant) {
             return -1 * (otherParticipantsBets[participant.address] !== undefined ? otherParticipantsBets[participant.address].points : 0);
         }]);
 
         return (
             <div>
-
+                {this.renderPayWinnerConfirmation()}
                 <Paper className={classes.root}>
                     <Table className={classes.table}>
                         <TableHead>
@@ -209,7 +253,12 @@ class ParticipantsList extends Component {
                         </TableBody>
                     </Table>
                 </Paper>
-                <br/>
+                <div className={classes.wrapper}>
+                    <Button onClick={this.payWinnerConfirmation} className={classes.payBtn} variant="raised" color="primary" disabled={isPayDisabled}>Pay Winner</Button>
+                    {isMining && <CircularProgress size={24} className={classes.buttonProgress} />}
+                </div>
+
+                <br />
             </div>
         )
     }
@@ -218,14 +267,11 @@ class ParticipantsList extends Component {
 
 function mapStateToProps(state) {
     return {
-        // userAddress: userProfileSelectors.getAddress(state),
-        // showContestDetailsDialog: wcwagersSelectors.isShowContestDetailsDialog(state),
-        // address: wcwagersSelectors.getAddress(state),
-        // contestDetails: wcwagersSelectors.getContestDetails(state),
         participants: wcwagersSelectors.getParticipants(state),
         otherParticipantsBets: wcwagersSelectors.getOtherParticipantsBets(state),
-        // participantRegistrationTxStatus: wcwagersSelectors.getParticipantRegistrationTxStatus(state),
-        // openBetsPage: matchesSelectors.getOpenBetsPage(state),
+        isOwner: wcwagersSelectors.isOwner(state),
+        winners: wcwagersSelectors.getCurrentWinners(state),
+        contestDetails: wcwagersSelectors.getContestDetails(state),
     };
 }
 

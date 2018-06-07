@@ -18,6 +18,7 @@ const initialState = Immutable({
         contestStartDate: 0,
         contestBalanceEther: 0,
         owner: '',
+        isOwner: false,
     },
     isFetched: false,
     participantRegistrationTxStatus: TX_STATUS.NONE,
@@ -37,6 +38,7 @@ const initialState = Immutable({
         round_2: undefined
     },
     otherParticipantsBets: [],
+    currentWinners: [],
     // [
     //     {
     //         address: '',
@@ -89,6 +91,7 @@ export default function reduce(state = initialState, action = {}) {
         case types.OTHER_PARTICIPANTS_BETS_FETCHED:
             return state.merge({
                 otherParticipantsBets: action.otherParticipantsBets,
+                currentWinners: action.currentWinners,
             });
         default:
             return state;
@@ -156,4 +159,11 @@ export function getBetsSubmitted(state) {
 }
 export function getOtherParticipantsBets(state) {
     return state.wcwagers.otherParticipantsBets;
+}
+
+export function isOwner(state) {
+    return state.wcwagers.contestDetails.isOwner;
+}
+export function getCurrentWinners(state) {
+    return state.wcwagers.currentWinners;
 }
