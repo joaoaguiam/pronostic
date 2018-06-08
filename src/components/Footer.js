@@ -37,7 +37,7 @@ class Footer extends Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <Typography variant="caption" gutterBottom align="center">Made with passion by Jean-Marc Henry and Joao Aguiam</Typography>
+                <Typography variant="caption" gutterBottom align="center">#buidl with passion by Jean-Marc Henry and Joao Aguiam</Typography>
                 <Typography variant="caption" gutterBottom align="center"><a href="https://github.com/joaoaguiam/pronostic" target="_blank">GitHub repo</a></Typography>
             </div>
         )
