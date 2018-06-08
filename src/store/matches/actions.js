@@ -11,10 +11,10 @@ import Web3 from 'web3';
 
 
 
-// const DATA_SOURCE = "https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json";
-const DATA_SOURCE = "/data/wc-results.json";
+const DATA_SOURCE = "https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json";
 
-
+// https://github.com/lsv/fifa-worldcup-2018
+// const DATA_SOURCE = "/data/wc-results.json";
 
 
 export function fetchMatches() {

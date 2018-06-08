@@ -17,6 +17,7 @@ import * as matchesActions from '../../store/matches/actions';
 
 import * as notificationsSelectors from '../../store/notifications/reducer';
 import * as notificationsActions from '../../store/notifications/actions';
+import moment from 'moment-timezone';
 
 // import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
@@ -114,21 +115,6 @@ class ParticipantsList extends Component {
         };
     }
 
-
-
-    componentDidMount() {
-        // this.props.dispatch(wcwagersActions.setContractAddress(this.props.routeParams.address));
-        // this.props.dispatch(matchesActions.fetchMatches());
-        // this.props.dispatch(notificationsActions.addNotification(this.props.routeParams.address));
-    }
-    // }
-    // handleClick = event => {
-    //     this.setState({ anchorEl: event.currentTarget });
-    // };
-
-    handleDialogClose = () => {
-        // this.props.dispatch(wcwagersActions.hideContestDetailsDialog())
-    };
     payWinner() {
         this.props.dispatch(wcwagersActions.payWinners());
         this.setState({ showPayWinnerConfirmation: false });
@@ -163,23 +149,23 @@ class ParticipantsList extends Component {
                     <List dense={true}>
                         {winners.map((participant) => {
                             return (
-                                <div className={this.props.classes.wrapper}>
+                                <div className={this.props.classes.wrapper} key={participant.address}>
 
-                                <ListItem>
-                                    <ListItemText
-                                        primary={participant.nickname}
-                                        secondary={participant.address}
-                                    />
-                                </ListItem>
-                                {/* <CircularProgress size={24} className={this.props.classes.buttonProgress} /> */}
+                                    <ListItem >
+                                        <ListItemText
+                                            primary={participant.nickname}
+                                            secondary={participant.address}
+                                        />
+                                    </ListItem>
+                                    {/* <CircularProgress size={24} className={this.props.classes.buttonProgress} /> */}
                                 </div>
                             );
                         })}
                     </List>
-                    <br/>
+                    <br />
                     <Typography>Pot Size:</Typography>
                     <Typography color="textSecondary">{potSizeEther}</Typography>
-                    <br/>
+                    <br />
                     <Typography>Ammount per winner:</Typography>
                     <Typography color="textSecondary">{ammountPayee}</Typography>
                     <FormControlLabel
@@ -192,7 +178,7 @@ class ParticipantsList extends Component {
                                 color="primary"
                             />
                         }
-                        label={"Confirm "+winnerTxt}
+                        label={"Confirm " + winnerTxt}
                     />
                 </DialogContent>
                 <DialogActions>
@@ -210,7 +196,16 @@ class ParticipantsList extends Component {
         let isMining = this.props.participantRegistrationTxStatus === wcwagersSelectors.TX_STATUS.PENDING;
 
         let hasParticipants = this.props.participants.length > 0;
-        let isPayDisabled = this.props.isOwner;
+
+        let finalPhaseDate = this.props.phasesDates['round_2'];
+        let finalDate = moment.unix(finalPhaseDate);
+
+        let now = moment();
+
+        let isPayDisabled = Number(this.props.contestDetails.contestBalanceEther) === 0 || finalDate.isAfter(now);
+
+        let isOwner = (this.props.contestDetails.owner === this.props.userAddress);
+
         if (!hasParticipants) {
             return (
                 <div>
@@ -253,11 +248,12 @@ class ParticipantsList extends Component {
                         </TableBody>
                     </Table>
                 </Paper>
+                {/* {this.props.isOwner && */}
                 <div className={classes.wrapper}>
-                    <Button onClick={this.payWinnerConfirmation} className={classes.payBtn} variant="raised" color="primary" disabled={isPayDisabled}>Pay Winner</Button>
+                    {isOwner && <Button onClick={this.payWinnerConfirmation} className={classes.payBtn} variant="raised" color="primary" disabled={isPayDisabled}>Pay Winner</Button>}
                     {isMining && <CircularProgress size={24} className={classes.buttonProgress} />}
                 </div>
-
+                {/* } */}
                 <br />
             </div>
         )
@@ -272,6 +268,9 @@ function mapStateToProps(state) {
         isOwner: wcwagersSelectors.isOwner(state),
         winners: wcwagersSelectors.getCurrentWinners(state),
         contestDetails: wcwagersSelectors.getContestDetails(state),
+        phasesDates: wcwagersSelectors.getPhaseDates(state),
+        userAddress: userProfileSelectors.getAddress(state),
+
     };
 }
 

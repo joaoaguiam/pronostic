@@ -124,7 +124,7 @@ class GroupPhaseContainer extends Component {
                             <Grid item className={classes.wrapperText} >
                                 <Typography variant="caption">Submissions allowed until: {submissionDateStr}</Typography>
                                 {phaseLink !== '' &&
-                                    <Typography variant="caption">Last submission: <a href={phaseLink} target="_balnk">{phaseLink}</a></Typography>
+                                    <Typography variant="caption">Latest submission: <a href={phaseLink} target="_balnk">{phaseLink}</a></Typography>
                                 }
                             </Grid>
 

@@ -63,7 +63,7 @@ const styles = theme => ({
         marginLeft: theme.spacing.unit,
     },
     winnerIcon: {
-        fontSize: 20,
+        fontSize: 16,
     },
 });
 
@@ -157,9 +157,11 @@ class GroupPhaseContainer extends Component {
                                 let isFinished = match.finished;
                                 let homeResult = match.home_result;
                                 let awayResult = match.away_result;
-
-                                let isWinnerHome = match.winner === match.home_team || match.home_result > match.away_result;
-                                let isWinnerAway = match.winner === match.away_team || match.home_result < match.away_result;
+                                // if(match.name === 49) {
+                                //     debugger;
+                                // }
+                                let isWinnerHome = match.winner === 'home' || match.home_result > match.away_result;
+                                let isWinnerAway = match.winner === 'away' || match.home_result < match.away_result;
 
                                 let homeBet = bets !== undefined && _.has(bets[match.name - 1], 'homeBet') ? bets[match.name - 1].homeBet : '';
                                 let awayBet = bets !== undefined && _.has(bets[match.name - 1], 'awayBet') ? bets[match.name - 1].awayBet : '';
@@ -175,9 +177,6 @@ class GroupPhaseContainer extends Component {
 
                                 let pointsForMatch = matchesSelectors.calculateMatchPoints(match, savedBet, timePhase);
 
-                                if(match.name === 49) {
-                                    // debugger;
-                                }
                                 return (
                                     <TableRow key={match.name}>
                                         <TableCell component="th" scope="row" className={classes.center}>{match.name}</TableCell>
@@ -241,12 +240,13 @@ class GroupPhaseContainer extends Component {
 
                                             />
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className={classes.center}>
                                             {isFinished &&
                                                 <div>
-                                                    {/* {isWinnerHome && <StarsIcon className={classes.winnerIcon} color="primary" />} */}
+                                                    {isWinnerHome && isKnockout && <span>*</span>}
+                                                    {/* <StarsIcon className={classes.winnerIcon} color="primary" /> */}
                                                     {homeResult} - {awayResult}
-                                                    {/* {isWinnerAway && <StarsIcon className={classes.winnerIcon} color="primary" />} */}
+                                                    {isWinnerAway && isKnockout && <span>*</span>}
                                                 </div>
                                             }
                                         </TableCell>

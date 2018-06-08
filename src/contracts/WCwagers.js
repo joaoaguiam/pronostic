@@ -70,14 +70,14 @@ export async function registerParticipant(wcwagersAddress, contestDetails, nickn
     return new Promise(async (resolve, reject) => {
         try {
             let contract = WCwagers(wcwagersAddress);
-            dispatch(notificationsActions.addNotification("Registration transaction needs to be validated on Metamask"));
+            dispatch(notificationsActions.addNotification("Confirm registration request on Metamask"));
             let tx = await contract.registerParticipantAsync(nickname, { value: web3.toWei(contestDetails.participationFeeEther, 'ether') });
             dispatch(wcwagersActions.setParticipantRegistrationTxStatus(TX_STATUS.PENDING));
-            dispatch(notificationsActions.addNotification("Waiting for registration transaction " + tx + " to be mined by the blockchain"));
+            dispatch(notificationsActions.addNotification("Waiting for registration to be confirmed by the blockchain"));
             console.log(tx);
             let result = await getTransactionReceiptMined(tx);
             dispatch(wcwagersActions.setParticipantRegistrationTxStatus(TX_STATUS.MINED));
-            dispatch(notificationsActions.addNotification("Participant successfully registered"));
+            dispatch(notificationsActions.addNotification(nickname+", you are now registered in this contest!"));
             console.log(result);
             resolve(result);
         } catch (e) {
@@ -91,17 +91,17 @@ export async function writeUrl(wcwagersAddress, url, phase, dispatch) {
     return new Promise(async (resolve, reject) => {
         try {
             let contract = WCwagers(wcwagersAddress);
-            dispatch(notificationsActions.addNotification("Submission transaction needs to be validated on Metamask"));
+            dispatch(notificationsActions.addNotification("Confirm submission on Metamask"));
             console.log('contract.writeURLAsync(' + url + ', ' + phase + ')');
             let tx = await contract.writeURLAsync(url, phase);
 
-            dispatch(notificationsActions.addNotification("Waiting for submission transaction " + tx + " to be mined by the blockchain"));
+            dispatch(notificationsActions.addNotification("Waiting for submission to be confirmed by the blockchain"));
 
             dispatch(wcwagersActions.setBetsTxStatus(TX_STATUS.PENDING));
 
             console.log(tx);
             let result = await getTransactionReceiptMined(tx);
-            dispatch(notificationsActions.addNotification("Submission successfully registered on the blockchain"));
+            dispatch(notificationsActions.addNotification("Your predictions have successfully been submitted!"));
             dispatch(wcwagersActions.setBetsTxStatus(TX_STATUS.MINED));
             console.log(result);
             resolve(result);
@@ -180,7 +180,7 @@ export async function payWinner(wcwagersAddress, winnerAddress, winnerName, amou
             dispatch(notificationsActions.addNotification("Confirm payment to " + winnerName + " in Metamask"));
             let tx = await contract.payWinnerAsync(amountWei,winnerAddress);
 
-            dispatch(notificationsActions.addNotification("Waiting validation of payment by the blockchain"));
+            dispatch(notificationsActions.addNotification("Waiting for the payment to be confirmed by the blockchain"));
 
             dispatch(wcwagersActions.setBetsTxStatus(TX_STATUS.PENDING));
 
