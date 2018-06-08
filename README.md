@@ -24,4 +24,23 @@ After each phase is started, the participants will be able to compare its predic
 
 Where does the results come from:
 ---
-Results and matches data is coming from a JSon file provided by Martin https://github.com/lsv/fifa-worldcup-2018[https://github.com/lsv/fifa-worldcup-2018]
+Results and matches data is coming from a JSon file provided by Martin Århof https://github.com/lsv/fifa-worldcup-2018.
+Each game should be updated within one hour of its finish and each participant will be able to see the points they have collected.
+
+How does the winner is declared:
+---
+The winner is calculated automatically by the front-end application based on the predictions stored on the blockchain/IPFS and it is up to the winner to trigger the payment for each winner, which will be the pot size distributed evenly by all the winners.
+
+How do points are calculated:
+--
+TODO
+
+How to create my own contest:
+---
+You can either deploy the WCWagers.sol contract or talk with one of us.
+
+Who has developed this application:
+---
+- Jean-Marc Henry 
+- Joao Aguiam https://twitter.com/joaoaguiam
+
