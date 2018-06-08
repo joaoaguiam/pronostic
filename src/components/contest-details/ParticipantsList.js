@@ -223,31 +223,33 @@ class ParticipantsList extends Component {
         return (
             <div>
                 {this.renderPayWinnerConfirmation()}
-                <Paper className={classes.root}>
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell numeric>Ranking</TableCell>
-                                <TableCell>Nickname</TableCell>
-                                <TableCell>Address</TableCell>
-                                <TableCell>Points</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {sortedparticipantList.map(participant => {
-                                let points = this.props.otherParticipantsBets[participant.address] !== undefined ? this.props.otherParticipantsBets[participant.address].points : '-';
-                                return (
-                                    <TableRow key={participant.address}>
-                                        <TableCell component="th" scope="row" className={classes.center}>{rank++}</TableCell>
-                                        <TableCell>{participant.nickname}</TableCell>
-                                        <TableCell>{participant.address}</TableCell>
-                                        <TableCell className={classes.center}>{points}</TableCell>
-                                    </TableRow>
-                                )
-                            })}
-                        </TableBody>
-                    </Table>
-                </Paper>
+                {/* <Paper className={classes.root}> */}
+                <Typography variant="subheading">Participants</Typography>
+                <br />
+                <Table className={classes.table}>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell numeric>Ranking</TableCell>
+                            <TableCell>Nickname</TableCell>
+                            {/* <TableCell>Address</TableCell> */}
+                            <TableCell>Points</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {sortedparticipantList.map(participant => {
+                            let points = this.props.otherParticipantsBets[participant.address] !== undefined ? this.props.otherParticipantsBets[participant.address].points : '-';
+                            return (
+                                <TableRow key={participant.address}>
+                                    <TableCell component="th" scope="row" className={classes.center}>{rank++}</TableCell>
+                                    <TableCell>{participant.nickname}</TableCell>
+                                    {/* <TableCell>{participant.address}</TableCell> */}
+                                    <TableCell className={classes.center}>{points}</TableCell>
+                                </TableRow>
+                            )
+                        })}
+                    </TableBody>
+                </Table>
+                {/* </Paper> */}
                 {/* {this.props.isOwner && */}
                 <div className={classes.wrapper}>
                     {isOwner && <Button onClick={this.payWinnerConfirmation} className={classes.payBtn} variant="raised" color="primary" disabled={isPayDisabled}>Pay Winner</Button>}

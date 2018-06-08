@@ -14,6 +14,7 @@ import * as matchesActions from '../../store/matches/actions';
 
 import * as notificationsSelectors from '../../store/notifications/reducer';
 import * as notificationsActions from '../../store/notifications/actions';
+import Grid from '@material-ui/core/Grid';
 
 // import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
@@ -33,6 +34,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
+import Paper from '@material-ui/core/Paper';
 
 
 import List from '@material-ui/core/List';
@@ -53,6 +55,10 @@ import CenterContainerMedium from '../layout/center-container/CenterContainerMed
 const styles = theme => ({
     root: {
         flexGrow: 1,
+        margin: '2em',
+    },
+    contestInfo:  {
+        'padding': '2em',
     },
     flex: {
         flex: 1,
@@ -98,8 +104,7 @@ class ContestDetails extends Component {
 
     componentDidMount() {
         this.props.dispatch(wcwagersActions.setContractAddress(this.props.routeParams.address));
-        // this.props.dispatch(matchesActions.fetchMatches());
-        // this.props.dispatch(notificationsActions.addNotification(this.props.routeParams.address));
+
     }
     // }
     // handleClick = event => {
@@ -118,26 +123,6 @@ class ContestDetails extends Component {
     registerParticipant = () => {
         this.props.dispatch(wcwagersActions.registerParticipant(this.state.nickname))
     };
-    // renderParticipant = (participant) => {
-    //     let isMe = participant.address === this.props.userAddress;
-    //     return (
-    //         <ListItem key={participant}>
-    //             <Avatar>
-    //                 <AccountCircle />
-    //             </Avatar>
-    //             {isMe &&
-    //                 <ListItemText primary={participant.address} secondary={participant.nickname} />
-    //             }
-    //             {!isMe &&
-    //                 <div>
-    //                     <div></div>
-    //                     <ListItemText primary="" secondary={participant.address} />
-    //                     <ListItemText primary="" secondary={participant.nickname} />
-    //                 </div>
-    //             }
-    //         </ListItem>
-    //     );
-    // }
     openBets() {
         // browserHistory.push('/contest/' + this.props.address + '/bet');
         this.props.dispatch(matchesActions.openBetsPage());
@@ -161,68 +146,66 @@ class ContestDetails extends Component {
         }
         return (
             <div>
-                <CenterContainerSmall>
-                    <div className={classes.root}>
-                        {/* <Dialog
-                 open={this.props.showContestDetailsDialog}
-                 onClose={this.handleDialogClose}
-                 aria-labelledby="contest-details-dialog-title"
-                 classes={{
-                     paper: classes.root, // class name, e.g. `classes-state-root-x`
-                 }}
-             >
 
-                 <DialogTitle id="contest-details-dialog-title">Contest Details</DialogTitle>
-                 <DialogContent id="contest-details-dialog-content"> */}
-                        <Typography>Contest Address</Typography>
-                        <Typography color="textSecondary">{this.props.address}</Typography>
-                        <br />
-                        <Typography>Contest Name</Typography>
-                        <Typography color="textSecondary">{this.props.contestDetails.contestName}</Typography>
-                        <br />
-                        <Typography>Contest Owner</Typography>
-                        <Typography color="textSecondary">{this.props.contestDetails.owner}</Typography>
-                        <br />
-                        <Typography>Participation Fee</Typography>
-                        <Typography color="textSecondary">{this.props.contestDetails.participationFeeEther}</Typography>
-                        <br />
-                        <Typography>Pot Size</Typography>
-                        <Typography color="textSecondary">{this.props.contestDetails.contestBalanceEther}</Typography>
-                        {!isParticipant &&
-                            <div className={classes.parentFlex}>
-                                <TextField
-                                    required
-                                    id="nickname"
-                                    label="Nickname"
-                                    value={this.state.nickname}
-                                    className={classes.textField}
-                                    margin="normal"
-                                    onChange={this.handleNicknameChange}
+                <div className={classes.root}>
+                    <Typography variant="headline" align="center">Welcome to Ponostic 2018</Typography>
+                    <Typography variant="subheading" color="textSecondary" align="center">Ready to set your predictions for all 64 matches in the Fifa World Cup 2018?</Typography>
 
-                                />
-                                <div className={classes.wrapper}>
-                                    <Button onClick={this.registerParticipant} className={classes.registerBtn} variant="raised" color="primary" disabled={isRegisterDisabled}>Register</Button>
-                                    {isMining && <CircularProgress size={24} className={classes.buttonProgress} />}
-                                </div>
+                    <CenterContainerSmall>
+
+                        <Paper>
+                            <div className={classes.contestInfo}>
+                                <Typography variant='subheading'>{this.props.contestDetails.contestName}</Typography>
+                                {/* <Typography>Contest Address</Typography> */}
+                                {/* <Typography color="textSecondary">{this.props.address}</Typography> */}
+                                {/* <br /> */}
+                                {/* <Typography>Contest Name</Typography> */}
+
+                                {/* <br /> */}
+                                {/* <Typography>Contest Owner</Typography>
+                                <Typography color="textSecondary">{this.props.contestDetails.owner}</Typography> */}
+                                <br />
+                                <Typography>Participation Fee</Typography>
+                                <Typography color="textSecondary">{this.props.contestDetails.participationFeeEther} ether</Typography>
+                                <br />
+                                <Typography>Pot Size</Typography>
+                                <Typography color="textSecondary">{this.props.contestDetails.contestBalanceEther} ether</Typography>
+                                {!isParticipant &&
+                                    <div className={classes.parentFlex}>
+                                        <TextField
+                                            required
+                                            id="nickname"
+                                            label="Nickname"
+                                            value={this.state.nickname}
+                                            className={classes.textField}
+                                            margin="normal"
+                                            onChange={this.handleNicknameChange}
+
+                                        />
+                                        <div className={classes.wrapper}>
+                                            <Button onClick={this.registerParticipant} className={classes.registerBtn} variant="raised" color="primary" disabled={isRegisterDisabled}>Register</Button>
+                                            {isMining && <CircularProgress size={24} className={classes.buttonProgress} />}
+                                        </div>
+                                    </div>
+                                }
+
+                                {isParticipant &&
+                                    <div>
+                                        {/* <Typography color="primary">Already a participant in this contest</Typography> */}
+
+                                        <Button variant="raised" onClick={this.openBets} className={classes.registerBtn} color="primary">Set your predictions</Button>
+                                    </div>
+                                }
+                                <br />
+                                <ParticipantsList />
+
                             </div>
-                        }
+                        </Paper>
 
-                        {isParticipant &&
-                            <div>
-                                {/* <Typography color="primary">Already a participant in this contest</Typography> */}
+                    </CenterContainerSmall>
 
-                                <Button variant="raised" onClick={this.openBets} className={classes.registerBtn} color="primary">Set your predictions</Button>
-                            </div>
-                        }
-                        {/* <Typography>Participants</Typography>
-                        {!hasParticipants && <Typography color="textSecondary">No participants registered yet!</Typography>}
-                        {hasParticipants && this.props.participants.map(this.renderParticipant)} */}
-                    </div>
-                </CenterContainerSmall>
-                <CenterContainerMedium>
-                    <ParticipantsList />
-                </CenterContainerMedium>
-            </div>
+                </div>
+            </div >
         )
     }
 }

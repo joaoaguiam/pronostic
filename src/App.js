@@ -38,6 +38,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Typography from '@material-ui/core/Typography';
 import NotificationSnackbar from './components/notifications/NotificationSnackbar';
+import Footer from './components/Footer';
 
 const theme = createMuiTheme({
     palette: {
@@ -106,6 +107,7 @@ class App extends Component {
                     <Header routeParams={this.props.routeParams} />
                     <NotificationSnackbar />
                     {this.props.children}
+                    <Footer />
                     {/* <BottomNavigation
                         value={0}
                         // onChange={this.handleChange}

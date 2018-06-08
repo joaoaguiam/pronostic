@@ -52,6 +52,9 @@ const styles = {
     },
     container: {
         height: '100%',
+    },
+    logo: {
+        'max-height': '50px'
     }
 };
 
@@ -111,6 +114,7 @@ class Header extends Component {
                 <UserProfileDialog />
                 <AppBar position="static">
                     <Toolbar>
+                        <img alt="World Cup 2018" src="/assets/wc-logo.png" className={classes.logo} />
                         <Typography variant="title" color="inherit" className={classes.flex} onClick={this.goToContestHome}>Pronostic - World Cup 2018</Typography>
                         {isContestPage &&
                             <div>
@@ -119,7 +123,7 @@ class Header extends Component {
 
                                     <Button onClick={this.handlePredictionsClick} color="inherit">Your Predictions</Button>
                                 }
-                                <Button onClick={this.handleRulesClick} color="inherit">Contest Rules</Button>
+                                <Button onClick={this.handleRulesClick} color="inherit">Contest Info</Button>
 
                                 <IconButton onClick={this.handleUserProfileClick} color="inherit">
                                     <AccountCircle />
