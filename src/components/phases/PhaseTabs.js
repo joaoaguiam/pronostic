@@ -52,7 +52,7 @@ class PhaseTabs extends Component {
                     textColor="primary"
                     centered
                 >
-                    <Tab label="Groups" />
+                    <Tab label="Group" />
                     <Tab label="Round of 16" />
                     <Tab label="Quarters" />
                     <Tab label="Semi-Finals" />

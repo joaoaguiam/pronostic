@@ -101,7 +101,7 @@ class GroupPhaseContainer extends Component {
         let phaseLink = this.props.betsSubmitted.groups;
         return (
             <div className={classes.root}>
-                <Typography variant="display2" gutterBottom>Groups Phase</Typography>
+                <Typography variant="display2" gutterBottom>Group Phase</Typography>
                 {groupKeys.map(this.renderGroupSection)}
                 <Grid container className={classes.btnContainer}>
                     <Grid item xs={12}>

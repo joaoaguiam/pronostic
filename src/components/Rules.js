@@ -139,7 +139,7 @@ class Rules extends Component {
 
                     <ExpansionPanel>
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                            <Typography className={classes.heading} variant="title">How much will it costs me to participate?</Typography>
+                            <Typography className={classes.heading} variant="title">How much will it cost me to participate?</Typography>
                         </ExpansionPanelSummary>
 
                         <ExpansionPanelDetails>

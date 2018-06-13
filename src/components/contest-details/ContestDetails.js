@@ -148,7 +148,7 @@ class ContestDetails extends Component {
             <div>
 
                 <div className={classes.root}>
-                    <Typography variant="headline" align="center">Welcome to Ponostic 2018</Typography>
+                    <Typography variant="headline" align="center">Welcome to Pronostic 2018</Typography>
                     <Typography variant="subheading" color="textSecondary" align="center">Ready to set your predictions for all 64 matches in the Fifa World Cup 2018?</Typography>
 
                     <CenterContainerSmall>
