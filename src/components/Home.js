@@ -39,6 +39,7 @@ class Home extends Component {
             <div className={classes.root}>
                 <br /><br />
                 <Typography variant="caption" gutterBottom align="center">You need to connect to an existing contest.</Typography>
+                <br />
                 {/* <br /><br /> */}
                 {/* <Typography variant="caption" gutterBottom align="center"><a href="https://github.com/joaoaguiam/pronostic" target="_blank">GitHub repo</a></Typography> */}
             </div>

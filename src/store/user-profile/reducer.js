@@ -9,6 +9,7 @@ const initialState = Immutable({
     network: '',
     isFetched: false,
     showUserProfileDialog: false,
+    isMetamaskBlocked: false,
 });
 
 export default function reduce(state = initialState, action = {}) {
@@ -24,6 +25,10 @@ export default function reduce(state = initialState, action = {}) {
         case types.SHOW_USER_DIALOG:
             return state.merge({
                 showUserProfileDialog: action.showUserProfileDialog
+            });
+        case types.METAMASK_BLOCKED:
+            return state.merge({
+                isMetamaskBlocked: true,
             });
         default:
             return state;
@@ -48,4 +53,7 @@ export function getNetwork(state) {
 }
 export function isShowUserProfileDialog(state) {
     return state.userProfile.showUserProfileDialog;
+}
+export function isMetamaskBlocked(state) {
+    return state.userProfile.isMetamaskBlocked;
 }

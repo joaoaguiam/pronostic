@@ -32,6 +32,7 @@ import '../../helpers/web3/Web3Helper';
 import UserProfileDialog from '../user-profile/UserProfileDialog';
 
 import { browserHistory } from 'react-router'
+import { isWeb3Available } from '../../helpers/web3/Web3Helper';
 
 // import ContestDetailsDialog from '../contest-details/ContestDetailsDialog';
 
@@ -109,6 +110,7 @@ class Header extends Component {
         let userAddress = this.props.userAddress;
         let isParticipant = _.findIndex(this.props.participants, function (participant) { return participant.address == userAddress; }) !== -1;
 
+        
         return (
             <div className={classes.root}>
                 <UserProfileDialog />

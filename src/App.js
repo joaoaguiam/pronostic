@@ -39,6 +39,8 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Typography from '@material-ui/core/Typography';
 import NotificationSnackbar from './components/notifications/NotificationSnackbar';
 import Footer from './components/Footer';
+import { isWeb3Available } from './helpers/web3/Web3Helper';
+import Web3NotAvailable from './components/Web3NotAvailable';
 
 const theme = createMuiTheme({
     palette: {
@@ -86,7 +88,7 @@ const styles = theme => ({
     bottomBar: {
         position: '',
         bottom: 0,
-        left:0,
+        left: 0,
         right: 0,
     }
 
@@ -95,18 +97,23 @@ const styles = theme => ({
 class App extends Component {
 
     componentDidMount() {
-        this.props.dispatch(userProfileActions.fetchEthereumAccount());
+        if (isWeb3Available()) {
+            this.props.dispatch(userProfileActions.fetchEthereumAccount());
+        }
     }
 
     render() {
 
-
+        let hasWeb3 = isWeb3Available();
         return (
             <MuiThemeProvider theme={theme}>
                 <div className="App">
                     <Header routeParams={this.props.routeParams} />
                     <NotificationSnackbar />
-                    {this.props.children}
+                    {!hasWeb3 && <Web3NotAvailable />}
+
+                    {hasWeb3 && this.props.children}
+
                     <Footer />
                     {/* <BottomNavigation
                         value={0}

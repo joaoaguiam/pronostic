@@ -257,6 +257,7 @@ class ParticipantsList extends Component {
                 </div>
                 {/* } */}
                 <br />
+                <br />
             </div>
         )
     }

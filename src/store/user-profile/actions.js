@@ -30,45 +30,59 @@ import * as matchesActions from '../matches/actions';
 
 let _fetchEthereumAccount = async (dispatch, getState) => {
     let currentAddres = userProfileSelectors.getAddress(getState());
-    let address = await web3.eth.getCoinbaseAsync();
+    try {
+        let address = await web3.eth.getCoinbaseAsync();
 
-    if (currentAddres === address) {
-        return;
+        if (currentAddres === address) {
+            return;
+        }
+        if (currentAddres !== '') {
+            location.reload();
+            return;
+            // matchesActions.closeBetsPage();
+        }
+
+        
+
+        web3.eth.defaultAccount = address;
+
+        let balanceWei = (await web3.eth.getBalanceAsync(address)).toNumber();
+        let balanceEther = web3.fromWei(balanceWei, 'Ether');
+
+        let networkId = await web3.version.getNetworkAsync();
+        let network;
+        switch (networkId) {
+            case "1":
+                network = "Main";
+                break;
+            case "2":
+                network = "Morden";
+                break;
+            case "3":
+                network = "Ropsten";
+                break;
+            case "4":
+                network = "Rinkeby";
+                break;
+            case "42":
+                network = "Kovan";
+                break;
+            default:
+                network = "Unknown";
+        }
+
+        // if(userProfileSelectors.isMetamaskBlocked()) {
+        //     debugger;
+        //     window.location.reload();
+        //     return;
+        // }
+
+        dispatch({ type: types.USER_FETCHED, address, balanceWei, balanceEther, network });
     }
-    if (currentAddres !== '') {
-        location.reload();
-        return;
-        // matchesActions.closeBetsPage();
+    catch (error) {
+        dispatch({ type: types.METAMASK_BLOCKED });
+
     }
-
-    web3.eth.defaultAccount = address;
-
-    let balanceWei = (await web3.eth.getBalanceAsync(address)).toNumber();
-    let balanceEther = web3.fromWei(balanceWei, 'Ether');
-
-    let networkId = await web3.version.getNetworkAsync();
-    let network;
-    switch (networkId) {
-        case "1":
-            network = "Main";
-            break;
-        case "2":
-            network = "Morden";
-            break;
-        case "3":
-            network = "Ropsten";
-            break;
-        case "4":
-            network = "Rinkeby";
-            break;
-        case "42":
-            network = "Kovan";
-            break;
-        default:
-            network = "Unknown";
-    }
-
-    dispatch({ type: types.USER_FETCHED, address, balanceWei, balanceEther, network });
 }
 
 
@@ -80,6 +94,7 @@ export function fetchEthereumAccount() {
             let _getState = getState;
 
             web3.currentProvider.publicConfigStore.on('update', () => {
+                // debugger;
                 _fetchEthereumAccount(_dispatch, _getState);
             });
 

@@ -217,6 +217,8 @@ class Rules extends Component {
                                     </Grid>
                                 </Grid>
 
+                                {/* <RulesKnockoutExamples /> */}
+
                                 <Grid item xs={6}>
                                     <Paper className={classes.paper}>
                                         <p>I predict Uruguay-Argentina 2-0.</p>
