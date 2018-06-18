@@ -276,3 +276,26 @@ export function payWinners() {
         }
     };
 }
+
+
+export function showMatchPredictionsDialog(matchNumber) {
+    return async (dispatch, getState) => {
+        try {
+
+            dispatch({ type: types.SHOW_MATCH_PREDICTIONS_DIALOG, showMatchPredictionsDialog: matchNumber });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}
+
+export function hideMatchPredictionsDialog() {
+    return async (dispatch, getState) => {
+        try {
+
+            dispatch({ type: types.SHOW_MATCH_PREDICTIONS_DIALOG, showMatchPredictionsDialog: 0 });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}

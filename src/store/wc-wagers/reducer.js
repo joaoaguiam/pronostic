@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import * as types from './actionTypes';
 import Immutable from 'seamless-immutable';
+import * as matchesSelectors from '../matches/reducer';
 
 export const TX_STATUS = {
     NONE: 0,
@@ -39,6 +40,7 @@ const initialState = Immutable({
     },
     otherParticipantsBets: [],
     currentWinners: [],
+    showMatchPredictionsDialog: 0,
     // [
     //     {
     //         address: '',
@@ -92,6 +94,10 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 otherParticipantsBets: action.otherParticipantsBets,
                 currentWinners: action.currentWinners,
+            });
+        case types.SHOW_MATCH_PREDICTIONS_DIALOG:
+            return state.merge({
+                showMatchPredictionsDialog: action.showMatchPredictionsDialog
             });
         default:
             return state;
@@ -166,4 +172,31 @@ export function isOwner(state) {
 }
 export function getCurrentWinners(state) {
     return state.wcwagers.currentWinners;
+}
+
+export function getPredictionsForMatch(flatMatches, otherParticipantsBets, matchNumber) {
+    let results = [];
+    let matchIndex = Number(matchNumber) - 1;
+    let match = flatMatches[matchIndex];
+
+    let phase = matchesSelectors.getPhaseFromGameNumber(matchIndex);
+    for (var participant in otherParticipantsBets) {
+        if (!otherParticipantsBets.hasOwnProperty(participant)) {
+            continue;
+        };
+
+        var participantBets = otherParticipantsBets[participant];
+        if (participantBets.betsSubmitted[phase] !== undefined) {
+            let matchBets = participantBets.betsSubmitted[phase].bets[matchIndex];
+            if (matchBets !== undefined) {
+                let points = matchesSelectors.calculateMatchPoints(match, participantBets.betsSubmitted[phase].bets, phase);
+                results.push({ participant, matchBets , points});
+            }
+        }
+    }
+    return results;
+}
+
+export function getShowMatchPredictionsDialog(state) {
+    return state.wcwagers.showMatchPredictionsDialog;
 }

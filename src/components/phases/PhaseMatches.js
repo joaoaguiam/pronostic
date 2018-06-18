@@ -30,6 +30,9 @@ import Radio from '@material-ui/core/Radio';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 
+
+import IconButton from '@material-ui/core/IconButton';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import 'flag-icon-css/css/flag-icon.css';
 
 import _ from 'lodash';
@@ -57,7 +60,8 @@ const styles = theme => ({
         }
     },
     button: {
-        margin: theme.spacing.unit,
+        'margin-left    ': theme.spacing.unit,
+        size: 6,
     },
     rightIcon: {
         marginLeft: theme.spacing.unit,
@@ -97,6 +101,9 @@ class GroupPhaseContainer extends Component {
             let bet = e.target.value;
             dispatch(matchesActions.setWinnerBet(phase, subPhase, matchId, bet))
         }
+    }
+    showMatchPredictionsDialog(matchNumber) {
+        this.props.dispatch(wcwagersActions.showMatchPredictionsDialog(matchNumber));
     }
     render() {
         const { classes } = this.props;
@@ -239,16 +246,20 @@ class GroupPhaseContainer extends Component {
                                                 error={changedAwayBet}
 
                                             />
+                                            {!isKnockout &&
+                                                <IconButton className={classes.button} aria-label="Delete">
+                                                    <AssignmentIcon onClick={() => { this.showMatchPredictionsDialog(match.name) }} />
+                                                </IconButton>
+                                            }
                                         </TableCell>
                                         <TableCell className={classes.center}>
-                                            {isFinished &&
-                                                <div>
-                                                    {isWinnerHome && isKnockout && <span>*</span>}
-                                                    {/* <StarsIcon className={classes.winnerIcon} color="primary" /> */}
-                                                    {homeResult} - {awayResult}
-                                                    {isWinnerAway && isKnockout && <span>*</span>}
-                                                </div>
-                                            }
+                                            <div>
+                                                {isWinnerHome && isKnockout && <span>*</span>}
+                                                {/* <StarsIcon className={classes.winnerIcon} color="primary" /> */}
+                                                {homeResult} - {awayResult}
+                                                {isWinnerAway && isKnockout && <span>*</span>}
+                                            </div>
+
                                         </TableCell>
                                         <TableCell>{pointsForMatch}</TableCell>
 

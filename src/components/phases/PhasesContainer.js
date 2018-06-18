@@ -20,6 +20,7 @@ import Typography from '@material-ui/core/Typography';
 import KnockoutPhaseContainer from './KnockoutPhaseContainer';
 import CenterContainerLarge from '../layout/center-container/CenterContainerLarge';
 import { browserHistory } from 'react-router'
+import MatchPredictionsDialog from './MatchPredictionsDialog';
 
 const styles = {
     root: {
@@ -45,7 +46,7 @@ class PhasesContainer extends Component {
     componentWillUpdate(nextProps, nextState) {
         let userAddress = nextProps.userAddress;
         let isParticipant = _.findIndex(nextProps.participants, function (participant) { return participant.address == userAddress; }) !== -1;
-        if(nextProps.isParticipantFetched && !isParticipant) {
+        if (nextProps.isParticipantFetched && !isParticipant) {
             let address = nextProps.routeParams.address;
             if (address !== '') {
                 browserHistory.push('/contest/' + address);
@@ -103,6 +104,7 @@ class PhasesContainer extends Component {
         return (
             <CenterContainerLarge>
                 <div className={classes.root}>
+                    <MatchPredictionsDialog />
                     <PhaseTabs />
                     {this.renderSelectedPhase()}
                 </div>

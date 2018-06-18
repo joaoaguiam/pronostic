@@ -152,6 +152,9 @@ export function calculateMatchPoints(match, savedBets, phase) {
     if (matchNum === 15)
         debugger;
     if (phase === 'groups') {
+        // if(match.name === 1) {
+        //     debugger;
+        // }
         // 10 points if you predict the exact score
         if (homeBet === homeResult && awayBet === awayResult) {
             return 10;
