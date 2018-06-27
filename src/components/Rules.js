@@ -210,7 +210,7 @@ class Rules extends Component {
                                         <Typography>
                                             <br />For the knockout stage the scoring is slightly different from the group stage.<br />
                                             <br />You will need to predict the final score (before the PKs) AND the winning team.<br />
-                                            <br />Where things are different is if you predict a draw. Because then you can get points for predicting the correct score AND points for predicting the correct winner.<br />
+                                            <br />When predicting the correct winner (be it after 90 minutes, 120 minutes or PKs), you get 5 points. When you correctly predict the final score (not including penalty shootouts), you get an additional 10 points! Note, that it is possible to predict a score that contradicts your choice of winner.<br />
                                             <br />Below are a few examples to illustrate how the scoring system works in the knockout stages.<br />
                                         </Typography>
                                         <br />
@@ -221,23 +221,23 @@ class Rules extends Component {
 
                                 <Grid item xs={6}>
                                     <Paper className={classes.paper}>
-                                        <p>I predict Uruguay-Argentina 2-0.</p>
+                                        <p>I predict Uruguay-Argentina 2-0, with Urugay as a winner.</p>
                                         <p>Results : 1-1 after 120 minutes, Uruguay wins in PKs.</p>
                                         <p>I predicted Uruguay as a winner, but I have the wrong score. I collect 5 points.</p>
                                     </Paper>
                                 </Grid>
                                 <Grid item xs={6}>
                                     <Paper className={classes.paper}>
-                                        <p>I predict Uruguay-Argentina 2-0.</p>
+                                        <p>I predict Uruguay-Argentina 2-0, BUT Argentina is my winner.</p>
                                         <p>Results : 2-0 after 90 minutes, Uruguay wins.</p>
-                                        <p>I have the exact score. I collect 10 points.</p>
+                                        <p>I have the exact score, but I have the wrong winning team. I collect 10 points.</p>
                                     </Paper>
                                 </Grid>
                                 <Grid item xs={6}>
                                     <Paper className={classes.paper}>
-                                        <p>I predict Uruguay-Argentina 1-1 and Uruguay as an winner.</p>
+                                        <p>I predict Uruguay-Argentina 1-1 and Uruguay as a winner.</p>
                                         <p>Results : a draw 1-1 after 90 minutes. Uruguay wins in overtime 2-1.</p>
-                                        <p>I have the right score after 90 minutes, but only the final score matters! I collect 5 points for predicting the correct winner.</p>
+                                        <p>I have the right score after 90 minutes, but only the final score matters! I collect 5 points for predicting the correct winner and 0 for the score.</p>
                                     </Paper>
                                 </Grid>
                                 <Grid item xs={6}>
@@ -247,14 +247,7 @@ class Rules extends Component {
                                         <p>I have the right score after overtime. I collect 10 points. On top of that I collect 5 points for predicting the correct winner, for a total of 15 points!</p>
                                     </Paper>
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <Paper className={classes.paper}>
-                                        <p>I predict Uruguay-Argentina 1-1 and Uruguay as an winner.</p>
-                                        <p>Results : a draw, 0-0 after overtime. Uruguay wins in PKs.</p>
-                                        <p>I have predicted a draw, but the wrong score. I collect 3 points.</p>
-                                        <p>As I did not predict the correct winner, I only collect 3 points.</p>
-                                    </Paper>
-                                </Grid>
+
                             </Grid>
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
