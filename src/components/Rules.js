@@ -206,11 +206,13 @@ class Rules extends Component {
                             </Grid>  */}
                             <Grid container spacing={24}>
                                 <Grid container>
-                                    <Grid item style={{padding: '1em'}}>
+                                    <Grid item style={{ padding: '1em' }}>
                                         <Typography>
                                             <br />For the knockout stage the scoring is slightly different from the group stage.<br />
                                             <br />You will need to predict the final score (before the PKs) AND the winning team.<br />
-                                            <br />When predicting the correct winner (be it after 90 minutes, 120 minutes or PKs), you get 5 points. When you correctly predict the final score (not including penalty shootouts), you get an additional 10 points! Note, that it is possible to predict a score that contradicts your choice of winner.<br />
+                                            <br />When predicting the correct winner (be it after 90 minutes, 120 minutes or PKs), you get 5 points.
+                                            <br />When you correctly predict the final score (not including penalty shootouts), you get an additional 10 points!
+                                            <br /> Note, that it is possible to predict a score that contradicts your choice of winner.<br />
                                             <br />Below are a few examples to illustrate how the scoring system works in the knockout stages.<br />
                                         </Typography>
                                         <br />

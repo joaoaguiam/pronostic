@@ -99,10 +99,16 @@ class MatchPredictionsDialog extends Component {
         }]);
         let homeTeam = '';
         let awayTeam = '';
+        let result = '';
         if (this.props.showMatchPredictionsDialog !== 0) {
             let selectedMatch = this.props.flatMatches[Number(this.props.showMatchPredictionsDialog) - 1];
             homeTeam = matchesSelectors.getTeam(this.props.matches, selectedMatch.home_team);
             awayTeam = matchesSelectors.getTeam(this.props.matches, selectedMatch.away_team);
+            let homeResult = selectedMatch.home_result;
+            let awayResult = selectedMatch.away_result;
+            if (homeResult) {
+                result = "(" + homeResult + " - " + awayResult + ")";
+            }
         }
         console.log(allPredictions);
         // if(allPredictions.length > 0) {
@@ -135,11 +141,12 @@ class MatchPredictionsDialog extends Component {
                                 let homeBet = prediction.matchBets.homeBet;
                                 let awayBet = prediction.matchBets.awayBet;
                                 let points = prediction.points;
+                                let isYanick = participant.nickname === 'Yanick';
                                 return (
                                     <TableRow key={"MatchPrediction_" + prediction.participant}>
-                                        <TableCell>
-                                            {participant.nickname}
-                                        </TableCell>
+                                        <TableCell>{participant.nickname}</TableCell>
+                                        {/* {!isYanick && <TableCell>{participant.nickname}</TableCell>}
+                                        {isYanick && <TableCell><s>Yanick</s> Achour <i class="far fa-smile"></i></TableCell>} */}
                                         <TableCell>
                                             <div>
                                                 {/* {isWinnerHome && isKnockout && <span>*</span>} */}

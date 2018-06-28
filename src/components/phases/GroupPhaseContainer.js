@@ -72,6 +72,7 @@ class GroupPhaseContainer extends Component {
 
         let group = this.props.matches.groups[groupKey];
         let matches = group.matches;
+        
         return (
             <div key={groupKey} className={classes.group}>
                 <Typography variant="title" gutterBottom>{group.name}</Typography>

@@ -106,7 +106,7 @@ class KnockoutPhaseContainer extends Component {
                             >
 
                                 <Grid item className={classes.wrapper}>
-                                    <Button variant="raised" color="primary" onClick={this.handleSubmit} disabled={isDisabled} >Submit to Blockchain</Button>
+                                    <Button variant="raised" color="primary" onClick={this.handleSubmit} disabled={isDisabled}>Submit to Blockchain</Button>
                                     {isMining && <CircularProgress size={24} className={classes.buttonProgress} />}
                                 </Grid>
 

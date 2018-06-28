@@ -164,11 +164,11 @@ class GroupPhaseContainer extends Component {
                                 let isFinished = match.finished;
                                 let homeResult = match.home_result;
                                 let awayResult = match.away_result;
-                                // if(match.name === 49) {
+                                // if(match.name === 51) {
                                 //     debugger;
                                 // }
-                                let isWinnerHome = match.winner === 'home' || match.home_result > match.away_result;
-                                let isWinnerAway = match.winner === 'away' || match.home_result < match.away_result;
+                                let isWinnerHome = match.winner === match.home_team || match.home_result > match.away_result;
+                                let isWinnerAway = match.winner === match.away_team || match.home_result < match.away_result;
 
                                 let homeBet = bets !== undefined && _.has(bets[match.name - 1], 'homeBet') ? bets[match.name - 1].homeBet : '';
                                 let awayBet = bets !== undefined && _.has(bets[match.name - 1], 'awayBet') ? bets[match.name - 1].awayBet : '';
@@ -178,7 +178,8 @@ class GroupPhaseContainer extends Component {
                                 let changedHomeBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'homeBet') ? (savedBet[match.name - 1].homeBet !== homeBet) : (homeBet !== '');
                                 let changedAwayBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'awayBet') ? (savedBet[match.name - 1].awayBet !== awayBet) : (awayBet !== '');
                                 let changedWinnerBet = savedBet !== undefined && _.has(savedBet[match.name - 1], 'winnerBet') ? (savedBet[match.name - 1].winnerBet == winnerBet ? 'default' : 'secondary') : 'secondary';
-                                // if(match.name === 18) {
+                                // if(match.name === 30) {
+                                //     console.log(submissionDenied);
                                 //     debugger;
                                 // }
 
@@ -246,7 +247,7 @@ class GroupPhaseContainer extends Component {
                                                 error={changedAwayBet}
 
                                             />
-                                            {!isKnockout &&
+                                            {submissionDenied &&
                                                 <IconButton className={classes.button} aria-label="Delete">
                                                     <AssignmentIcon onClick={() => { this.showMatchPredictionsDialog(match.name) }} />
                                                 </IconButton>

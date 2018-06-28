@@ -144,17 +144,14 @@ export function calculateMatchPoints(match, savedBets, phase) {
     let savedBet = savedBets[matchId];
     let homeBet = (savedBet !== undefined && _.has(savedBet, 'homeBet')) ? savedBet.homeBet : undefined;
     let awayBet = (savedBet !== undefined && _.has(savedBet, 'awayBet')) ? savedBet.awayBet : undefined;
-    // let winnerBet = (savedBet !== undefined && _.has(savedBet[match.name - 1], 'winnerBet')) ? savedBet[match.name - 1].winnerBet  : undefined;
+
 
     if (homeBet === undefined || awayBet === undefined) {
         return undefined;
     }
-    if (matchNum === 15)
-        debugger;
+
     if (phase === 'groups') {
-        // if(match.name === 1) {
-        //     debugger;
-        // }
+
         // 10 points if you predict the exact score
         if (homeBet === homeResult && awayBet === awayResult) {
             return 10;
@@ -171,23 +168,43 @@ export function calculateMatchPoints(match, savedBets, phase) {
         }
         return 0;
     }
+    else {
+        // let winnerBet = (savedBet !== undefined && _.has(savedBet[match.name - 1], 'winnerBet')) ? savedBet[match.name - 1].winnerBet : undefined;
+        let winnerBet = (savedBet !== undefined && _.has(savedBet, 'winnerBet')) ? savedBet.winnerBet : undefined;
+
+        let points = 0;
+
+        // 10 points if you predict the exact score
+        if (homeBet === homeResult && awayBet === awayResult) {
+            points = 10;
+        }
+
+        // predict the correct winner
+        if ((winnerBet === 'home' && match.winner === match.home_team) || (winnerBet === 'away' && match.winner === match.away_team)) {
+            points += 5;
+        }
+
+        // if (matchNum === 49)
+        //     debugger;
+        return points;
+    }
 }
 
 export function calculatePoints(matches, bets, phase) {
-    if(matches === undefined) {
+    if (matches === undefined) {
         return 0;
     }
     let totalPoints = 0;
-    for(let i = 0; i < 64; i++) {
+    for (let i = 0; i < 64; i++) {
         let phaseI = getPhaseFromGameNumber(i);
-        if(phaseI === phase) {
+        if (phaseI === phase) {
             // debugger;
             let match = matches[i];
-            if(match === undefined) {
+            if (match === undefined) {
                 debugger;
             }
-            let points = calculateMatchPoints(match, bets, phase) ;
-            
+            let points = calculateMatchPoints(match, bets, phase);
+
             totalPoints += points !== undefined ? points : 0;
         }
     }

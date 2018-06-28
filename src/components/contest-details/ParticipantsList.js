@@ -220,6 +220,7 @@ class ParticipantsList extends Component {
             return -1 * (otherParticipantsBets[participant.address] !== undefined ? otherParticipantsBets[participant.address].points : 0);
         }]);
 
+
         return (
             <div>
                 {this.renderPayWinnerConfirmation()}
@@ -238,10 +239,14 @@ class ParticipantsList extends Component {
                     <TableBody>
                         {sortedparticipantList.map(participant => {
                             let points = this.props.otherParticipantsBets[participant.address] !== undefined ? this.props.otherParticipantsBets[participant.address].points : '-';
+                            let isYanick = participant.nickname === "Yanick";
+
                             return (
                                 <TableRow key={participant.address}>
                                     <TableCell component="th" scope="row" className={classes.center}>{rank++}</TableCell>
                                     <TableCell>{participant.nickname}</TableCell>
+                                    {/* {!isYanick && <TableCell>{participant.nickname}</TableCell>}
+                                    {isYanick && <TableCell><s>Yanick</s> Achour <i class="far fa-smile"></i></TableCell>} */}
                                     {/* <TableCell>{participant.address}</TableCell> */}
                                     <TableCell className={classes.center}>{points}</TableCell>
                                 </TableRow>

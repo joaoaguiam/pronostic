@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 // import 'font-awesome/css/font-awesome.css';
 // import 'font-awesome/scss/font-awesome.scss';
 
-// import '../lib/font-awesome/web-fonts-with-css/css/fontawesome-all.css';
+import '../lib/font-awesome/web-fonts-with-css/css/fontawesome-all.css';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
