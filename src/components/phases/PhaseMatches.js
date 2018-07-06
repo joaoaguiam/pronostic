@@ -164,6 +164,7 @@ class GroupPhaseContainer extends Component {
                                 let isFinished = match.finished;
                                 let homeResult = match.home_result;
                                 let awayResult = match.away_result;
+                                let isDraw = homeResult === awayResult;
                                 // if(match.name === 51) {
                                 //     debugger;
                                 // }
@@ -255,10 +256,10 @@ class GroupPhaseContainer extends Component {
                                         </TableCell>
                                         <TableCell className={classes.center}>
                                             <div>
-                                                {isWinnerHome && isKnockout && <span>*</span>}
+                                                {isWinnerHome && isKnockout && isDraw && <span>*</span>}
                                                 {/* <StarsIcon className={classes.winnerIcon} color="primary" /> */}
                                                 {homeResult} - {awayResult}
-                                                {isWinnerAway && isKnockout && <span>*</span>}
+                                                {isWinnerAway && isKnockout && isDraw && <span>*</span>}
                                             </div>
 
                                         </TableCell>

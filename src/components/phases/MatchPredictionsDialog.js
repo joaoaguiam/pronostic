@@ -142,6 +142,14 @@ class MatchPredictionsDialog extends Component {
                                 let awayBet = prediction.matchBets.awayBet;
                                 let points = prediction.points;
                                 let isYanick = participant.nickname === 'Yanick';
+                                // if(isYanick){
+                                //     debugger;
+                                // }
+                                let bets = prediction.matchBets;
+                                let winnerBet = bets !== undefined && _.has(bets, 'winnerBet') ? bets.winnerBet : '';
+
+                                let isWinnerHome = winnerBet === 'home';
+                                let isWinnerAway = winnerBet === 'away';
                                 return (
                                     <TableRow key={"MatchPrediction_" + prediction.participant}>
                                         <TableCell>{participant.nickname}</TableCell>
@@ -149,9 +157,9 @@ class MatchPredictionsDialog extends Component {
                                         {isYanick && <TableCell><s>Yanick</s> Achour <i class="far fa-smile"></i></TableCell>} */}
                                         <TableCell>
                                             <div>
-                                                {/* {isWinnerHome && isKnockout && <span>*</span>} */}
+                                                {isWinnerHome && <span>*</span>}
                                                 {homeBet} - {awayBet}
-                                                {/* {isWinnerAway && isKnockout && <span>*</span>} */}
+                                                {isWinnerAway && <span>*</span>}
                                             </div>
                                         </TableCell>
                                         <TableCell>

@@ -53,7 +53,7 @@ export function fetchMatches() {
 
             dispatch(wcwagersActions.loadOtherParticipantBets());
 
-            
+
             // Load cached bets
             let cachedbets = localStorage.getItem('pronostic-bets-' + contractAddress);
             console.log(cachedbets);
@@ -66,13 +66,13 @@ export function fetchMatches() {
                 let savedBets = matchesSelectors.getSavedBets(getState());
                 for (let i = 0; i < 64; i++) {
                     let phase = matchesSelectors.getPhaseFromGameNumber(i);
-                    
+
                     // load from blockchain values
                     let homeBet = undefined;
-                    let awayBet =  undefined;
+                    let awayBet = undefined;
                     let winnerBet = undefined;
 
-                    if(savedBets[phase] !== undefined) {
+                    if (savedBets[phase] !== undefined) {
                         homeBet = savedBets[phase][i].homeBet;
                         awayBet = savedBets[phase][i].awayBet;
                         winnerBet = savedBets[phase][i].winnerBet;

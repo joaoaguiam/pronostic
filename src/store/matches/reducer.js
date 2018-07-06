@@ -14,7 +14,7 @@ const initialState = Immutable({
         round_4: undefined,
         round_2: undefined,
     },
-    selectedTab: 0,
+    selectedTab: 2,
     isFetched: false,
     ipfsLinks: {
         groups: undefined,

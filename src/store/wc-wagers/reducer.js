@@ -187,7 +187,7 @@ export function getPredictionsForMatch(flatMatches, otherParticipantsBets, match
 
         var participantBets = otherParticipantsBets[participant];
         if (participantBets.betsSubmitted[phase] !== undefined) {
-            let matchBets = participantBets.betsSubmitted[phase].bets[matchIndex];
+            let matchBets = participantBets.betsSubmitted[phase].bets ? participantBets.betsSubmitted[phase].bets[matchIndex] : undefined;
             if (matchBets !== undefined) {
                 let points = matchesSelectors.calculateMatchPoints(match, participantBets.betsSubmitted[phase].bets, phase);
                 results.push({ participant, matchBets , points});

@@ -224,9 +224,16 @@ export function loadOtherParticipantBets() {
                         let url = await WCwagers.getURL(address, participant.address, phase.smartcontract);
 
                         let response = await fetch(url);
-                        let bets = await response.json();
-
-                        let points = matchesSelectors.calculatePoints(matches, bets, phase.json);
+                        console.log(url);
+                        // debugger;
+                        let bets = undefined;
+                        try {
+                             bets = await response.json();
+                        }
+                        catch (error) {
+                            // debugger;
+                        }
+                        let points = bets ? matchesSelectors.calculatePoints(matches, bets, phase.json) : 0;
                         participantPoints += points;
                         // debugger;
                         betsSubmitted[phase.json] = {
@@ -243,17 +250,17 @@ export function loadOtherParticipantBets() {
                 };
 
                 // set winner
-                if(participantPoints > winnerScore) {
+                if (participantPoints > winnerScore) {
                     currentWinners = [participant];
                     winnerScore = participantPoints;
                 }
-                else if(participantPoints === winnerScore) {
+                else if (participantPoints === winnerScore) {
                     currentWinners.push(participant);
                 }
             };
 
             console.log(otherParticipantsBets);
-            dispatch({ type: types.OTHER_PARTICIPANTS_BETS_FETCHED, otherParticipantsBets, currentWinners});
+            dispatch({ type: types.OTHER_PARTICIPANTS_BETS_FETCHED, otherParticipantsBets, currentWinners });
         } catch (error) {
             console.error(error);
         }
@@ -267,7 +274,7 @@ export function payWinners() {
             let address = wcwagersSelectors.getAddress(getState());
             let contractBalance = await WCwagers.getBalanceWei(address);
             let ammountPayee = Math.floor(contractBalance / winners.length);
-            for(let i = 0; i < winners.length; i++){
+            for (let i = 0; i < winners.length; i++) {
                 let winner = winners[i];
                 WCwagers.payWinner(address, winner.address, winner.nickname, ammountPayee, dispatch);
             }
