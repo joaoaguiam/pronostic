@@ -220,27 +220,32 @@ export function loadOtherParticipantBets() {
 
                     let phaseDate = moment.unix(phasesDates[phase.json]);
                     if (phaseDate.isBefore(currentTime)) {
-
-                        let url = await WCwagers.getURL(address, participant.address, phase.smartcontract);
-
-                        let response = await fetch(url);
-                        console.log(url);
-                        // debugger;
-                        let bets = undefined;
                         try {
-                             bets = await response.json();
+                            let url = await WCwagers.getURL(address, participant.address, phase.smartcontract);
+                            console.log("url:" + url);
+                            if(url === '') {
+                                continue;
+                            }
+
+                            let response = await fetch(url);
+                            let bets = await response.json();
+
+                            
+
+                            let points = bets ? matchesSelectors.calculatePoints(matches, bets, phase.json) : 0;
+                            participantPoints += points;
+                            // debugger;
+                            betsSubmitted[phase.json] = {
+                                url,
+                                bets,
+                                points
+                            };
                         }
                         catch (error) {
-                            // debugger;
+                            console.error(error);
+
+                            debugger;
                         }
-                        let points = bets ? matchesSelectors.calculatePoints(matches, bets, phase.json) : 0;
-                        participantPoints += points;
-                        // debugger;
-                        betsSubmitted[phase.json] = {
-                            url,
-                            bets,
-                            points
-                        };
                     }
                 }
 

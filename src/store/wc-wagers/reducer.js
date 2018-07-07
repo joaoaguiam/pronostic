@@ -186,11 +186,15 @@ export function getPredictionsForMatch(flatMatches, otherParticipantsBets, match
         };
 
         var participantBets = otherParticipantsBets[participant];
+        if (matchNumber === 56)
+                debugger;
         if (participantBets.betsSubmitted[phase] !== undefined) {
             let matchBets = participantBets.betsSubmitted[phase].bets ? participantBets.betsSubmitted[phase].bets[matchIndex] : undefined;
+            if (matchNumber === 56)
+                debugger;
             if (matchBets !== undefined) {
                 let points = matchesSelectors.calculateMatchPoints(match, participantBets.betsSubmitted[phase].bets, phase);
-                results.push({ participant, matchBets , points});
+                results.push({ participant, matchBets, points });
             }
         }
     }
